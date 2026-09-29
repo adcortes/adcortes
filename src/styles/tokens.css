@@ -21,7 +21,7 @@
   --ridge-2: #2d3039;
   --ridge-3: #25272e;
   --ridge-4: #1f2025;
-  --font: 'Schibsted Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --container: 1240px;
   --gutter: clamp(20px, 4vw, 56px);
   --section-y: clamp(56px, 7vw, 104px);
@@ -64,7 +64,7 @@
   --fs-body: 16px;
   --fs-body-small: 15px;
   --fs-nav: 15px;
-  --fs-wordmark: 20px;
+  --fs-wordmark: 22px;
   --fs-wordmark-footer: 16px;
   --fs-small: 14px;
 

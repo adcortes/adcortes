@@ -10,8 +10,10 @@ import { nav } from '../data/site';
 
 <header class="site-header">
   <div class="container site-header__inner">
-    <a class="wordmark" href="/" aria-label="adcortes, home">
-      adcortes<span aria-hidden="true">.</span>
+    <a class="site-header__logo" href="/" aria-label="adcortes, home">
+      <span class="wordmark">
+        adcortes<span aria-hidden="true">.</span>
+      </span>
     </a>
 
     <nav aria-label="Primary">
@@ -43,22 +45,12 @@ import { nav } from '../data/site';
     min-height: var(--header-height);
   }
 
-  /* §4 — live text, no SVG. */
-  .wordmark {
-    font-size: var(--fs-wordmark);
-    font-weight: var(--fw-medium);
-    line-height: 1;
-    letter-spacing: -0.03em;
-    color: var(--paper-200);
-    text-decoration: none;
+  .site-header__logo {
     /* §3 — 44px minimum target. */
-    display: inline-flex;
-    align-items: center;
     min-height: var(--target-min);
-  }
-
-  .wordmark span {
-    color: var(--accent);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
   }
 
   .nav {
