@@ -1,0 +1,77 @@
+---
+/*
+ * Site header — wordmark + primary nav.
+ * design-system.md §4 (wordmark), §9 (nav link); content.md §Header.
+ *
+ * Three inline text links at every size: no pills, no hamburger.
+ */
+import { nav } from '../data/site';
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a class="site-header__logo" href="/" aria-label="adcortes, home">
+      <span class="wordmark">
+        adcortes<span aria-hidden="true">.</span>
+      </span>
+    </a>
+
+    <nav aria-label="Primary">
+      <ul class="nav">
+        {
+          nav.map((item) => (
+            <li>
+              <a class="nav__link" href={item.href}>
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    border-bottom: var(--hairline);
+  }
+
+  .site-header__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-16);
+    min-height: var(--header-height);
+  }
+
+  .site-header__logo {
+    /* §3 — 44px minimum target. */
+    min-height: var(--target-min);
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+  }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: var(--nav-gap);
+  }
+
+  /* §9 — 15px/500, 44px row, hover to accent. */
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--target-min);
+    font-size: var(--fs-nav);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    color: var(--paper-200);
+    text-decoration: none;
+  }
+
+  .nav__link:hover {
+    color: var(--accent);
+  }
+</style>

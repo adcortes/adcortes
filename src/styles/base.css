@@ -1,0 +1,177 @@
+/*
+ * Base styles — Egg Theme
+ * Source of truth: docs/references/design/handoff/design-system.md §3, §4, §9, §10, §11
+ */
+
+/* --- Font face ------------------------------------------------------------
+ * One variable file covers the required 400/500/600. See public/fonts/README.md
+ * for why three static files are not used.
+ */
+@font-face {
+  font-family: "Schibsted Grotesk";
+  font-style: normal;
+  font-weight: 400 600;
+  font-display: swap;
+  src: url("/fonts/schibsted-grotesk-latin-variable.woff2") format("woff2-variations");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* --- Reset ---------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul[class],
+ol[class] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* --- Document ------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  /* The header is not sticky, but in-page jumps should not land flush to the top edge. */
+  scroll-padding-top: var(--space-24);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink-900);
+  color: var(--paper-200);
+  font-family: var(--font);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-regular);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* §4 — sentence case throughout; nothing heavier than 600. */
+h1,
+h2,
+h3 {
+  font-weight: var(--fw-semibold);
+}
+
+h1,
+h3 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+a {
+  color: inherit;
+}
+
+/* --- Layout primitives ---------------------------------------------------- */
+/* §6 — container and gutters. */
+.container {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* --- Focus-visible, §10 verbatim ------------------------------------------
+ * Never :focus, never outline: none.
+ */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 4px;
+  border-radius: var(--radius-focus);
+}
+
+.footer a:focus-visible {
+  outline-offset: 2px;
+}
+
+.icon-btn:focus-visible {
+  outline-offset: 0;
+}
+
+.cta:focus-visible,
+.skip:focus-visible {
+  outline-color: var(--paper-200);
+  outline-offset: 3px;
+}
+
+/* --- Skip link, §9 -------------------------------------------------------- */
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  /* §3 — 44px minimum target; padding alone landed at 43px. */
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target-min);
+  background: var(--accent);
+  color: var(--ink-900);
+  font-size: var(--fs-body-small);
+  font-weight: var(--fw-semibold);
+  line-height: 1;
+  padding-inline: 18px;
+  border-radius: var(--radius-panel);
+  text-decoration: none;
+}
+
+.skip:focus {
+  left: var(--space-12);
+  top: var(--space-12);
+}
+
+/* §4 — live text, no SVG. */
+.wordmark {
+  font-size: var(--fs-wordmark);
+  font-weight: var(--fw-medium);
+  line-height: 1;
+  color: var(--paper-200);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.wordmark span {
+  color: var(--accent);
+  font-size: 1.7em;
+  line-height: 0;
+}
+
+/* --- Reduced motion, §11 verbatim ----------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .hero-bg * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+  }
+}

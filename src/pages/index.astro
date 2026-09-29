@@ -1,0 +1,98 @@
+---
+/*
+ * The one route.
+ *
+ * MILESTONE 1 — Foundation. The page order, landmarks and section labelling are
+ * final; the section bodies are filled in by later milestones:
+ *   M2  Hero sub-line, intro, jump link, mountains and moon
+ *   M3  Selected work (the three groups and their diagrams)
+ *   M4  Collaborations band, About, Contact
+ *
+ * Page order is fixed at every size (visual-direction.md §Page order):
+ * Header, Hero, Selected work, Collaborations band, About, Contact, Footer.
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionShell from '../components/SectionShell.astro';
+---
+
+<BaseLayout>
+  <section class="hero" aria-labelledby="hero-h">
+    <p class="hero__eyebrow">UX Engineer — design systems &amp; accessible frontend</p>
+    <h1 id="hero-h" class="hero__title">Clear paths from idea to interface.</h1>
+    {/* M2: sub-line, intro, "View selected work ↓", HeroBackground, Moon. */}
+  </section>
+
+  <SectionShell id="work" labelledBy="work-h" topRule>
+    <h2 slot="label" id="work-h" class="section-heading">Selected work</h2>
+    {/* M3: intro, two ProjectEntry blocks, WebWorkGroup. */}
+  </SectionShell>
+
+  {/* M4: the full-bleed Selected collaborations band sits here. */}
+
+  <SectionShell id="about" labelledBy="about-h">
+    <h2 slot="label" id="about-h" class="section-heading">About</h2>
+    {/* M4: About lead and the four numbered items. */}
+  </SectionShell>
+
+  <SectionShell id="contact" labelledBy="contact-h" topRule>
+    <p slot="label" class="section-label">Contact</p>
+    <h2 id="contact-h" class="contact-heading">Let's talk about what you're building.</h2>
+    {/* M4: body copy and the single CTA. */}
+  </SectionShell>
+</BaseLayout>
+
+<style>
+  /* §5 — hero padding. The mountains and moon arrive in M2; `isolation` and
+     `position` are already set so the background wrapper drops straight in. */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
+  }
+
+  /* §1 — muted, under 16px, never a heading. */
+  .hero__eyebrow {
+    position: relative;
+    z-index: 1;
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--paper-400);
+    margin-bottom: var(--space-12);
+  }
+
+  /* §4 — Display, used once per page. Measure 17ch. */
+  .hero__title {
+    position: relative;
+    z-index: 1;
+    max-width: 17ch;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  /* §4 — Section heading: 22px, deliberately small. */
+  .section-heading {
+    font-size: var(--fs-section);
+    font-weight: var(--fw-semibold);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+  }
+
+  /* Contact's label column is plain text; its h2 is the fluid closing statement. */
+  .section-label {
+    font-size: var(--fs-section);
+    font-weight: var(--fw-semibold);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    color: var(--paper-200);
+  }
+
+  /* §4 — Contact heading, fluid. Measure 52ch on the body copy that follows. */
+  .contact-heading {
+    font-size: var(--fs-contact);
+    font-weight: var(--fw-semibold);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+</style>

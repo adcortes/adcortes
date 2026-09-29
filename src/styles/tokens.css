@@ -1,0 +1,90 @@
+/*
+ * Design tokens — Egg Theme
+ * Source of truth: docs/references/design/handoff/design-system.md
+ *
+ * The §12 block below is copied verbatim from the handoff. Everything after it
+ * is the same document's §4, §5, §7 and §8 expressed as tokens.
+ *
+ * This file is the ONLY place a colour literal may appear, with one exception:
+ * the inlined hero SVGs, whose fills are part of the approved artwork.
+ */
+
+:root {
+  /* --- design-system.md §12, verbatim --- */
+  --ink-900: #1d1e22;
+  --ink-700: #393f4d;
+  --ink-500: #555c6c;
+  --paper-200: #d4d4dc;
+  --paper-400: #adaeb8;
+  --accent: #feda6a;
+  --ridge-1: #353a46;
+  --ridge-2: #2d3039;
+  --ridge-3: #25272e;
+  --ridge-4: #1f2025;
+  --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --container: 1240px;
+  --gutter: clamp(20px, 4vw, 56px);
+  --section-y: clamp(56px, 7vw, 104px);
+  --fs-display: clamp(34px, 4.3vw, 58px);
+  --fs-sub: clamp(18px, 1.5vw, 21px);
+  --fs-contact: clamp(28px, 3vw, 40px);
+  --fs-lead: clamp(19px, 1.7vw, 23px);
+  --moon: clamp(20px, 2.1vw, 30px);
+
+  /* --- §5 spacing scale --- */
+  --space-4: 4px;
+  --space-6: 6px;
+  --space-8: 8px;
+  --space-10: 10px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-28: 28px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-56: 56px;
+  --space-64: 64px;
+  --space-80: 80px;
+  --space-104: 104px;
+
+  /* --- §5 area-specific spacing --- */
+  --hero-pad-top: clamp(72px, 11vw, 108px);
+  --hero-pad-bottom: clamp(72px, 9vw, 136px);
+  --contact-pad-bottom: clamp(72px, 9vw, 128px);
+  --header-height: clamp(64px, 11vw, 88px);
+  --column-gap: clamp(32px, 5vw, 80px);
+  --nav-gap: clamp(20px, 3vw, 40px);
+
+  /* --- §4 fixed type sizes --- */
+  --fs-section: 22px;
+  --fs-project-title: 24px;
+  --fs-about-item: 17px;
+  --fs-body-large: 17px;
+  --fs-body: 16px;
+  --fs-body-small: 15px;
+  --fs-nav: 15px;
+  --fs-wordmark: 22px;
+  --fs-wordmark-footer: 16px;
+  --fs-small: 14px;
+
+  /* --- §4 weights --- */
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+
+  /* --- §8 radii --- */
+  --radius-focus: 2px;
+  --radius-chip: 4px;
+  --radius-panel: 6px;
+  --radius-cta: 8px;
+  --radius-frame: 10px;
+
+  /* --- §6 layout --- */
+  --band-inner: 1128px;
+  --hairline: 1px solid var(--ink-700);
+
+  /* --- §3 minimum target size --- */
+  --target-min: 44px;
+  --cta-height: 48px;
+}
