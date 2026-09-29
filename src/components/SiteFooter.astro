@@ -1,0 +1,130 @@
+---
+/*
+ * Site footer.
+ * content.md §Footer; design-system.md §9 (footer inline link, icon button).
+ *
+ * The social icon links render only when their URLs exist in src/data/site.ts.
+ * No `href="#"` placeholders — see the approved plan, §8.2.
+ */
+import { footer, social } from '../data/site';
+import { mailtoHref } from '../lib/email';
+import LinkedIn from './icons/LinkedIn.astro';
+import GitHub from './icons/GitHub.astro';
+
+const accessibilityMailto = mailtoHref('Accessibility barrier on the adcortes portfolio');
+const hasSocial = Boolean(social.linkedin || social.github);
+---
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <p class="footer__wordmark">
+      adcortes<span aria-hidden="true">.</span> © 2026
+    </p>
+
+    <p class="footer__statement">
+      {footer.accessibilityStatement}{' '}
+      <a href={accessibilityMailto}>{footer.accessibilityLinkLabel}</a>.
+    </p>
+
+    {
+      hasSocial && (
+        <ul class="footer__social">
+          {social.linkedin && (
+            <li>
+              <a class="icon-btn" href={social.linkedin} aria-label="adcortes on LinkedIn">
+                <LinkedIn />
+              </a>
+            </li>
+          )}
+          {social.github && (
+            <li>
+              <a class="icon-btn" href={social.github} aria-label="adcortes on GitHub">
+                <GitHub />
+              </a>
+            </li>
+          )}
+        </ul>
+      )
+    }
+  </div>
+</footer>
+
+<style>
+  .footer {
+    border-top: var(--hairline);
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--paper-400);
+  }
+
+  .footer__inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-16);
+    padding-block: var(--space-24) var(--space-32);
+  }
+
+  /* §4 — the footer wordmark is 16px. */
+  .footer__wordmark {
+    font-size: var(--fs-wordmark-footer);
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--paper-200);
+  }
+
+  .footer__wordmark span {
+    color: var(--accent);
+  }
+
+  .footer__statement {
+    /* Inherits 14px muted; the link itself is paper-200 and underlined (§9). */
+    max-width: 52ch;
+  }
+
+  /*
+   * §9 — footer inline link: inherits 14px, paper-200, underlined.
+   *
+   * This is the one interactive target under 44px, and deliberately so: WCAG 2.2
+   * SC 2.5.8 exempts a target "in a sentence or block of text", which is exactly
+   * what this is. Padding it out to 44px would break the sentence it sits in.
+   */
+  .footer__statement a {
+    color: var(--paper-200);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .footer__statement a:hover {
+    color: var(--accent);
+  }
+
+  .footer__social {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  /* §9 — icon button: 44 × 44, radius 6, muted, hover accent. */
+  .icon-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--target-min);
+    height: var(--target-min);
+    border-radius: var(--radius-panel);
+    color: var(--paper-400);
+  }
+
+  .icon-btn:hover {
+    color: var(--accent);
+  }
+
+  @media (max-width: 639px) {
+    .footer__inner {
+      justify-content: flex-start;
+    }
+  }
+</style>

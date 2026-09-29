@@ -1,4 +1,4 @@
-# Egg Theme — design handoff
+# Design handoff
 
 Approved design handoff for the **adcortes** portfolio. The Egg Theme is frozen: the documents below are the source of truth for every visual decision.
 
