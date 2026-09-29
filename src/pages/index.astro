@@ -2,9 +2,8 @@
 /*
  * The one route.
  *
- * MILESTONE 1 — Foundation. The page order, landmarks and section labelling are
- * final; the section bodies are filled in by later milestones:
- *   M2  Hero sub-line, intro, jump link, mountains and moon
+ * MILESTONE 2 — Hero. The page order, landmarks and section labelling are
+ * final; the remaining section bodies are filled in by later milestones:
  *   M3  Selected work (the three groups and their diagrams)
  *   M4  Collaborations band, About, Contact
  *
@@ -13,13 +12,32 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionShell from '../components/SectionShell.astro';
+import HeroBackground from '../components/HeroBackground.astro';
 ---
 
 <BaseLayout>
   <section class="hero" aria-labelledby="hero-h">
-    <p class="hero__eyebrow">UX Engineer — design systems &amp; accessible frontend</p>
-    <h1 id="hero-h" class="hero__title">Clear paths from idea to interface.</h1>
-    {/* M2: sub-line, intro, "View selected work ↓", HeroBackground, Moon. */}
+    {/* Decorative, first in the DOM so every text node paints over it. */}
+    <HeroBackground />
+
+    <div class="hero__content">
+      <div class="hero__lead">
+        <p class="hero__eyebrow">UX Engineer — design systems &amp; accessible frontend</p>
+        <h1 id="hero-h" class="hero__title">Clear paths from idea to interface.</h1>
+        <p class="hero__subline">Clear interfaces, built in code.</p>
+      </div>
+
+      <div class="hero__aside">
+        <p class="hero__intro">
+          UX Engineer working across product thinking, design systems and accessible frontend.
+        </p>
+        <p class="hero__jump">
+          <a class="hero__link" href="#work">
+            View selected work <span aria-hidden="true">↓</span>
+          </a>
+        </p>
+      </div>
+    </div>
   </section>
 
   <SectionShell id="work" labelledBy="work-h" topRule>
@@ -42,33 +60,105 @@ import SectionShell from '../components/SectionShell.astro';
 </BaseLayout>
 
 <style>
-  /* §5 — hero padding. The mountains and moon arrive in M2; `isolation` and
-     `position` are already set so the background wrapper drops straight in. */
+  /* §5 — hero padding. `isolation` keeps the decorative background's z-index 0
+     scoped to the hero, so it can never rise above anything else on the page. */
   .hero {
     position: relative;
     isolation: isolate;
     padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
   }
 
-  /* §1 — muted, under 16px, never a heading. */
-  .hero__eyebrow {
+  /* Every text node sits on layer 1; the mountains and moon are on layer 0. */
+  .hero__content {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  /* §1 — muted, under 16px, never a heading. */
+  .hero__eyebrow {
     font-size: var(--fs-small);
     line-height: 1.4;
     color: var(--paper-400);
-    margin-bottom: var(--space-12);
+    margin-bottom: var(--space-16);
   }
 
   /* §4 — Display, used once per page. Measure 17ch. */
   .hero__title {
-    position: relative;
-    z-index: 1;
     max-width: 17ch;
     font-size: var(--fs-display);
     font-weight: var(--fw-semibold);
     line-height: 1.08;
     letter-spacing: -0.025em;
+  }
+
+  /* §4 — Hero sub-line: the one accent string in the hero, kept short. */
+  .hero__subline {
+    margin-top: var(--space-28);
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+
+  /* §4 — Body large, measure 460px. */
+  .hero__intro {
+    max-width: 460px;
+    font-size: var(--fs-body-large);
+    line-height: 1.65;
+  }
+
+  .hero__jump {
+    margin-top: var(--space-20);
+  }
+
+  /*
+   * §9 content link, hero variant: 15px/600 accent, no underline, a 1px bottom
+   * border in the current colour and an aria-hidden trailing glyph. The 44px
+   * minimum target comes from min-height, which also sets the border far enough
+   * below the text to read as a rule rather than an underline.
+   */
+  .hero__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--target-min);
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .hero__link:hover {
+    color: var(--paper-200);
+  }
+
+  /*
+   * §7 desktop — from 1024px the intro and its jump link move beside the
+   * headline, matching the section grid's breakpoint. Top-aligned: the
+   * headline column is the taller one, which keeps the intro's baseline above
+   * the highest ridge (visual-direction.md §Mountain background rules).
+   * Below 1024px everything stays in one column, as the tablet board shows.
+   */
+  @media (min-width: 1024px) {
+    .hero__content {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--column-gap);
+    }
+
+    .hero__lead {
+      flex: 1 1 auto;
+    }
+
+    .hero__aside {
+      flex: 0 1 460px;
+    }
   }
 
   /* §4 — Section heading: 22px, deliberately small. */
