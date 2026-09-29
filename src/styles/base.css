@@ -56,6 +56,10 @@ html {
   /* The header is not sticky, but in-page jumps should not land flush to the top edge. */
   scroll-padding-top: var(--space-24);
   -webkit-text-size-adjust: 100%;
+  /* The hero background is full-bleed at 100vw, which on a classic scrollbar is
+     wider than the viewport. `clip` absorbs that overhang without turning the
+     root into a scroll container, so no sideways scrollbar appears. */
+  overflow-x: clip;
 }
 
 body {
