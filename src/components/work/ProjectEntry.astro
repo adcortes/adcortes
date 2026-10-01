@@ -1,0 +1,281 @@
+---
+/*
+ * Selected work, groups 1 and 2 — one project: its diagram paired with its text.
+ * content.md §Selected work; design-system.md §4, §7, §9.
+ *
+ * Below 640px the diagram and the summary are both dropped (§7), leaving
+ * category, title, role, outcome and tags — the mobile reduction described in
+ * visual-direction.md §Responsive intent.
+ */
+import type { ProjectEntry } from '../../types/content';
+import EmrDiagram from './diagrams/EmrDiagram.astro';
+import DesignSystemDiagram from './diagrams/DesignSystemDiagram.astro';
+
+interface Props {
+  entry: ProjectEntry;
+}
+
+const { entry } = Astro.props;
+const { visual, action } = entry;
+
+/* The data names a diagram; the mapping keeps that name a closed set. */
+const diagrams = {
+  emr: EmrDiagram,
+  'design-system': DesignSystemDiagram,
+};
+const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
+---
+
+<li class="project">
+  <figure class="project__figure">
+    {
+      /*
+       * Two variants, one slot. A diagram is drawn in CSS and is decorative,
+       * so its accessible text is the caption alone; an image is real content
+       * and carries its own meaningful alt.
+       */
+      visual.kind === 'image' ? (
+        <img
+          class="project__image"
+          src={visual.src}
+          alt={visual.alt}
+          width={visual.width}
+          height={visual.height}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        Diagram && <Diagram />
+      )
+    }
+    <figcaption class="project__caption">{visual.caption}</figcaption>
+  </figure>
+
+  <div class="project__body">
+    <div class="project__head">
+      <p class="project__category">{entry.category}</p>
+      <h3 class="project__title">{entry.title}</h3>
+      <p class="project__summary">{entry.summary}</p>
+    </div>
+
+    {/* §9 metadata <dl>: auto-fit columns over a 1px top rule. */}
+    <dl class="project__meta">
+      <div>
+        <dt>Role</dt>
+        <dd>{entry.role}</dd>
+      </div>
+      <div>
+        <dt>Outcome</dt>
+        <dd>{entry.outcome}</dd>
+      </div>
+    </dl>
+
+    {/*
+      Two deliberate footer layouts, chosen by the data rather than by flex
+      wrapping: tags alone take the full width; tags with an action split into
+      two columns, the action on the right.
+    */}
+    <div class:list={['project__footer', { 'project__footer--with-action': action }]}>
+      {/* §9 tags: plain text, no borders, fills or pills. */}
+      <ul class="project__tags" aria-label="Tags">
+        {entry.tags.map((tag) => <li>{tag}</li>)}
+      </ul>
+
+      {
+        /*
+         * The one action, rendered only when it is real: a link with a working
+         * href, or a button with a working behaviour. There is no placeholder
+         * form — no href="#", no invented route and no inert button.
+         */
+        action &&
+          (action.kind === 'link' ? (
+            <a class="project__action" href={action.href}>
+              {action.label} <span aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <button class="project__action" type="button" data-behaviour={action.behaviour}>
+              {action.label} <span aria-hidden="true">→</span>
+            </button>
+          ))
+      }
+    </div>
+  </div>
+</li>
+
+<style>
+  /*
+   * §9 — the 1px divider is the only structural line; there are no cards. The
+   * first project needs none, because the section already carries a top rule.
+   */
+  .project {
+    padding-block: 0 var(--work-row-gap);
+  }
+
+  .project:not(:first-child) {
+    border-top: var(--hairline);
+    padding-block-start: var(--work-row-gap);
+  }
+
+  .project__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-20);
+  }
+
+  .project__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  /* §4 — project category: 14px/500 accent, a short string on a dark ground. */
+  .project__category {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    color: var(--accent);
+  }
+
+  /* §4 — project title, the only use of 24px on the page. */
+  .project__title {
+    font-size: var(--fs-project-title);
+    font-weight: var(--fw-semibold);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  /* §4 — body 16. §7 — hidden below 640px together with the diagram. */
+  .project__summary {
+    display: none;
+    font-size: var(--fs-body);
+    line-height: 1.65;
+  }
+
+  /* §7 — diagrams are tablet and desktop only. */
+  .project__figure {
+    display: none;
+  }
+
+  /* An image visual fills the figure column and keeps the diagram's frame
+     radius (§8), so either variant sits the same way in the row. */
+  .project__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-frame);
+  }
+
+  .project__caption {
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--paper-400);
+  }
+
+  .project__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-16) var(--space-28);
+    border-top: var(--hairline);
+    padding-top: 18px;
+  }
+
+  .project__meta dt {
+    margin-bottom: var(--space-6);
+    font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    color: var(--paper-400);
+  }
+
+  .project__meta dd {
+    font-size: var(--fs-body-small);
+    line-height: 1.55;
+  }
+
+  /*
+   * Tags-only: one column, so the tags have the whole footer width to run in.
+   * The modifier below is the only thing that introduces a second column.
+   */
+  .project__footer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    align-items: center;
+    gap: var(--space-12) var(--space-24);
+  }
+
+  /*
+   * Tags and action: the action keeps its own column on the right and takes only
+   * the width it needs. Stacked below 640px, where the single column is narrow
+   * and the 44px target would otherwise crowd the tags.
+   */
+  @media (min-width: 640px) {
+    .project__footer--with-action {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
+  }
+
+  .project__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6) var(--space-16);
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--paper-400);
+  }
+
+  /*
+   * §9 content link: 15px/600 accent, no underline, aria-hidden trailing glyph,
+   * 44px minimum target. One rule covers both action elements, so a link and a
+   * button are the same control to look at; the button resets the UA's own
+   * background, border and font. Focus comes from the global :focus-visible in
+   * base.css (§10) and is never overridden here.
+   */
+  .project__action {
+    justify-self: start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-6);
+    min-height: var(--target-min);
+    padding: 0;
+    background: none;
+    border: 0;
+    font-family: inherit;
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    color: var(--accent);
+    text-align: left;
+    text-decoration: none;
+  }
+
+  button.project__action {
+    cursor: pointer;
+  }
+
+  .project__action:hover {
+    color: var(--paper-200);
+  }
+
+  /*
+   * §7 tablet and up — the diagram sits beside its text. A two-column grid
+   * rather than wrapped flex, so the pairing holds across the whole 640–1023px
+   * range instead of collapsing again at the narrow end.
+   */
+  @media (min-width: 640px) {
+    .project {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      gap: var(--space-32) clamp(28px, 4vw, 56px);
+      align-items: start;
+    }
+
+    .project__summary {
+      display: block;
+    }
+
+    .project__figure {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-10);
+    }
+  }
+</style>

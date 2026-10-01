@@ -1,0 +1,164 @@
+---
+/*
+ * Selected work, group 3 — text-based, no diagram.
+ * content.md §Selected work, "3. Agency & freelance"; design-system.md §4, §7.
+ *
+ * It stays readable at every size: one column of three items on mobile, three-up
+ * from 640px (§7). Each item name is strong 17px text rather than a heading, so
+ * the section keeps its h2 → h3-per-project order.
+ */
+import type { WebWorkGroup } from '../../types/content';
+
+interface Props {
+  group: WebWorkGroup;
+}
+
+const { group } = Astro.props;
+---
+
+<li class="web">
+  <div class="web__head">
+    <div class="web__heading">
+      <p class="web__category">{group.category}</p>
+      <h3 class="web__title">{group.title}</h3>
+    </div>
+    <p class="web__intro">{group.intro}</p>
+  </div>
+
+  <ul class="web__items">
+    {
+      group.items.map((item) => (
+        <li class="web__item">
+          <p class="web__name">{item.name}</p>
+          <p class="web__description">{item.description}</p>
+          <p class="web__attribution">{item.attribution}</p>
+          {
+            /* Rendered only with a real destination; never href="#". */
+            item.link && (
+              <a class="web__link" href={item.link.href}>
+                {item.link.label} <span aria-hidden="true">↗</span>
+              </a>
+            )
+          }
+        </li>
+      ))
+    }
+  </ul>
+</li>
+
+<style>
+  /* Last row in the list: a top rule, and no trailing padding. */
+  .web {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-28);
+    border-top: var(--hairline);
+    padding-block-start: var(--work-row-gap);
+  }
+
+  .web__head {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .web__heading {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  /* §4 — same category and title styles as the two projects above. */
+  .web__category {
+    font-size: var(--fs-small);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    color: var(--accent);
+  }
+
+  .web__title {
+    font-size: var(--fs-project-title);
+    font-weight: var(--fw-semibold);
+    line-height: 1.2;
+    letter-spacing: -0.015em;
+  }
+
+  .web__intro {
+    font-size: var(--fs-body);
+    line-height: 1.65;
+  }
+
+  /* §7 — one column below 640px. */
+  .web__items {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0 var(--space-32);
+  }
+
+  .web__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+    border-top: var(--hairline);
+    padding-block: 18px;
+  }
+
+  /* §4 — 17px/600, the same weight and size as an About item title. */
+  .web__name {
+    font-size: var(--fs-about-item);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+  }
+
+  .web__description {
+    font-size: var(--fs-body-small);
+    line-height: 1.5;
+  }
+
+  .web__attribution {
+    margin-top: var(--space-4);
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--paper-400);
+  }
+
+  /* §9 content link, 44px minimum target. */
+  .web__link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-6);
+    min-height: var(--target-min);
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .web__link:hover {
+    color: var(--paper-200);
+  }
+
+  /* §7 tablet and up — the intro moves beside the heading, items go three-up. */
+  @media (min-width: 640px) {
+    .web__head {
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: var(--space-12) clamp(28px, 4vw, 56px);
+    }
+
+    .web__heading {
+      flex: 1 1 280px;
+    }
+
+    .web__intro {
+      flex: 1.2 1 320px;
+    }
+
+    .web__items {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>
