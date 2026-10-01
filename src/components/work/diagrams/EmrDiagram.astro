@@ -1,0 +1,151 @@
+---
+/*
+ * EMR project diagram — the stand-in for confidential screens.
+ * Reference: handoff/previews (visual reference only) + assets.md ("Project
+ * diagram (EMR)" — HTML/CSS, about 560 × 220, fluid, decorative).
+ *
+ * It is a drawing, not an image and not a screenshot: a records list beside a
+ * consultation form, reduced to the frame, two panels, and bars standing in for
+ * rows and fields. The whole thing is aria-hidden; the <figcaption> rendered by
+ * ProjectEntry carries the meaning. Rebuilt from the documented tokens — no
+ * prototype markup, CSS or script is reproduced here.
+ *
+ * Only `--ink-500` and `--ink-700` draw structure (§1: decorative strokes only,
+ * never text), with two single accent marks for "selected" (§Colour usage).
+ */
+---
+
+<div class="emr" aria-hidden="true">
+  <div class="emr__panel">
+    <span class="emr__title"></span>
+    <span class="emr__search"></span>
+    <span class="emr__row emr__row--current"><span class="emr__dot"></span><span class="emr__bar"></span></span>
+    <span class="emr__row"><span class="emr__dot"></span><span class="emr__bar"></span></span>
+    <span class="emr__row"><span class="emr__dot"></span><span class="emr__bar emr__bar--short"></span></span>
+  </div>
+
+  <div class="emr__panel emr__panel--active">
+    <span class="emr__title emr__title--narrow"></span>
+    <span class="emr__textarea"></span>
+    <span class="emr__row"><span class="emr__check emr__check--on"></span><span class="emr__bar"></span></span>
+    <span class="emr__row"><span class="emr__check"></span><span class="emr__bar emr__bar--medium"></span></span>
+    <span class="emr__action"></span>
+  </div>
+</div>
+
+<style>
+  /*
+   * §8 — 10px diagram frame, 6px diagram panels, 4px diagram chips.
+   * The frame keeps a 220px floor and otherwise grows with its column, so the
+   * drawing stays in proportion from 640px up without a fixed width.
+   */
+  .emr {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(8px, 1.4vw, 12px);
+    min-height: 220px;
+    padding: clamp(14px, 2.2vw, 22px);
+    border: var(--hairline);
+    border-radius: var(--radius-frame);
+  }
+
+  .emr__panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+    padding: clamp(10px, 1.4vw, 12px);
+    border: 1px solid var(--ink-700);
+    border-radius: var(--radius-panel);
+  }
+
+  /* The consultation form is the panel in focus, so it carries the lighter edge. */
+  .emr__panel--active {
+    border-color: var(--ink-500);
+  }
+
+  /* Bars stand in for text: a heading, then list rows and form fields. */
+  .emr__title {
+    width: 50%;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--ink-500);
+  }
+
+  .emr__title--narrow {
+    width: 40%;
+  }
+
+  .emr__search {
+    height: 22px;
+    border: 1px solid var(--ink-500);
+    border-radius: var(--radius-chip);
+  }
+
+  .emr__textarea {
+    height: 44px;
+    border: 1px solid var(--ink-700);
+    border-radius: var(--radius-chip);
+  }
+
+  .emr__row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-8);
+  }
+
+  .emr__bar {
+    flex: 1;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--ink-700);
+  }
+
+  .emr__bar--short {
+    flex: 0 0 60%;
+  }
+
+  .emr__bar--medium {
+    flex: 0 0 70%;
+  }
+
+  /* §Colour usage — accent marks the one selected record and the one checked
+     field. Two short marks, never a fill. */
+  .emr__row--current .emr__bar {
+    background: var(--ink-500);
+  }
+
+  .emr__dot,
+  .emr__check {
+    flex: 0 0 auto;
+    width: 10px;
+    height: 10px;
+    border: 1px solid var(--ink-500);
+  }
+
+  .emr__dot {
+    border-radius: 50%;
+  }
+
+  .emr__row--current .emr__dot {
+    border-color: var(--accent);
+    background: var(--accent);
+  }
+
+  .emr__check {
+    border-radius: 2px;
+  }
+
+  .emr__check--on {
+    border-color: var(--accent);
+  }
+
+  /* The form's single action, pushed to the bottom corner the way a save sits. */
+  .emr__action {
+    margin-top: auto;
+    align-self: flex-end;
+    width: 48px;
+    height: 18px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-chip);
+  }
+</style>

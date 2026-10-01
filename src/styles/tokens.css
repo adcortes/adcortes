@@ -54,6 +54,8 @@
   --contact-pad-bottom: clamp(72px, 9vw, 128px);
   --header-height: clamp(64px, 11vw, 88px);
   --column-gap: clamp(32px, 5vw, 80px);
+  /* Space above and below each Selected work row, either side of its divider. */
+  --work-row-gap: clamp(40px, 5vw, 64px);
   --nav-gap: clamp(20px, 3vw, 40px);
 
   /* --- §4 fixed type sizes --- */

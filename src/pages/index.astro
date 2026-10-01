@@ -2,9 +2,8 @@
 /*
  * The one route.
  *
- * MILESTONE 2 — Hero. The page order, landmarks and section labelling are
- * final; the remaining section bodies are filled in by later milestones:
- *   M3  Selected work (the three groups and their diagrams)
+ * MILESTONE 3 — Selected work. The page order, landmarks and section labelling
+ * are final; the remaining section bodies are filled in by later milestones:
  *   M4  Collaborations band, About, Contact
  *
  * Page order is fixed at every size (visual-direction.md §Page order):
@@ -13,6 +12,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionShell from '../components/SectionShell.astro';
 import HeroBackground from '../components/HeroBackground.astro';
+import ProjectEntry from '../components/work/ProjectEntry.astro';
+import WebWorkGroup from '../components/work/WebWorkGroup.astro';
+import { projects, webWork, workSection } from '../data/work';
 ---
 
 <BaseLayout>
@@ -41,8 +43,17 @@ import HeroBackground from '../components/HeroBackground.astro';
   </section>
 
   <SectionShell id="work" labelledBy="work-h" topRule>
-    <h2 slot="label" id="work-h" class="section-heading">Selected work</h2>
-    {/* M3: intro, two ProjectEntry blocks, WebWorkGroup. */}
+    <h2 slot="label" id="work-h" class="section-heading">{workSection.heading}</h2>
+    <p slot="label" class="work__intro">
+      {workSection.intro}
+      {/* §7 — the diagram sentence only applies where the diagrams render. */}
+      <span class="work__intro-extra"> {workSection.introFromTablet}</span>
+    </p>
+
+    <ol class="work__list">
+      {projects.map((entry) => <ProjectEntry entry={entry} />)}
+      <WebWorkGroup group={webWork} />
+    </ol>
   </SectionShell>
 
   {/* M4: the full-bleed Selected collaborations band sits here. */}
@@ -82,7 +93,7 @@ import HeroBackground from '../components/HeroBackground.astro';
     font-size: var(--fs-small);
     line-height: 1.4;
     color: var(--paper-400);
-    margin-bottom: var(--space-16);
+    margin-bottom: var(--space-12);
   }
 
   /* §4 — Display, used once per page. Measure 17ch. */
@@ -96,7 +107,7 @@ import HeroBackground from '../components/HeroBackground.astro';
 
   /* §4 — Hero sub-line: the one accent string in the hero, kept short. */
   .hero__subline {
-    margin-top: var(--space-28);
+    margin-top: var(--space-20);
     font-size: var(--fs-sub);
     font-weight: var(--fw-medium);
     line-height: 1.4;
@@ -140,15 +151,15 @@ import HeroBackground from '../components/HeroBackground.astro';
 
   /*
    * §7 desktop — from 1024px the intro and its jump link move beside the
-   * headline, matching the section grid's breakpoint. Top-aligned: the
-   * headline column is the taller one, which keeps the intro's baseline above
-   * the highest ridge (visual-direction.md §Mountain background rules).
-   * Below 1024px everything stays in one column, as the tablet board shows.
+   * headline, matching the section grid's breakpoint. The two columns are
+   * bottom-aligned, so the jump link sits on the sub-line's row exactly as the
+   * approved desktop board shows. Below 1024px everything stays in one column,
+   * as the tablet and mobile boards show.
    */
   @media (min-width: 1024px) {
     .hero__content {
       flex-direction: row;
-      align-items: flex-start;
+      align-items: flex-end;
       gap: var(--column-gap);
     }
 
@@ -167,6 +178,33 @@ import HeroBackground from '../components/HeroBackground.astro';
     font-weight: var(--fw-semibold);
     line-height: 1.3;
     letter-spacing: -0.015em;
+  }
+
+  /*
+   * §4 — body small, muted: the one line under the Work heading. On mobile only
+   * its first sentence shows, because the diagrams it refers to are hidden (§7).
+   */
+  .work__intro {
+    margin-top: var(--space-10);
+    font-size: var(--fs-body-small);
+    line-height: 1.5;
+    color: var(--paper-400);
+  }
+
+  .work__intro-extra {
+    display: none;
+  }
+
+  @media (min-width: 640px) {
+    .work__intro-extra {
+      display: inline;
+    }
+  }
+
+  /* The three Selected work rows. Dividers and spacing belong to each row. */
+  .work__list {
+    display: flex;
+    flex-direction: column;
   }
 
   /* Contact's label column is plain text; its h2 is the fluid closing statement. */
