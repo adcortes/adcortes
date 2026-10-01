@@ -16,20 +16,39 @@ interface Props {
 }
 
 const { entry } = Astro.props;
+const { visual, action } = entry;
 
 /* The data names a diagram; the mapping keeps that name a closed set. */
 const diagrams = {
   emr: EmrDiagram,
   'design-system': DesignSystemDiagram,
 };
-const Diagram = diagrams[entry.diagram.component];
+const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
 ---
 
 <li class="project">
   <figure class="project__figure">
-    <Diagram />
-    {/* Real accessible text: the diagram above it is aria-hidden. */}
-    <figcaption class="project__caption">{entry.diagram.caption}</figcaption>
+    {
+      /*
+       * Two variants, one slot. A diagram is drawn in CSS and is decorative,
+       * so its accessible text is the caption alone; an image is real content
+       * and carries its own meaningful alt.
+       */
+      visual.kind === 'image' ? (
+        <img
+          class="project__image"
+          src={visual.src}
+          alt={visual.alt}
+          width={visual.width}
+          height={visual.height}
+          loading="lazy"
+          decoding="async"
+        />
+      ) : (
+        Diagram && <Diagram />
+      )
+    }
+    <figcaption class="project__caption">{visual.caption}</figcaption>
   </figure>
 
   <div class="project__body">
@@ -51,20 +70,33 @@ const Diagram = diagrams[entry.diagram.component];
       </div>
     </dl>
 
-    <div class="project__footer">
+    {/*
+      Two deliberate footer layouts, chosen by the data rather than by flex
+      wrapping: tags alone take the full width; tags with an action split into
+      two columns, the action on the right.
+    */}
+    <div class:list={['project__footer', { 'project__footer--with-action': action }]}>
       {/* §9 tags: plain text, no borders, fills or pills. */}
       <ul class="project__tags" aria-label="Tags">
         {entry.tags.map((tag) => <li>{tag}</li>)}
       </ul>
 
       {
-        /* A link is rendered only when it has a real destination — there is no
-           placeholder form, and never href="#". */
-        entry.link && (
-          <a class="project__link" href={entry.link.href}>
-            {entry.link.label} <span aria-hidden="true">↗</span>
-          </a>
-        )
+        /*
+         * The one action, rendered only when it is real: a link with a working
+         * href, or a button with a working behaviour. There is no placeholder
+         * form — no href="#", no invented route and no inert button.
+         */
+        action &&
+          (action.kind === 'link' ? (
+            <a class="project__action" href={action.href}>
+              {action.label} <span aria-hidden="true">↗</span>
+            </a>
+          ) : (
+            <button class="project__action" type="button" data-behaviour={action.behaviour}>
+              {action.label} <span aria-hidden="true">→</span>
+            </button>
+          ))
       }
     </div>
   </div>
@@ -124,6 +156,14 @@ const Diagram = diagrams[entry.diagram.component];
     display: none;
   }
 
+  /* An image visual fills the figure column and keeps the diagram's frame
+     radius (§8), so either variant sits the same way in the row. */
+  .project__image {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-frame);
+  }
+
   .project__caption {
     font-size: var(--fs-small);
     line-height: 1.4;
@@ -151,12 +191,26 @@ const Diagram = diagrams[entry.diagram.component];
     line-height: 1.55;
   }
 
+  /*
+   * Tags-only: one column, so the tags have the whole footer width to run in.
+   * The modifier below is the only thing that introduces a second column.
+   */
   .project__footer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
     align-items: center;
     gap: var(--space-12) var(--space-24);
+  }
+
+  /*
+   * Tags and action: the action keeps its own column on the right and takes only
+   * the width it needs. Stacked below 640px, where the single column is narrow
+   * and the 44px target would otherwise crowd the tags.
+   */
+  @media (min-width: 640px) {
+    .project__footer--with-action {
+      grid-template-columns: minmax(0, 1fr) auto;
+    }
   }
 
   .project__tags {
@@ -168,21 +222,36 @@ const Diagram = diagrams[entry.diagram.component];
     color: var(--paper-400);
   }
 
-  /* §9 content link: 15px/600 accent, no underline, aria-hidden trailing glyph,
-     44px minimum target. */
-  .project__link {
+  /*
+   * §9 content link: 15px/600 accent, no underline, aria-hidden trailing glyph,
+   * 44px minimum target. One rule covers both action elements, so a link and a
+   * button are the same control to look at; the button resets the UA's own
+   * background, border and font. Focus comes from the global :focus-visible in
+   * base.css (§10) and is never overridden here.
+   */
+  .project__action {
+    justify-self: start;
     display: inline-flex;
     align-items: center;
     gap: var(--space-6);
     min-height: var(--target-min);
+    padding: 0;
+    background: none;
+    border: 0;
+    font-family: inherit;
     font-size: var(--fs-body-small);
     font-weight: var(--fw-semibold);
     line-height: 1.4;
     color: var(--accent);
+    text-align: left;
     text-decoration: none;
   }
 
-  .project__link:hover {
+  button.project__action {
+    cursor: pointer;
+  }
+
+  .project__action:hover {
     color: var(--paper-200);
   }
 

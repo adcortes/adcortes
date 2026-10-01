@@ -18,14 +18,75 @@ export interface Link {
 /** Which diagram component stands in for a project's confidential screens. */
 export type DiagramId = 'emr' | 'design-system';
 
-export interface Diagram {
-  /** Decorative markup, aria-hidden; the meaning lives in the caption. */
-  component: DiagramId;
+/**
+ * A project's visual. Both variants share the same <figure> slot, the same
+ * responsive rules (shown from 640px up, design-system.md §7) and the same
+ * caption treatment; only what sits above the caption differs.
+ */
+interface ProjectVisualBase {
   /** Visible <figcaption>. Shown from 640px up. */
   caption: string;
 }
 
-/** Selected work, groups 1 and 2 — a single project with metadata and a diagram. */
+/**
+ * A local Astro component, drawn in HTML and CSS. The drawing is decorative
+ * (`aria-hidden`); the caption carries its meaning.
+ */
+export interface DiagramVisual extends ProjectVisualBase {
+  kind: 'diagram';
+  /** A key from the closed set the renderer knows how to draw. */
+  component: DiagramId;
+}
+
+/**
+ * A local image asset. Unlike the diagrams it is meaningful content, so `alt`
+ * is required and describes the image — it is never empty and never repeats the
+ * caption.
+ */
+export interface ImageVisual extends ProjectVisualBase {
+  kind: 'image';
+  /** Path to a local asset under `public/`, e.g. "/work/<name>.png". */
+  src: string;
+  alt: string;
+  /** Intrinsic size, when known — it reserves the right space while loading. */
+  width?: number;
+  height?: number;
+}
+
+export type ProjectVisual = DiagramVisual | ImageVisual;
+
+/**
+ * Behaviours a project action button may perform.
+ *
+ * The page ships no client-side JavaScript, so no button behaviour exists yet
+ * and this union is deliberately empty. That makes `ButtonAction` impossible to
+ * construct, which is the point: a button can only appear once a real behaviour
+ * is added here, never as an inert or disabled control. Replace `never` with the
+ * behaviour keys when there is one.
+ */
+/** An action with a real destination. */
+export interface LinkAction extends Link {
+  kind: 'link';
+}
+
+/** An action with a real behaviour. */
+export interface ButtonAction {
+  kind: 'button';
+  label: string;
+  behaviour: never;
+}
+
+/**
+ * The single optional action in a project's footer.
+ *
+ * There is no placeholder form: an action is either a link with a working
+ * `href` or a button with a real behaviour, or it is absent and the footer
+ * renders tags alone. The build must never emit `href="#"`, an invented URL or
+ * a disabled button.
+ */
+export type ProjectAction = LinkAction | ButtonAction;
+
+/** Selected work, groups 1 and 2 — a single project with metadata and a visual. */
 export interface ProjectEntry {
   id: string;
   /** Accent label above the title. */
@@ -36,8 +97,8 @@ export interface ProjectEntry {
   role: string;
   outcome: string;
   tags: string[];
-  link?: Link;
-  diagram: Diagram;
+  action?: ProjectAction;
+  visual: ProjectVisual;
 }
 
 export interface WebWorkItem {
