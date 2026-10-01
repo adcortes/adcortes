@@ -16,12 +16,18 @@ interface Props {
   labelledBy: string;
   /** Sections after the hero carry a 1px top rule; About does not. */
   topRule?: boolean;
+  /** The last section on the page takes the deeper §5 bottom padding. */
+  closing?: boolean;
 }
 
-const { id, labelledBy, topRule = false } = Astro.props;
+const { id, labelledBy, topRule = false, closing = false } = Astro.props;
 ---
 
-<section id={id} aria-labelledby={labelledBy} class:list={['section', { 'section--ruled': topRule }]}>
+<section
+  id={id}
+  aria-labelledby={labelledBy}
+  class:list={['section', { 'section--ruled': topRule, 'section--closing': closing }]}
+>
   <div class="section__label">
     <slot name="label" />
   </div>
@@ -40,6 +46,11 @@ const { id, labelledBy, topRule = false } = Astro.props;
 
   .section--ruled {
     border-top: var(--hairline);
+  }
+
+  /* §5 — Contact bottom, the one section-padding value that is not --section-y. */
+  .section--closing {
+    padding-bottom: var(--contact-pad-bottom);
   }
 
   /* §6 — label column 1 1 200px capped at 280px, content column 3.4 1 620px. */

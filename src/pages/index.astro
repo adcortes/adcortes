@@ -2,10 +2,8 @@
 /*
  * The one route.
  *
- * MILESTONE 4A — Selected collaborations and About. The page order, landmarks
- * and section labelling are final; the remaining section body is filled in by a
- * later milestone:
- *   M4B  Contact
+ * MILESTONE 4B — Contact. Every approved section now has its body; the page
+ * order, landmarks and section labelling are final.
  *
  * Page order is fixed at every size (visual-direction.md §Page order):
  * Header, Hero, Selected work, Collaborations band, About, Contact, Footer.
@@ -20,6 +18,8 @@ import AboutList from '../components/AboutList.astro';
 import { projects, webWork, workSection } from '../data/work';
 import { collaborations, collaborationsSection } from '../data/collaborations';
 import { about, aboutItems } from '../data/about';
+import { contact } from '../data/site';
+import { mailtoHref } from '../lib/email';
 ---
 
 <BaseLayout>
@@ -70,10 +70,21 @@ import { about, aboutItems } from '../data/about';
     <AboutList items={aboutItems} />
   </SectionShell>
 
-  <SectionShell id="contact" labelledBy="contact-h" topRule>
-    <p slot="label" class="section-label">Contact</p>
-    <h2 id="contact-h" class="contact-heading">Let's talk about what you're building.</h2>
-    {/* M4: body copy and the single CTA. */}
+  <SectionShell id="contact" labelledBy="contact-h" topRule closing>
+    <p slot="label" class="section-label">{contact.label}</p>
+
+    <h2 id="contact-h" class="contact-heading">{contact.heading}</h2>
+    <p class="contact__body">{contact.body}</p>
+    {/*
+      §9 — the one button on the page. It is a link, not a <button>: it
+      navigates, and the address is assembled in src/lib/email.ts so it is
+      never printed on screen or in the HTML source (visual-direction.md §6).
+    */}
+    <p class="contact__action">
+      <a class="cta" href={mailtoHref()}>
+        {contact.ctaLabel} <span aria-hidden="true">→</span>
+      </a>
+    </p>
   </SectionShell>
 </BaseLayout>
 
@@ -237,5 +248,40 @@ import { about, aboutItems } from '../data/about';
     font-weight: var(--fw-semibold);
     line-height: 1.15;
     letter-spacing: -0.02em;
+  }
+
+  /* §4 — body, measure 52ch. */
+  .contact__body {
+    max-width: 52ch;
+    margin-top: var(--space-20);
+  }
+
+  .contact__action {
+    margin-top: var(--space-32);
+  }
+
+  /*
+   * §9 primary button — the only button on the page. 48px tall, 22px side
+   * padding, accent border and text, filling with accent on hover. Its focus
+   * ring is the paper-200 variant already set globally in base.css §10.
+   */
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--cta-height);
+    padding-inline: 22px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-cta);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .cta:hover {
+    background: var(--accent);
+    color: var(--ink-900);
   }
 </style>
