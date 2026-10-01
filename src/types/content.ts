@@ -130,3 +130,25 @@ export interface NavItem {
   label: string;
   href: string;
 }
+
+/**
+ * One name in the Selected collaborations band.
+ *
+ * `name` is the approved `[bracketed]` string from content.md. It is both the
+ * visible placeholder text today and the logo's accessible label once a real
+ * asset exists, so the two can never drift apart.
+ *
+ * `logo` is absent until a local file is in place. Adding it swaps the text
+ * placeholder for the image inside the same fixed-height slot, so neither the
+ * band layout nor this interface changes.
+ */
+export interface Collaboration {
+  name: string;
+  logo?: {
+    /** Local asset under `public/`, e.g. "/images/logos/<name>.svg". */
+    src: string;
+    /** Intrinsic size, so the slot reserves the right width while loading. */
+    width: number;
+    height: number;
+  };
+}

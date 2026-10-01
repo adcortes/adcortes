@@ -2,9 +2,10 @@
 /*
  * The one route.
  *
- * MILESTONE 3 — Selected work. The page order, landmarks and section labelling
- * are final; the remaining section bodies are filled in by later milestones:
- *   M4  Collaborations band, About, Contact
+ * MILESTONE 4A — Selected collaborations and About. The page order, landmarks
+ * and section labelling are final; the remaining section body is filled in by a
+ * later milestone:
+ *   M4B  Contact
  *
  * Page order is fixed at every size (visual-direction.md §Page order):
  * Header, Hero, Selected work, Collaborations band, About, Contact, Footer.
@@ -14,7 +15,11 @@ import SectionShell from '../components/SectionShell.astro';
 import HeroBackground from '../components/HeroBackground.astro';
 import ProjectEntry from '../components/work/ProjectEntry.astro';
 import WebWorkGroup from '../components/work/WebWorkGroup.astro';
+import Collaborations from '../components/Collaborations.astro';
+import AboutList from '../components/AboutList.astro';
 import { projects, webWork, workSection } from '../data/work';
+import { collaborations, collaborationsSection } from '../data/collaborations';
+import { about, aboutItems } from '../data/about';
 ---
 
 <BaseLayout>
@@ -56,11 +61,13 @@ import { projects, webWork, workSection } from '../data/work';
     </ol>
   </SectionShell>
 
-  {/* M4: the full-bleed Selected collaborations band sits here. */}
+  <Collaborations heading={collaborationsSection.heading} items={collaborations} />
 
   <SectionShell id="about" labelledBy="about-h">
-    <h2 slot="label" id="about-h" class="section-heading">About</h2>
-    {/* M4: About lead and the four numbered items. */}
+    <h2 slot="label" id="about-h" class="section-heading">{about.heading}</h2>
+
+    <p class="about__lead">{about.lead}</p>
+    <AboutList items={aboutItems} />
   </SectionShell>
 
   <SectionShell id="contact" labelledBy="contact-h" topRule>
@@ -205,6 +212,14 @@ import { projects, webWork, workSection } from '../data/work';
   .work__list {
     display: flex;
     flex-direction: column;
+  }
+
+  /* §4 — About lead: the one reflective paragraph. Measure 44ch. */
+  .about__lead {
+    max-width: 44ch;
+    font-size: var(--fs-lead);
+    line-height: 1.55;
+    margin-bottom: clamp(40px, 5vw, 64px);
   }
 
   /* Contact's label column is plain text; its h2 is the fluid closing statement. */
