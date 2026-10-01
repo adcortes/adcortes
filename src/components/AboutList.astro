@@ -1,0 +1,92 @@
+---
+/*
+ * The four numbered About items.
+ * content.md §About; design-system.md §4 (About item title), §7 (2 × 2 from
+ * the tablet board, 1 column below 640px).
+ *
+ * An <ol> carries the numbering semantically, so the visible numerals are
+ * decorative and hidden from assistive tech rather than read twice.
+ */
+import type { AboutItem } from '../types/content';
+
+interface Props {
+  items: AboutItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<ol class="about__items">
+  {
+    items.map((item) => (
+      <li class="about__item">
+        <h3 class="about__item-title">
+          <span class="about__number" aria-hidden="true">
+            {item.number}
+          </span>
+          {item.title}
+        </h3>
+        {item.body && <p class="about__body">{item.body}</p>}
+        {item.bullets && (
+          <ul class="about__bullets">
+            {item.bullets.map((bullet) => (
+              <li>{bullet}</li>
+            ))}
+          </ul>
+        )}
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  /*
+   * `min(100%, 280px)` keeps the track from overflowing a 320px viewport: below
+   * 640px the content column is narrower than the track minimum, so auto-fit
+   * settles on a single column, and 2 × 2 from the tablet board upwards.
+   */
+  .about__items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    column-gap: clamp(28px, 4vw, 56px);
+  }
+
+  /* §9 — a hairline is the only structural line; the items are not cards. */
+  .about__item {
+    border-top: var(--hairline);
+    padding-block: var(--space-20) var(--space-32);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-10);
+  }
+
+  .about__item-title {
+    display: flex;
+    gap: var(--space-12);
+    font-size: var(--fs-about-item);
+    line-height: 1.4;
+  }
+
+  /* §1 — the About numerals are one of the accent's approved short strings. */
+  .about__number {
+    font-weight: var(--fw-medium);
+    color: var(--accent);
+  }
+
+  .about__body,
+  .about__bullets {
+    font-size: var(--fs-body-small);
+    line-height: 1.55;
+  }
+
+  /* The one list on the page that keeps its markers: they separate three
+     strengths that would otherwise read as one run-on line. */
+  .about__bullets {
+    /* base.css strips markers from every classed list; this one opts back in. */
+    list-style: disc;
+    padding-inline-start: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-6);
+  }
+</style>

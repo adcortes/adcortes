@@ -29,7 +29,7 @@
   --fs-sub: clamp(18px, 1.5vw, 21px);
   --fs-contact: clamp(28px, 3vw, 40px);
   --fs-lead: clamp(19px, 1.7vw, 23px);
-  --moon: clamp(20px, 2.1vw, 30px);
+  --moon: clamp(32px, 4.1vw, 30px);
 
   /* --- §5 spacing scale --- */
   --space-4: 4px;
