@@ -6,17 +6,15 @@
  * order, landmarks and section labelling are final.
  *
  * Page order is fixed at every size (visual-direction.md §Page order):
- * Header, Hero, Selected work, Collaborations band, About, Contact, Footer.
+ * Header, Hero, Selected work, About, Contact, Footer.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionShell from '../components/SectionShell.astro';
 import HeroBackground from '../components/HeroBackground.astro';
 import ProjectEntry from '../components/work/ProjectEntry.astro';
 import WebWorkGroup from '../components/work/WebWorkGroup.astro';
-import Collaborations from '../components/Collaborations.astro';
 import AboutList from '../components/AboutList.astro';
 import { projects, webWork, workSection } from '../data/work';
-import { collaborations, collaborationsSection } from '../data/collaborations';
 import { about, aboutItems } from '../data/about';
 import { contact } from '../data/site';
 import { mailtoHref } from '../lib/email';
@@ -30,13 +28,13 @@ import { mailtoHref } from '../lib/email';
     <div class="hero__content">
       <div class="hero__lead">
         <p class="hero__eyebrow">UX Engineer — design systems &amp; accessible frontend</p>
-        <h1 id="hero-h" class="hero__title">Clear paths from idea to interface.</h1>
+        <h1 id="hero-h" class="hero__title">From idea to interface.</h1>
         <p class="hero__subline">Clear interfaces, built in code.</p>
       </div>
 
       <div class="hero__aside">
         <p class="hero__intro">
-          UX Engineer working across product thinking, design systems and accessible frontend.
+          I work between product, design and frontend. I help teams turn decisions into accessible interfaces, with attention to the details that make them work.
         </p>
         <p class="hero__jump">
           <a class="hero__link" href="#work">
@@ -51,8 +49,6 @@ import { mailtoHref } from '../lib/email';
     <h2 slot="label" id="work-h" class="section-heading">{workSection.heading}</h2>
     <p slot="label" class="work__intro">
       {workSection.intro}
-      {/* §7 — the diagram sentence only applies where the diagrams render. */}
-      <span class="work__intro-extra"> {workSection.introFromTablet}</span>
     </p>
 
     <ol class="work__list">
@@ -60,8 +56,6 @@ import { mailtoHref } from '../lib/email';
       <WebWorkGroup group={webWork} />
     </ol>
   </SectionShell>
-
-  <Collaborations heading={collaborationsSection.heading} items={collaborations} />
 
   <SectionShell id="about" labelledBy="about-h">
     <h2 slot="label" id="about-h" class="section-heading">{about.heading}</h2>
@@ -135,7 +129,7 @@ import { mailtoHref } from '../lib/email';
 
   /* §4 — Body large, measure 460px. */
   .hero__intro {
-    max-width: 460px;
+    max-width: 480px;
     font-size: var(--fs-body-large);
     line-height: 1.65;
   }
@@ -186,7 +180,7 @@ import { mailtoHref } from '../lib/email';
     }
 
     .hero__aside {
-      flex: 0 1 460px;
+      flex: 0 1 480px;
     }
   }
 
@@ -207,16 +201,6 @@ import { mailtoHref } from '../lib/email';
     font-size: var(--fs-body-small);
     line-height: 1.5;
     color: var(--paper-400);
-  }
-
-  .work__intro-extra {
-    display: none;
-  }
-
-  @media (min-width: 640px) {
-    .work__intro-extra {
-      display: inline;
-    }
   }
 
   /* The three Selected work rows. Dividers and spacing belong to each row. */

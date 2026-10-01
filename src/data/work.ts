@@ -12,13 +12,7 @@ import type { ProjectEntry, WebWorkGroup } from "../types/content";
 export const workSection = {
   heading: "Selected work",
   /** Shown at every size. */
-  intro: "Three projects.",
-  /*
-   * The second sentence only makes sense where the diagrams are rendered, so it
-   * is hidden below 640px together with them (design-system.md §7). It is one
-   * sentence of a single approved string, so it stays in the same <p>.
-   */
-  introFromTablet: "Diagrams stand in for confidential screens.",
+  intro: "Product, design systems and frontend.",
 } as const;
 
 /*
@@ -36,13 +30,13 @@ export const projects: ProjectEntry[] = [
   {
     id: "emr",
     category: "Product",
-    title: "A lightweight medical record for a neurology practice",
+    title: "A lightweight EMR for small clinics",
     summary:
-      "A small neurology practice in Brazil needed [one line on what wasn't working in its records workflow]. I'm building its EMR together with the doctor who uses it every day.",
-    role: "End to end, from discovery and scope to frontend, backend and accessibility.",
+      "A role-based web application for managing patients, appointments and clinical workflows in a small practice — designed around clear scheduling rules, reliable data and accessible UI.",
+    role: "Product definition, UX engineering and full-stack development.",
     outcome:
-      "A records tool shaped around one doctor's daily workflow, built with AI as a learning partner.",
-    tags: ["Healthcare", "Accessibility", "Full stack"],
+      "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
     visual: {
       kind: "diagram",
       component: "emr",

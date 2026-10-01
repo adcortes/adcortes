@@ -83,7 +83,6 @@
   --radius-frame: 10px;
 
   /* --- §6 layout --- */
-  --band-inner: 1128px;
   --hairline: 1px solid var(--ink-700);
 
   /* --- §3 minimum target size --- */
