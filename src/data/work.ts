@@ -101,31 +101,51 @@ export const webWork: WebWorkGroup = {
       name: "Natura Selection",
       description:
         "An ecommerce website designed to make a broad product catalogue clear, approachable and easy to browse.",
-      attribution: "[Agency].",
+      role: "Web design · Frontend development",
+      tags: ["Ecommerce", "UI design", "Frontend"],
+      link: {
+        label: "Visit site",
+        href: "https://naturaselection.com/",
+        target: "_blank",
+      },
     },
     {
       name: "Boekie Boekie",
       description:
         "A playful, non-linear digital experience for a Dutch children’s art and literature magazine, using animation and interaction to encourage exploration.",
-      attribution: "Freelance.",
+      role: "Creative design · Frontend development",
+      tags: ["Creative coding", "Animation", "Interactive storytelling"],
+      link: {
+        label: "Visit site",
+        href: "https://boekie-boekie.nl/Wonderkamers/BoekieBoekie-bouwt.html",
+        target: "_blank",
+      },
     },
     {
-      name: "Lilla Diagonal",
+      name: "L'illa Diagonal",
       description:
         "A digital presence for L’illa Diagonal, a shopping centre in Barcelona, combining web design and frontend development.",
-      attribution: "Freelance.",
+      role: "Web design · Frontend development",
+      tags: ["WordPress", "PHP", "Responsive web"],
+      link: {
+        label: "Visit site",
+        href: "https://lilla.com/",
+        target: "_blank",
+      },
     },
     {
       name: "Editorial Salvat — Collection websites",
       description:
         "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
-      attribution: "Freelance.",
+      role: "Visual design · Frontend development",
+      tags: ["Design system", "Frontend"],
     },
     {
       name: "Bruguer — Colores del Mundo",
       description:
-        "An interactive product experience for Bruguer’s Colores del Mundo paint range, bringing colour inspiration, product details and technical documentation together.",
-      attribution: "Freelance.",
+        "An interactive product experience for Bruguer’s Vibrations paint range, bringing colour inspiration, product details and technical documentation together.",
+      role: "Visual design · Frontend development",
+      tags: ["Interactive design", "CSS animation", "Product content"],
     },
   ],
 };

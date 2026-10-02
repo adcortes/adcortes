@@ -34,7 +34,23 @@ export const contact = {
 export const footer = {
   accessibilityStatement: "Built to meet WCAG 2.2 AA. Found a barrier?",
   accessibilityLinkLabel: "Let me know",
+  /* The attribution line's lead-in; the links after it are built in markup. */
+  attribution: "Designed & built by",
 } as const;
+
+/*
+ * This site's own source. `forks` is a static field on purpose: the page ships
+ * no client-side JavaScript, so there is no runtime call to the GitHub API, and
+ * a build-time one would make the number stale the moment it was fetched
+ * anyway. Update it by hand when it is worth saying.
+ *
+ * It is optional, and the footer renders the fork count only when it is set to
+ * a positive number — so leaving it out, or letting it fall back to 0, simply
+ * drops that part of the line and the rest stays correct.
+ */
+export const repo: { url: string; forks?: number } = {
+  url: "https://github.com/adcortes/portfolio",
+};
 
 /*
  * The two social destinations. SiteFooter renders each icon link only when its

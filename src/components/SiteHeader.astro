@@ -4,12 +4,16 @@
  * design-system.md §4 (wordmark), §9 (nav link); content.md §Header.
  *
  * Three inline text links at every size: no pills, no hamburger.
+ *
+ * Fluid rather than capped at the container: the wordmark and nav sit --gutter
+ * from the viewport edges at every size, framing the page rather than lining up
+ * with the central reading column.
  */
 import { nav } from '../data/site';
 ---
 
 <header class="site-header">
-  <div class="container site-header__inner">
+  <div class="site-header__inner">
     <a class="site-header__logo" href="/" aria-label="adcortes, home">
       <span class="wordmark">
         adcortes<span aria-hidden="true">.</span>
@@ -37,8 +41,10 @@ import { nav } from '../data/site';
     border-bottom: var(--hairline);
   }
 
+  /* §6 gutters, but no container cap — the header runs to the viewport edges. */
   .site-header__inner {
     display: flex;
+    padding-inline: var(--gutter);
     justify-content: space-between;
     align-items: center;
     gap: var(--space-16);

@@ -6,7 +6,7 @@
  * order, landmarks and section labelling are final.
  *
  * Page order is fixed at every size (visual-direction.md §Page order):
- * Header, Hero, Selected work, About, Contact, Footer.
+ * Header, Hero, Selected work, Earlier web projects band, About, Contact, Footer.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionShell from '../components/SectionShell.astro';
@@ -53,9 +53,15 @@ import { mailtoHref } from '../lib/email';
 
     <ol class="work__list">
       {projects.map((entry) => <ProjectEntry entry={entry} />)}
-      <WebWorkGroup group={webWork} />
     </ol>
   </SectionShell>
+
+  {/*
+    The full-bleed band, a direct child of `main.container` so it can break out
+    of the cap — see WebWorkGroup.astro. It stays between Selected work and
+    About, which is where the page order puts it.
+  */}
+  <WebWorkGroup group={webWork} />
 
   <SectionShell id="about" labelledBy="about-h">
     <h2 slot="label" id="about-h" class="section-heading">{about.heading}</h2>

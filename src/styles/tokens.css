@@ -11,6 +11,7 @@
 
 :root {
   /* --- design-system.md §12, verbatim --- */
+  --light-text: #ffffff;
   --ink-900: #1d1e22;
   --ink-700: #393f4d;
   --ink-500: #555c6c;
@@ -24,7 +25,7 @@
   --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --container: 1240px;
   --gutter: clamp(20px, 4vw, 56px);
-  --section-y: clamp(56px, 7vw, 104px);
+  --section-y: clamp(56px, 5vw, 104px);
   --fs-display: clamp(34px, 4.3vw, 58px);
   --fs-sub: clamp(18px, 1.5vw, 21px);
   --fs-contact: clamp(28px, 3vw, 40px);
@@ -84,9 +85,28 @@
   --radius-frame: 10px;
 
   /* --- §6 layout --- */
+  /*
+   * A full-bleed band's inner cap: the container's own content box, so a band
+   * that bleeds puts its content back on exactly the reading column every
+   * capped section uses. It resolves to the 1128px §6 documents wherever the
+   * gutter is at its 56px maximum (≥1400px), and tracks the container below
+   * that, where a fixed 1128px would sit a few pixels off the column.
+   */
+  --band-inner: calc(var(--container) - 2 * var(--gutter));
   --hairline: 1px solid var(--ink-700);
 
+  /*
+   * --- Surfaces -------------------------------------------------------------
+   * Aliases of the §12 palette — no new colour values. A section may sit on a
+   * raised slate ground instead of the page's --ink-900. The two companions
+   * keep its rules and chips reading at the weight they have on the page
+   * ground, where a plain --hairline would drop to 1.25:1 and disappear.
+   */
+  --surface-raised: var(--ridge-2);
+  --hairline-raised: 1px solid var(--ink-500);
+  --chip-raised: var(--ink-700);
+
   /* --- §3 minimum target size --- */
-  --target-min: 44px;
+  --target-min: 34px;
   --cta-height: 48px;
 }

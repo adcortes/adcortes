@@ -13,10 +13,11 @@
 export interface Link {
   label: string;
   href: string;
+  target?: "_blank" | "_self" | "_parent" | "_top";
 }
 
 /** Which diagram component stands in for a project's confidential screens. */
-export type DiagramId = 'emr' | 'design-system';
+export type DiagramId = "emr" | "design-system";
 
 /**
  * A project's visual. Both variants share the same <figure> slot, the same
@@ -33,7 +34,7 @@ interface ProjectVisualBase {
  * (`aria-hidden`); the caption carries its meaning.
  */
 export interface DiagramVisual extends ProjectVisualBase {
-  kind: 'diagram';
+  kind: "diagram";
   /** A key from the closed set the renderer knows how to draw. */
   component: DiagramId;
 }
@@ -44,7 +45,7 @@ export interface DiagramVisual extends ProjectVisualBase {
  * caption.
  */
 export interface ImageVisual extends ProjectVisualBase {
-  kind: 'image';
+  kind: "image";
   /** Path to a local asset under `public/`, e.g. "/work/<name>.png". */
   src: string;
   alt: string;
@@ -66,12 +67,12 @@ export type ProjectVisual = DiagramVisual | ImageVisual;
  */
 /** An action with a real destination. */
 export interface LinkAction extends Link {
-  kind: 'link';
+  kind: "link";
 }
 
 /** An action with a real behaviour. */
 export interface ButtonAction {
-  kind: 'button';
+  kind: "button";
   label: string;
   behaviour: never;
 }
@@ -104,8 +105,14 @@ export interface ProjectEntry {
 export interface WebWorkItem {
   name: string;
   description: string;
-  /** "[Agency]." or "Freelance." */
-  attribution: string;
+  /**
+   * What I did on the piece, in the one-line form the Selected work projects
+   * use for their own `role`. Optional and rendered only when present, so an
+   * item without one keeps the name/description/attribution shape it has now.
+   */
+  role?: string;
+  /** Optional, and never rendered empty: an absent list and `[]` both render nothing. */
+  tags?: string[];
   link?: Link;
 }
 
