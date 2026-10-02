@@ -48,10 +48,36 @@ export const projects: ProjectEntry[] = [
     category: "Product & design systems",
     title: "Airline booking & disruption products",
     summary:
-      "Booking and disruption-management products for several airlines, where [one line on the need]. I joined as the only design and frontend person.",
-    role: "UX architecture, styles and design system evolution. Later technical lead for Avianca web at FLYR, still coding.",
-    outcome: "The area grew from one person to 26+ frontend developers and 4 designers.",
-    tags: ["Design systems", "UX architecture", "Technical leadership"],
+      "Booking and disruption-management products for airlines. I joined as designer and frontend developer, building the UX architecture, UI foundations and component system as the products and team grew.",
+    role: "UX architecture, styles and design-system evolution. Later, technical lead for distributed frontend teams and airline web delivery, while remaining hands-on in the codebase.",
+    outcome:
+      "Grew into a team of 10+ frontend developers and four designers, supporting multiple airline products.",
+    tags: [
+      "UX architecture",
+      "Design systems",
+      "Angular",
+      "Storybook",
+      "SCSS",
+      "Accessibility",
+      "Technical leadership",
+      "Figma",
+    ],
+    visual: {
+      kind: "diagram",
+      component: "design-system",
+      caption: "One token and component layer shared across several airlines.",
+    },
+  },
+  {
+    id: "airline",
+    category: "HTML Email",
+    title: "Reusable airline email templates",
+    summary:
+      "A white-label email system for disruption communications and booking flows, designed to adapt to each airline’s brand while remaining reliable across major email clients and devices.",
+    role: "Email design, responsive HTML implementation and accessibility.",
+    outcome:
+      "A reusable template foundation applied to multiple airline brands, tested across Gmail, Outlook, Apple Mail and mobile/desktop email environments.",
+    tags: ["Email design", "Responsive HTML", "Accessibility", "Design systems"],
     visual: {
       kind: "diagram",
       component: "design-system",
@@ -68,23 +94,37 @@ export const projects: ProjectEntry[] = [
  */
 export const webWork: WebWorkGroup = {
   category: "Agency & freelance",
-  title: "Selected web work",
-  intro:
-    "Information architecture, wireframes, design, frontend and HTML email for direct clients.",
+  title: "Earlier web projects",
+  intro: "A short selection of design and frontend projects from earlier in my career.",
   items: [
     {
-      name: "[Project name]",
-      description: "IA, wireframes and frontend for [client].",
+      name: "Natura Selection",
+      description:
+        "An ecommerce website designed to make a broad product catalogue clear, approachable and easy to browse.",
       attribution: "[Agency].",
     },
     {
-      name: "[Project name]",
-      description: "Design and frontend for [client].",
+      name: "Boekie Boekie",
+      description:
+        "A playful, non-linear digital experience for a Dutch children’s art and literature magazine, using animation and interaction to encourage exploration.",
       attribution: "Freelance.",
     },
     {
-      name: "[Project name]",
-      description: "HTML email system for [client].",
+      name: "Lilla Diagonal",
+      description:
+        "A digital presence for L’illa Diagonal, a shopping centre in Barcelona, combining web design and frontend development.",
+      attribution: "Freelance.",
+    },
+    {
+      name: "Editorial Salvat — Collection websites",
+      description:
+        "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
+      attribution: "Freelance.",
+    },
+    {
+      name: "Bruguer — Colores del Mundo",
+      description:
+        "An interactive product experience for Bruguer’s Colores del Mundo paint range, bringing colour inspiration, product details and technical documentation together.",
       attribution: "Freelance.",
     },
   ],
