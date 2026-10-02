@@ -102,9 +102,34 @@ export interface ProjectEntry {
   visual: ProjectVisual;
 }
 
+/**
+ * An earlier project's screenshot, shown inside its disclosure panel.
+ *
+ * Distinct from `ImageVisual`: it carries no `caption` — the panel's own
+ * description does that work — and its intrinsic size is required, because the
+ * panel reserves the 16:10 box before the lazy image arrives.
+ */
+export interface WebWorkImage {
+  /** Path to a local asset under `public/`, e.g. "/images/<name>.jpeg". */
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /**
+   * Which edge of the screenshot the 16:10 box keeps when it crops. Defaults to
+   * the top crop every project but Boekie Boekie uses.
+   */
+  crop?: 'top' | 'center';
+}
+
 export interface WebWorkItem {
   name: string;
   description: string;
+  /**
+   * The year or year range the work shipped, rendered in its own column.
+   * Optional and omitted rather than guessed.
+   */
+  year?: string;
   /**
    * What I did on the piece, in the one-line form the Selected work projects
    * use for their own `role`. Optional and rendered only when present, so an
@@ -113,6 +138,8 @@ export interface WebWorkItem {
   role?: string;
   /** Optional, and never rendered empty: an absent list and `[]` both render nothing. */
   tags?: string[];
+  /** Optional: an item without one shows the empty image surface instead. */
+  image?: WebWorkImage;
   link?: Link;
 }
 

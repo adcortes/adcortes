@@ -1,11 +1,14 @@
 ---
 /*
- * Selected work, group 3 — text-based, no diagram.
- * content.md §Selected work, "3. Agency & freelance"; design-system.md §4, §7.
+ * Selected work, group 3 — the Earlier web projects archive.
+ * Source of truth: handoff/earlier-web-projects.md (option 5b), content.md
+ * §Selected work "3. Agency & freelance", design-system.md §4, §7.
  *
- * It stays readable at every size: one column of three items on mobile, three-up
- * from 640px (§7). Each item name is strong 17px text rather than a heading, so
- * the section keeps its h2 → h3-per-project order.
+ * An archive table with inline disclosure: one row per project, each row a
+ * button that opens its own details and screenshot in place. Only one row is
+ * open at a time. It reads like a CV archive — scannable, honest about the
+ * dates — and the disclosure pattern works on touch, keyboard and screen
+ * readers without depending on hover.
  *
  * The one full-bleed band on the page (§6: "bleeds to full width; its inner
  * content is capped at 1128px"), carrying the raised slate ground that marks
@@ -17,7 +20,15 @@
  * the content back on the same grid as every capped section above it.
  *
  * Its heading keeps h3: the level the group had inside Selected work, and the
- * one the approved type scale draws. The region is named by it.
+ * one the approved type scale draws. The region is named by it, which puts each
+ * project's own heading at h4 — one level below the handoff's sketch, because
+ * there the section stood alone.
+ *
+ * Progressive enhancement. The server renders every panel open and every button
+ * `aria-expanded="true"`, so with no JavaScript the archive is a plain, fully
+ * readable list. The inline script below sets `data-enhanced` on the section —
+ * which is what arms the collapsing CSS — then closes every panel and opens the
+ * first. It runs before first paint, so there is no flash of the open state.
  */
 import type { WebWorkGroup } from '../../types/content';
 
@@ -28,7 +39,7 @@ interface Props {
 const { group } = Astro.props;
 ---
 
-<section class="web" aria-labelledby="web-work-h">
+<section class="web" aria-labelledby="web-work-h" data-ewp>
   <div class="web__inner">
     <div class="web__head">
       <div class="web__heading">
@@ -38,47 +49,110 @@ const { group } = Astro.props;
       <p class="web__intro">{group.intro}</p>
     </div>
 
-    <ul class="web__items">
-      {
-        group.items.map((item) => (
-          <li class="web__item">
-            <p class="web__name">{item.name}</p>
-            <p class="web__description">{item.description}</p>
+    {/*
+      Visual only: each row repeats its own role and year inside its button, so
+      a screen reader hears them in context and never needs these labels. Hidden
+      below 640px, where the columns fold.
+    */}
+    <div class="web__table">
+      <div class="web__cols" aria-hidden="true">
+        <span>Project</span>
+        <span>Role</span>
+        <span>Year</span>
+        <span></span>
+      </div>
 
-            {
-              /* §9 metadata, the compact one-row form: rendered only when the
-                 item carries a role, so items without one are unchanged. */
-              item.role && (
-                <dl class="web__meta">
-                  <dt>Role</dt>
-                  <dd>{item.role}</dd>
-                </dl>
-              )
-            }
+      <ul class="web__items">
+        {
+          group.items.map((item, i) => (
+            <li class="web__item">
+              <h4 class="web__row-heading">
+                <button
+                  type="button"
+                  class="web__row"
+                  id={`ewp-btn-${i}`}
+                  aria-expanded="true"
+                  aria-controls={`ewp-panel-${i}`}
+                >
+                  <span class="web__name">{item.name}</span>
 
-            {
-              /* Tags as plain text on a subtle chip, as in the projects above.
-                 An absent list and an empty one both render nothing. */
-              item.tags && item.tags.length > 0 && (
-                <ul class="web__tags" aria-label="Tags">
-                  {item.tags.map((tag) => (
-                    <li>{tag}</li>
-                  ))}
-                </ul>
-              )
-            }
-            {
-              /* Rendered only with a real destination; never href="#". */
-              item.link && (
-                <a class="web__link" href={item.link.href} target={item.link.target ?? '_self'}>
-                  {item.link.label} <span aria-hidden="true">↗</span>
-                </a>
-              )
-            }
-          </li>
-        ))
-      }
-    </ul>
+                  {/*
+                    `display: contents` from 640px up, so role and year sit in
+                    their own table columns; below it the wrapper becomes the one
+                    muted line that folds under the name.
+                  */}
+                  <span class="web__fold">
+                    {item.role && <span class="web__role">{item.role}</span>}
+                    {item.year && <span class="web__year">{item.year}</span>}
+                  </span>
+
+                  {/* Drawn with two CSS bars, not a glyph, so it stays crisp. */}
+                  <span class="web__icon" aria-hidden="true" />
+                </button>
+              </h4>
+
+              <div
+                class="web__panel"
+                id={`ewp-panel-${i}`}
+                role="region"
+                aria-labelledby={`ewp-btn-${i}`}
+              >
+                <div class="web__panel-inner">
+                  <figure class="web__shot">
+                    {item.image ? (
+                      <img
+                        src={item.image.src}
+                        alt={item.image.alt}
+                        width={item.image.width}
+                        height={item.image.height}
+                        loading="lazy"
+                        decoding="async"
+                        data-crop={item.image.crop ?? 'top'}
+                      />
+                    ) : (
+                      /* The surface still holds its 16:10 box, so a row without
+                        a screenshot opens to the same height as the others. */
+                      <p class="web__shot-empty">Screenshot coming soon</p>
+                    )}
+                  </figure>
+
+                  <div class="web__body">
+                    <p class="web__description">{item.description}</p>
+
+                    {/* An absent list and an empty one both render nothing. */}
+                    {item.tags && item.tags.length > 0 && (
+                      <ul class="web__tags" aria-label="Tags">
+                        {item.tags.map((tag) => (
+                          <li>{tag}</li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {/*
+                      Rendered only with a real destination; never href="#". The
+                      label names the project, because three identical "Visit
+                      site" links are ambiguous out of context; the visible text
+                      opens it, so the accessible name still starts with what the
+                      link says.
+                    */}
+                    {item.link && (
+                      <a
+                        class="web__link"
+                        href={item.link.href}
+                        target={item.link.target ?? '_self'}
+                        aria-label={`${item.link.label} (opens ${item.name})`}
+                      >
+                        {item.link.label} <span aria-hidden="true">↗</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
   </div>
 </section>
 
@@ -86,11 +160,11 @@ const { group } = Astro.props;
   /*
    * The band. The break after the Selected work projects is the change of
    * ground rather than a rule: it sits on --surface-raised, one step up from
-   * the page's --ink-900, which also gives the thumbnails still to come a
-   * neutral slate to sit on. No rule on either edge — a hairline and a surface
-   * change next to each other read as two separate breaks — and no radius,
-   * since the band meets both viewport edges. Its own --section-y padding
-   * carries the vertical rhythm the capped sections take from the shell.
+   * the page's --ink-900, which also gives the screenshots a neutral slate to
+   * sit on. No rule on either edge — a hairline and a surface change next to
+   * each other read as two separate breaks — and no radius, since the band
+   * meets both viewport edges. Its own --section-y padding carries the vertical
+   * rhythm the capped sections take from the shell.
    */
   .web {
     margin-inline: calc(50% - 50vw);
@@ -129,71 +203,243 @@ const { group } = Astro.props;
   }
 
   .web__title {
-    font-size: var(--fs-project-title);
+    font-size: var(--fs-section);
     font-weight: var(--fw-semibold);
     line-height: 1.2;
     letter-spacing: -0.015em;
   }
 
   .web__intro {
-    font-size: var(--fs-body);
-    line-height: 1.65;
+    font-size: var(--fs-body-small);
+    line-height: 1.6;
   }
 
-  /* §7 — one column below 640px. */
-  .web__items {
+  /*
+   * --- The table ------------------------------------------------------------
+   * One shared column template for the header row and every project row, so the
+   * two stay locked together at each size. Mobile drops to name + toggle and
+   * folds role and year underneath.
+   */
+  .web__cols,
+  .web__row {
     display: grid;
-    /* grid-template-columns: minmax(0, 1fr); */
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 0 var(--space-32);
+    grid-template-columns: minmax(0, 1fr) 44px;
+    gap: 0 var(--space-20);
+    align-items: center;
+  }
+
+  /* Column labels are hidden where the columns they name no longer exist. */
+  .web__cols {
+    display: none;
+    font-size: var(--fs-x-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    color: var(--paper-400);
+    padding-bottom: var(--space-10);
+  }
+
+  .web__items {
+    /* Closes the table: every row draws its own top rule. */
+    border-bottom: var(--hairline-raised);
   }
 
   /* --hairline-raised, not --hairline: on this ground --ink-700 is 1.25:1. */
   .web__item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-6);
+    padding: 14px 0;
     border-top: var(--hairline-raised);
-    padding-block: 18px;
+  }
+
+  /* The heading is structure only; the button inside it carries the type. */
+  .web__row-heading {
+    font: inherit;
+    margin: 0;
+  }
+
+  /* The whole row is the hit area, and it clears 44px on its own. */
+  .web__row {
+    width: 100%;
+    min-height: 60px;
+    /* padding: 14px 0; */
+    margin: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
   }
 
   /* §4 — 17px/600, the same weight and size as an About item title. */
   .web__name {
     font-size: var(--fs-about-item);
     font-weight: var(--fw-semibold);
-    line-height: 1.4;
-    color: var(--light-text);
+    line-height: 1.35;
+    color: var(--paper-200);
   }
 
-  .web__description {
+  /* Hover and the open state share one accent treatment; nothing else moves. */
+  .web__row:hover .web__name,
+  .web__row[aria-expanded='true'] .web__name {
+    color: var(--accent);
+  }
+
+  .web__role,
+  .web__year {
     font-size: var(--fs-body-small);
-    line-height: 1.5;
-    margin-bottom: var(--space-8);
+    font-weight: var(--fw-regular);
+    line-height: 1.4;
+  }
+
+  .web__year {
+    color: var(--paper-400);
+    font-variant-numeric: tabular-nums;
   }
 
   /*
-   * §9 metadata — the <dl> the projects above use, in a one-row form that fits
-   * this narrower column: label and value on the same line, wrapping together.
+   * Below 640px role and year fold under the name as one muted line,
+   * "2014 · Web design · Frontend development" — the year first, with a middot
+   * between them. The wrapper is a real box only here.
    */
-  .web__meta {
+  .web__fold {
+    grid-column: 1;
     display: flex;
-    flex-direction: column;
     flex-wrap: wrap;
-    gap: var(--space-4) var(--space-6);
-    margin-top: auto;
+    align-items: baseline;
+    gap: 0 var(--space-6);
+    margin-top: var(--space-4);
+    color: var(--paper-400);
   }
 
-  .web__meta dt {
+  .web__fold .web__role {
+    color: inherit;
+  }
+
+  .web__fold .web__year {
+    order: -1;
+  }
+
+  .web__fold .web__year + .web__role::before {
+    content: '·';
+    margin-right: var(--space-6);
+  }
+
+  /*
+   * The toggle: a 28px ring with two bars. The vertical one rotates a quarter
+   * turn onto the horizontal one when the row opens, so + becomes −.
+   */
+  .web__icon {
+    position: relative;
+    justify-self: end;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    box-shadow: inset 0 0 0 1px var(--ink-500);
+    color: var(--paper-200);
+  }
+
+  .web__icon::before,
+  .web__icon::after {
+    content: '';
+    position: absolute;
+    inset: 50% 7px auto;
+    height: 1px;
+    margin-top: -0.5px;
+    background: currentColor;
+  }
+
+  .web__icon::after {
+    transform: rotate(90deg);
+    transition: transform 150ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .web__row:hover .web__icon,
+  .web__row[aria-expanded='true'] .web__icon {
+    color: var(--accent);
+  }
+
+  /* Open: the vertical bar lies down on the horizontal one. */
+  .web__row[aria-expanded='true'] .web__icon::after {
+    transform: rotate(0deg);
+  }
+
+  /*
+   * --- The panel ------------------------------------------------------------
+   * Static by default, which is the no-JavaScript state: every panel is simply
+   * open. `data-enhanced` — set by the script once it has taken over — is what
+   * turns the panel into the collapsing 0fr/1fr grid.
+   */
+  .web__panel-inner {
+    display: grid;
+    gap: var(--space-20);
+    /* padding: 4px 0 28px; */
+    /* The row that collapses; it must be able to reach zero. */
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .web[data-enhanced] .web__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transition:
+      grid-template-rows 200ms cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .web[data-enhanced] .web__panel[data-open] {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  /*
+   * The screenshot surface: one step up from the band, with the image sitting
+   * on it inset left, right and top so it reads as a screen on a desk rather
+   * than a bled-off photograph. 16:10, the ratio the exports are cropped to.
+   */
+  .web__shot {
+    margin: 0;
+    display: grid;
+    background: var(--ridge-1);
+    border-radius: var(--radius-panel);
+    box-shadow: inset 0 0 0 1px var(--ink-500);
+    padding: 5% 5% 0;
+  }
+
+  .web__shot img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border-radius: 3px 3px 0 0;
+  }
+
+  .web__shot img[data-crop='center'] {
+    object-position: center;
+  }
+
+  /* A row with no screenshot yet keeps the same box, so nothing jumps. */
+  .web__shot-empty {
+    aspect-ratio: 16 / 10;
+    display: grid;
+    place-content: center;
     font-size: var(--fs-small);
-    font-weight: var(--fw-semibold);
     line-height: 1.4;
     color: var(--paper-400);
   }
 
-  .web__meta dd {
-    margin: 0;
-    font-size: var(--fs-body-small);
-    line-height: 1.5;
+  .web__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .web__description {
+    max-width: 520px;
+    font-size: var(--fs-body);
+    line-height: 1.6;
+    text-wrap: pretty;
   }
 
   /* §9 tags: plain text on a subtle chip, as in the projects above. */
@@ -201,26 +447,31 @@ const { group } = Astro.props;
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-6) var(--space-8);
-    margin-top: var(--space-10);
+    margin-top: var(--space-12);
     font-size: var(--fs-x-small);
     line-height: 1.4;
-    color: var(--paper-400);
+    color: var(--paper-200);
   }
 
   .web__tags li {
     background: var(--chip-raised);
-    padding: 3px 6px;
+    padding: 3px 8px;
     border-radius: var(--radius-chip);
     white-space: nowrap;
   }
 
-  /* §9 content link, 44px minimum target. */
+  /*
+   * §9 content link. 44px rather than the page's --target-min: the archive's
+   * own acceptance check asks for 44px targets, and this link sits inside a
+   * dense list where the extra room is worth having.
+   */
   .web__link {
     align-self: flex-start;
     display: inline-flex;
     align-items: center;
     gap: var(--space-6);
-    min-height: var(--target-min);
+    min-height: 44px;
+    margin-top: var(--space-8);
     font-size: var(--fs-body-small);
     font-weight: var(--fw-semibold);
     line-height: 1.4;
@@ -232,7 +483,7 @@ const { group } = Astro.props;
     color: var(--paper-200);
   }
 
-  /* §7 tablet and up — the intro moves beside the heading, items go three-up. */
+  /* §7 tablet and up — the intro moves beside the heading, the table opens. */
   @media (min-width: 640px) {
     .web__head {
       flex-direction: row;
@@ -247,10 +498,129 @@ const { group } = Astro.props;
 
     .web__intro {
       flex: 1.2 1 320px;
+      max-width: 420px;
     }
 
-    .web__items {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+    .web__cols,
+    .web__row {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 96px 44px;
+      gap: 0 var(--space-20);
+    }
+
+    .web__cols {
+      display: grid;
+    }
+
+    /* Role and year become table cells of their own. */
+    .web__fold {
+      display: contents;
+    }
+
+    .web__fold .web__role {
+      color: var(--paper-200);
+    }
+
+    .web__fold .web__year + .web__role::before {
+      content: none;
+    }
+
+    .web__panel-inner {
+      grid-template-columns: 240px minmax(0, 1fr);
+      gap: var(--space-28);
+      /* padding: 6px 0 32px; */
+    }
+  }
+
+  /* §7 desktop — the handoff's wider table and wider screenshot. */
+  @media (min-width: 1024px) {
+    .web__cols,
+    .web__row {
+      grid-template-columns: 4fr 4fr 120px 44px;
+      gap: 0 var(--space-24);
+    }
+
+    .web__panel-inner {
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: var(--space-40);
+    }
+  }
+
+  /* Panels open instantly; the icon still changes, it just does not swing. */
+  @media (prefers-reduced-motion: reduce) {
+    .web[data-enhanced] .web__panel,
+    .web__icon::after {
+      transition: none;
     }
   }
 </style>
+
+<script is:inline>
+  /*
+   * The archive's disclosure behaviour — the page's only script. It runs where
+   * it sits, before first paint, so the open-by-default markup above is
+   * collapsed without a flash.
+   *
+   * Closing animates first and only then sets `hidden`, so the panel keeps its
+   * 200ms collapse while still leaving the accessibility tree and the tab order
+   * once it is shut.
+   */
+  (() => {
+    const root = document.querySelector('[data-ewp]');
+    if (!root) return;
+
+    const rows = Array.from(root.querySelectorAll('button[aria-controls]'))
+      .map((btn) => ({ btn, panel: document.getElementById(btn.getAttribute('aria-controls')) }))
+      .filter((row) => row.panel);
+    if (!rows.length) return;
+
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const isOpen = (row) => row.btn.getAttribute('aria-expanded') === 'true';
+
+    const close = (row) => {
+      row.btn.setAttribute('aria-expanded', 'false');
+      delete row.panel.dataset.open;
+
+      if (reduced.matches) {
+        row.panel.hidden = true;
+        return;
+      }
+
+      // Runs on transitionend, and again on a timer for any browser that
+      // decides not to transition the grid row at all.
+      const settle = () => {
+        row.panel.removeEventListener('transitionend', settle);
+        if (!('open' in row.panel.dataset)) row.panel.hidden = true;
+      };
+      row.panel.addEventListener('transitionend', settle);
+      window.setTimeout(settle, 400);
+    };
+
+    const open = (row) => {
+      row.panel.hidden = false;
+      // Flush the 0fr state so the opening transition has somewhere to start.
+      void row.panel.offsetHeight;
+      row.panel.dataset.open = '';
+      row.btn.setAttribute('aria-expanded', 'true');
+    };
+
+    // Arms the collapsing CSS, then takes the whole list down.
+    root.dataset.enhanced = '';
+    for (const row of rows) {
+      row.btn.setAttribute('aria-expanded', 'false');
+      delete row.panel.dataset.open;
+      row.panel.hidden = true;
+
+      row.btn.addEventListener('click', () => {
+        const wasOpen = isOpen(row);
+        rows.filter(isOpen).forEach(close);
+        if (!wasOpen) open(row);
+      });
+    }
+
+    // The first row starts open. No reflow flush here, so it simply is open on
+    // the first paint rather than animating into place.
+    rows[0].panel.hidden = false;
+    rows[0].panel.dataset.open = '';
+    rows[0].btn.setAttribute('aria-expanded', 'true');
+  })();
+</script>
