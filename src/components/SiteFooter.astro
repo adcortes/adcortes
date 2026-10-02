@@ -3,25 +3,60 @@
  * Site footer.
  * content.md §Footer; design-system.md §9 (footer inline link, icon button).
  *
+ * Fluid rather than capped at the container: its content sits --gutter from the
+ * viewport edges at every size, so it frames the page instead of lining up with
+ * the central reading column.
+ *
  * The social icon links render only when their URLs exist in src/data/site.ts.
- * No `href="#"` placeholders — see the approved plan, §8.2.
+ * No `href="#"` placeholders — see the approved plan, §8.2. The footer is the
+ * one place they appear, at every width.
  */
-import { footer, social } from '../data/site';
+import { footer, repo, social } from '../data/site';
 import { mailtoHref } from '../lib/email';
 import LinkedIn from './icons/LinkedIn.astro';
 import GitHub from './icons/GitHub.astro';
 
 const accessibilityMailto = mailtoHref('Accessibility barrier on the adcortes portfolio');
+
+/*
+ * Rendered only when it is set and positive, so the line reads correctly before
+ * anyone has filled it in. Singular at one, plural everywhere else.
+ */
+const forks = repo.forks && repo.forks > 0 ? repo.forks : undefined;
+const forkLabel = forks === 1 ? '1 fork' : `${forks} forks`;
+
 const hasSocial = Boolean(social.linkedin || social.github);
 ---
 
 <footer class="footer">
-  <div class="container footer__inner">
-    <p class="footer__wordmark">
-      <span class="wordmark">
-        adcortes<span aria-hidden="true">.</span>
-      </span> © 2026
-    </p>
+  <div class="footer__inner">
+    <div class="footer__identity">
+      <p class="footer__wordmark">
+        <span class="wordmark">
+          adcortes<span aria-hidden="true">.</span>
+        </span> © 2026
+      </p>
+
+      {/*
+        The attribution line. "adcortes" goes to the profile and "GitHub" to
+        this site's own repository, so each link name says where it leads; the
+        separators are decorative and aria-hidden, like the wordmark's period.
+      */}
+      <p class="footer__attribution">
+        {footer.attribution}{' '}
+        {social.github ? <a href={social.github}>adcortes</a> : 'adcortes'}
+        <span aria-hidden="true"> · </span>
+        <a href={repo.url}>GitHub</a>
+        {
+          forks && (
+            <>
+              <span aria-hidden="true"> · </span>
+              <a href={`${repo.url}/forks`}>{forkLabel}</a>
+            </>
+          )
+        }
+      </p>
+    </div>
 
     <p class="footer__statement">
       {footer.accessibilityStatement}{' '}
@@ -30,7 +65,7 @@ const hasSocial = Boolean(social.linkedin || social.github);
 
     {
       hasSocial && (
-        <ul class="footer__social">
+        <ul class="footer__social" aria-label="Social links">
           {social.linkedin && (
             <li>
               <a class="icon-btn" href={social.linkedin} aria-label="adcortes on LinkedIn">
@@ -59,13 +94,21 @@ const hasSocial = Boolean(social.linkedin || social.github);
     color: var(--paper-400);
   }
 
+  /* §6 gutters, but no container cap — the footer runs to the viewport edges. */
   .footer__inner {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: var(--space-16);
+    padding-inline: var(--gutter);
     padding-block: var(--space-24) var(--space-32);
+  }
+
+  .footer__identity {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-8);
   }
 
   .footer__wordmark {
@@ -84,13 +127,15 @@ const hasSocial = Boolean(social.linkedin || social.github);
    * SC 2.5.8 exempts a target "in a sentence or block of text", which is exactly
    * what this is. Padding it out to 44px would break the sentence it sits in.
    */
-  .footer__statement a {
+  .footer__statement a,
+  .footer__attribution a {
     color: var(--paper-200);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
 
-  .footer__statement a:hover {
+  .footer__statement a:hover,
+  .footer__attribution a:hover {
     color: var(--accent);
   }
 

@@ -3,28 +3,28 @@
  * Source of truth: docs/references/design/handoff/content.md (§Header, §Footer, §Meta)
  */
 
-import type { NavItem } from '../types/content';
+import type { NavItem } from "../types/content";
 
 export const site = {
-  lang: 'en',
-  title: 'adcortes — UX Engineer, design systems & accessible frontend',
+  lang: "en",
+  title: "adcortes — UX Engineer, design systems & accessible frontend",
   description:
-    'UX Engineer working across product thinking, design systems and accessible frontend.',
-  ogImage: '/og-image.png',
-  ogImageAlt: 'adcortes. — Clear paths from idea to interface.',
+    "UX Engineer working across product thinking, design systems and accessible frontend.",
+  ogImage: "/og-image.png",
+  ogImageAlt: "adcortes. UX Engineer — design systems &amp; accessible frontend",
 } as const;
 
 export const nav: NavItem[] = [
-  { label: 'Work', href: '#work' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: "Work", href: "#work" },
+  { label: "About", href: "#about" },
+  { label: "Contact", href: "#contact" },
 ];
 
 export const contact = {
-  label: 'Contact',
+  label: "Contact",
   heading: "Let's talk about what you're building.",
   body: "Whether you're hiring, planning a product, or we've worked together before, I'd be glad to hear from you.",
-  ctaLabel: 'Get in touch',
+  ctaLabel: "Get in touch",
 } as const;
 
 /*
@@ -32,9 +32,25 @@ export const contact = {
  * period is accent-coloured and aria-hidden. A string copy would only drift.
  */
 export const footer = {
-  accessibilityStatement: 'Built to meet WCAG 2.2 AA. Found a barrier?',
-  accessibilityLinkLabel: 'Let me know',
+  accessibilityStatement: "Built to meet WCAG 2.2 AA. Found a barrier?",
+  accessibilityLinkLabel: "Let me know",
+  /* The attribution line's lead-in; the links after it are built in markup. */
+  attribution: "Designed & built by",
 } as const;
+
+/*
+ * This site's own source. `forks` is a static field on purpose: the page ships
+ * no client-side JavaScript, so there is no runtime call to the GitHub API, and
+ * a build-time one would make the number stale the moment it was fetched
+ * anyway. Update it by hand when it is worth saying.
+ *
+ * It is optional, and the footer renders the fork count only when it is set to
+ * a positive number — so leaving it out, or letting it fall back to 0, simply
+ * drops that part of the line and the rest stays correct.
+ */
+export const repo: { url: string; forks?: number } = {
+  url: "https://github.com/adcortes/portfolio",
+};
 
 /*
  * The two social destinations. SiteFooter renders each icon link only when its
@@ -44,6 +60,6 @@ export const footer = {
  * so the literal string never reaches the HTML source (visual-direction.md §6).
  */
 export const social: { linkedin?: string; github?: string } = {
-  linkedin: 'https://www.linkedin.com/in/adcortes/',
-  github: 'https://github.com/adcortes',
+  linkedin: "https://www.linkedin.com/in/adcortes/",
+  github: "https://github.com/adcortes",
 };

@@ -6,6 +6,18 @@
  * It stays readable at every size: one column of three items on mobile, three-up
  * from 640px (§7). Each item name is strong 17px text rather than a heading, so
  * the section keeps its h2 → h3-per-project order.
+ *
+ * The one full-bleed band on the page (§6: "bleeds to full width; its inner
+ * content is capped at 1128px"), carrying the raised slate ground that marks
+ * the break after the Selected work projects. It sits as a direct child of
+ * `main.container`, so it breaks out with the documented negative-margin
+ * trick: that containing block is centred, so `calc(50% - 50vw)` on each side
+ * lands the edges exactly on the viewport edges, and `html { overflow-x: clip }`
+ * in base.css already absorbs the scrollbar overhang. `--band-inner` then puts
+ * the content back on the same grid as every capped section above it.
+ *
+ * Its heading keeps h3: the level the group had inside Selected work, and the
+ * one the approved type scale draws. The region is named by it.
  */
 import type { WebWorkGroup } from '../../types/content';
 
@@ -16,44 +28,84 @@ interface Props {
 const { group } = Astro.props;
 ---
 
-<li class="web">
-  <div class="web__head">
-    <div class="web__heading">
-      <p class="web__category">{group.category}</p>
-      <h3 class="web__title">{group.title}</h3>
+<section class="web" aria-labelledby="web-work-h">
+  <div class="web__inner">
+    <div class="web__head">
+      <div class="web__heading">
+        <p class="web__category">{group.category}</p>
+        <h3 id="web-work-h" class="web__title">{group.title}</h3>
+      </div>
+      <p class="web__intro">{group.intro}</p>
     </div>
-    <p class="web__intro">{group.intro}</p>
-  </div>
 
-  <ul class="web__items">
-    {
-      group.items.map((item) => (
-        <li class="web__item">
-          <p class="web__name">{item.name}</p>
-          <p class="web__description">{item.description}</p>
-          <p class="web__attribution">{item.attribution}</p>
-          {
-            /* Rendered only with a real destination; never href="#". */
-            item.link && (
-              <a class="web__link" href={item.link.href}>
-                {item.link.label} <span aria-hidden="true">↗</span>
-              </a>
-            )
-          }
-        </li>
-      ))
-    }
-  </ul>
-</li>
+    <ul class="web__items">
+      {
+        group.items.map((item) => (
+          <li class="web__item">
+            <p class="web__name">{item.name}</p>
+            <p class="web__description">{item.description}</p>
+
+            {
+              /* §9 metadata, the compact one-row form: rendered only when the
+                 item carries a role, so items without one are unchanged. */
+              item.role && (
+                <dl class="web__meta">
+                  <dt>Role</dt>
+                  <dd>{item.role}</dd>
+                </dl>
+              )
+            }
+
+            {
+              /* Tags as plain text on a subtle chip, as in the projects above.
+                 An absent list and an empty one both render nothing. */
+              item.tags && item.tags.length > 0 && (
+                <ul class="web__tags" aria-label="Tags">
+                  {item.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )
+            }
+            {
+              /* Rendered only with a real destination; never href="#". */
+              item.link && (
+                <a class="web__link" href={item.link.href} target={item.link.target ?? '_self'}>
+                  {item.link.label} <span aria-hidden="true">↗</span>
+                </a>
+              )
+            }
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
 
 <style>
-  /* Last row in the list: a top rule, and no trailing padding. */
+  /*
+   * The band. The break after the Selected work projects is the change of
+   * ground rather than a rule: it sits on --surface-raised, one step up from
+   * the page's --ink-900, which also gives the thumbnails still to come a
+   * neutral slate to sit on. No rule on either edge — a hairline and a surface
+   * change next to each other read as two separate breaks — and no radius,
+   * since the band meets both viewport edges. Its own --section-y padding
+   * carries the vertical rhythm the capped sections take from the shell.
+   */
   .web {
+    margin-inline: calc(50% - 50vw);
+    background: var(--surface-raised);
+    padding-block: var(--section-y);
+    padding-inline: var(--gutter);
+  }
+
+  /* §6 — the band bleeds, its content does not: the same 1128px reading grid. */
+  .web__inner {
+    max-width: var(--band-inner);
+    margin-inline: auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-28);
-    border-top: var(--hairline);
-    padding-block-start: var(--work-row-gap);
   }
 
   .web__head {
@@ -91,15 +143,17 @@ const { group } = Astro.props;
   /* §7 — one column below 640px. */
   .web__items {
     display: grid;
-    grid-template-columns: minmax(0, 1fr);
+    /* grid-template-columns: minmax(0, 1fr); */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 0 var(--space-32);
   }
 
+  /* --hairline-raised, not --hairline: on this ground --ink-700 is 1.25:1. */
   .web__item {
     display: flex;
     flex-direction: column;
     gap: var(--space-6);
-    border-top: var(--hairline);
+    border-top: var(--hairline-raised);
     padding-block: 18px;
   }
 
@@ -108,18 +162,56 @@ const { group } = Astro.props;
     font-size: var(--fs-about-item);
     font-weight: var(--fw-semibold);
     line-height: 1.4;
+    color: var(--light-text);
   }
 
   .web__description {
     font-size: var(--fs-body-small);
     line-height: 1.5;
+    margin-bottom: var(--space-8);
   }
 
-  .web__attribution {
-    margin-top: var(--space-4);
+  /*
+   * §9 metadata — the <dl> the projects above use, in a one-row form that fits
+   * this narrower column: label and value on the same line, wrapping together.
+   */
+  .web__meta {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    gap: var(--space-4) var(--space-6);
+    margin-top: auto;
+  }
+
+  .web__meta dt {
     font-size: var(--fs-small);
+    font-weight: var(--fw-semibold);
     line-height: 1.4;
     color: var(--paper-400);
+  }
+
+  .web__meta dd {
+    margin: 0;
+    font-size: var(--fs-body-small);
+    line-height: 1.5;
+  }
+
+  /* §9 tags: plain text on a subtle chip, as in the projects above. */
+  .web__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6) var(--space-8);
+    margin-top: var(--space-10);
+    font-size: var(--fs-x-small);
+    line-height: 1.4;
+    color: var(--paper-400);
+  }
+
+  .web__tags li {
+    background: var(--chip-raised);
+    padding: 3px 6px;
+    border-radius: var(--radius-chip);
+    white-space: nowrap;
   }
 
   /* §9 content link, 44px minimum target. */
@@ -145,7 +237,7 @@ const { group } = Astro.props;
     .web__head {
       flex-direction: row;
       flex-wrap: wrap;
-      align-items: flex-end;
+      align-items: flex-start;
       gap: var(--space-12) clamp(28px, 4vw, 56px);
     }
 

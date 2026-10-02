@@ -116,6 +116,14 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     padding-block-start: var(--work-row-gap);
   }
 
+  /*
+   * The last row needs no trailing gap: the band that follows brings the
+   * section's own --section-y padding plus its change of ground.
+   */
+  .project:last-child {
+    padding-block-end: 0;
+  }
+
   .project__body {
     display: flex;
     flex-direction: column;
@@ -138,6 +146,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
 
   /* §4 — project title, the only use of 24px on the page. */
   .project__title {
+    color: var(--light-text);
     font-size: var(--fs-project-title);
     font-weight: var(--fw-semibold);
     line-height: 1.2;
@@ -216,10 +225,17 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
   .project__tags {
     display: flex;
     flex-wrap: wrap;
-    gap: var(--space-6) var(--space-16);
-    font-size: var(--fs-small);
+    gap: var(--space-6) var(--space-10);
+    font-size: var(--fs-x-small);
     line-height: 1.4;
     color: var(--paper-400);
+  }
+
+  .project__tags li {
+    background: rgba(255,255,255, 0.05);
+    padding: 3px 6px;
+    border-radius: 4px;
+    white-space: nowrap;
   }
 
   /*

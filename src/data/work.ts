@@ -12,13 +12,7 @@ import type { ProjectEntry, WebWorkGroup } from "../types/content";
 export const workSection = {
   heading: "Selected work",
   /** Shown at every size. */
-  intro: "Three projects.",
-  /*
-   * The second sentence only makes sense where the diagrams are rendered, so it
-   * is hidden below 640px together with them (design-system.md §7). It is one
-   * sentence of a single approved string, so it stays in the same <p>.
-   */
-  introFromTablet: "Diagrams stand in for confidential screens.",
+  intro: "Product, design systems and frontend.",
 } as const;
 
 /*
@@ -36,13 +30,13 @@ export const projects: ProjectEntry[] = [
   {
     id: "emr",
     category: "Product",
-    title: "A lightweight medical record for a neurology practice",
+    title: "A lightweight EMR for small clinics",
     summary:
-      "A small neurology practice in Brazil needed [one line on what wasn't working in its records workflow]. I'm building its EMR together with the doctor who uses it every day.",
-    role: "End to end, from discovery and scope to frontend, backend and accessibility.",
+      "A role-based web application for managing patients, appointments and clinical workflows in a small practice — designed around clear scheduling rules, reliable data and accessible UI.",
+    role: "Product definition, UX engineering and full-stack development.",
     outcome:
-      "A records tool shaped around one doctor's daily workflow, built with AI as a learning partner.",
-    tags: ["Healthcare", "Accessibility", "Full stack"],
+      "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
     visual: {
       kind: "diagram",
       component: "emr",
@@ -54,10 +48,36 @@ export const projects: ProjectEntry[] = [
     category: "Product & design systems",
     title: "Airline booking & disruption products",
     summary:
-      "Booking and disruption-management products for several airlines, where [one line on the need]. I joined as the only design and frontend person.",
-    role: "UX architecture, styles and design system evolution. Later technical lead for Avianca web at FLYR, still coding.",
-    outcome: "The area grew from one person to 26+ frontend developers and 4 designers.",
-    tags: ["Design systems", "UX architecture", "Technical leadership"],
+      "Booking and disruption-management products for airlines. I joined as designer and frontend developer, building the UX architecture, UI foundations and component system as the products and team grew.",
+    role: "UX architecture, styles and design-system evolution. Later, technical lead for distributed frontend teams and airline web delivery, while remaining hands-on in the codebase.",
+    outcome:
+      "Grew into a team of 10+ frontend developers and four designers, supporting multiple airline products.",
+    tags: [
+      "UX architecture",
+      "Design systems",
+      "Angular",
+      "Storybook",
+      "SCSS",
+      "Accessibility",
+      "Technical leadership",
+      "Figma",
+    ],
+    visual: {
+      kind: "diagram",
+      component: "design-system",
+      caption: "One token and component layer shared across several airlines.",
+    },
+  },
+  {
+    id: "airline",
+    category: "HTML Email",
+    title: "Reusable airline email templates",
+    summary:
+      "A white-label email system for disruption communications and booking flows, designed to adapt to each airline’s brand while remaining reliable across major email clients and devices.",
+    role: "Email design, responsive HTML implementation and accessibility.",
+    outcome:
+      "A reusable template foundation applied to multiple airline brands, tested across Gmail, Outlook, Apple Mail and mobile/desktop email environments.",
+    tags: ["Email design", "Responsive HTML", "Accessibility", "Design systems"],
     visual: {
       kind: "diagram",
       component: "design-system",
@@ -74,24 +94,58 @@ export const projects: ProjectEntry[] = [
  */
 export const webWork: WebWorkGroup = {
   category: "Agency & freelance",
-  title: "Selected web work",
-  intro:
-    "Information architecture, wireframes, design, frontend and HTML email for direct clients.",
+  title: "Earlier web projects",
+  intro: "A short selection of design and frontend projects from earlier in my career.",
   items: [
     {
-      name: "[Project name]",
-      description: "IA, wireframes and frontend for [client].",
-      attribution: "[Agency].",
+      name: "Natura Selection",
+      description:
+        "An ecommerce website designed to make a broad product catalogue clear, approachable and easy to browse.",
+      role: "Web design · Frontend development",
+      tags: ["Ecommerce", "UI design", "Frontend"],
+      link: {
+        label: "Visit site",
+        href: "https://naturaselection.com/",
+        target: "_blank",
+      },
     },
     {
-      name: "[Project name]",
-      description: "Design and frontend for [client].",
-      attribution: "Freelance.",
+      name: "Boekie Boekie",
+      description:
+        "A playful, non-linear digital experience for a Dutch children’s art and literature magazine, using animation and interaction to encourage exploration.",
+      role: "Creative design · Frontend development",
+      tags: ["Creative coding", "Animation", "Interactive storytelling"],
+      link: {
+        label: "Visit site",
+        href: "https://boekie-boekie.nl/Wonderkamers/BoekieBoekie-bouwt.html",
+        target: "_blank",
+      },
     },
     {
-      name: "[Project name]",
-      description: "HTML email system for [client].",
-      attribution: "Freelance.",
+      name: "L'illa Diagonal",
+      description:
+        "A digital presence for L’illa Diagonal, a shopping centre in Barcelona, combining web design and frontend development.",
+      role: "Web design · Frontend development",
+      tags: ["WordPress", "PHP", "Responsive web"],
+      link: {
+        label: "Visit site",
+        href: "https://lilla.com/",
+        target: "_blank",
+      },
+    },
+    {
+      name: "Editorial Salvat — Collection websites",
+      description:
+        "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
+      role: "Visual design · Frontend development",
+      tags: ["Design system", "Frontend"],
+    },
+    {
+      name: "Bruguer — Colores del Mundo",
+      description:
+        "An interactive product experience for Bruguer’s Vibrations paint range, bringing colour inspiration, product details and technical documentation together.",
+      role: "Visual design · Frontend development",
+      tags: ["Interactive design", "CSS animation", "Product content"],
     },
   ],
 };
