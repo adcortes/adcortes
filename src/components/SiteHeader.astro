@@ -43,6 +43,8 @@ import { nav } from '../data/site';
 
   /* §6 gutters, but no container cap — the header runs to the viewport edges. */
   .site-header__inner {
+    max-width: var(--container);
+    margin-inline: auto;
     display: flex;
     padding-inline: var(--gutter);
     justify-content: space-between;

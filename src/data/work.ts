@@ -63,8 +63,10 @@ export const projects: ProjectEntry[] = [
       "Figma",
     ],
     visual: {
-      kind: "diagram",
-      component: "design-system",
+      kind: "image",
+      src: "/images/ibe-booking.jpeg",
+      alt: "",
+      // component: "design-system",
       caption: "One token and component layer shared across several airlines.",
     },
   },
@@ -99,10 +101,17 @@ export const webWork: WebWorkGroup = {
   items: [
     {
       name: "Natura Selection",
+      engagement: "Agency",
       description:
         "An ecommerce website designed to make a broad product catalogue clear, approachable and easy to browse.",
       role: "Web design · Frontend development",
       tags: ["Ecommerce", "UI design", "Frontend"],
+      image: {
+        src: "/images/natura-selection.jpeg",
+        alt: "The Natura Selection footwear category page, a grid of product photographs above their names and prices.",
+        width: 1024,
+        height: 637,
+      },
       link: {
         label: "Visit site",
         href: "https://naturaselection.com/",
@@ -111,10 +120,19 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "Boekie Boekie",
+      engagement: "Agency",
       description:
         "A playful, non-linear digital experience for a Dutch children’s art and literature magazine, using animation and interaction to encourage exploration.",
       role: "Creative design · Frontend development",
       tags: ["Creative coding", "Animation", "Interactive storytelling"],
+      image: {
+        src: "/images/boekie-boekie.jpeg",
+        alt: "An illustrated Boekie Boekie wonder-room scene, with drawn objects scattered across the page as entry points.",
+        width: 1024,
+        height: 637,
+        /* The composition is centred, so this one keeps the middle. */
+        crop: "center",
+      },
       link: {
         label: "Visit site",
         href: "https://boekie-boekie.nl/Wonderkamers/BoekieBoekie-bouwt.html",
@@ -123,10 +141,17 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "L'illa Diagonal",
+      engagement: "Agency",
       description:
         "A digital presence for L’illa Diagonal, a shopping centre in Barcelona, combining web design and frontend development.",
       role: "Web design · Frontend development",
       tags: ["WordPress", "PHP", "Responsive web"],
+      image: {
+        src: "/images/lilla-diagonal.jpeg",
+        alt: "The L’illa Diagonal homepage, with a full-width promotional image above the shopping centre’s listings.",
+        width: 1024,
+        height: 637,
+      },
       link: {
         label: "Visit site",
         href: "https://lilla.com/",
@@ -135,6 +160,7 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "Editorial Salvat — Collection websites",
+      engagement: "Agency",
       description:
         "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
       role: "Visual design · Frontend development",
@@ -142,10 +168,17 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "Bruguer — Colores del Mundo",
+      engagement: "Agency",
       description:
         "An interactive product experience for Bruguer’s Vibrations paint range, bringing colour inspiration, product details and technical documentation together.",
       role: "Visual design · Frontend development",
       tags: ["Interactive design", "CSS animation", "Product content"],
+      image: {
+        src: "/images/bruguer-vibrations.jpeg",
+        alt: "A Bruguer Vibrations colour page, pairing a painted interior photograph with the range’s colour swatches.",
+        width: 1024,
+        height: 637,
+      },
     },
   ],
 };
