@@ -6,9 +6,9 @@
  *
  * An archive table with inline disclosure: one row per project, each row a
  * button that opens its own details and screenshot in place. Only one row is
- * open at a time. It reads like a CV archive — scannable, honest about the
- * dates — and the disclosure pattern works on touch, keyboard and screen
- * readers without depending on hover.
+ * open at a time. It reads like a CV archive — scannable, honest about how each
+ * piece was engaged — and the disclosure pattern works on touch, keyboard and
+ * screen readers without depending on hover.
  *
  * The one full-bleed band on the page (§6: "bleeds to full width; its inner
  * content is capped at 1128px"), carrying the raised slate ground that marks
@@ -50,15 +50,19 @@ const { group } = Astro.props;
     </div>
 
     {/*
-      Visual only: each row repeats its own role and year inside its button, so
-      a screen reader hears them in context and never needs these labels. Hidden
-      below 640px, where the columns fold.
+      Visual only: each row repeats its own role and engagement inside its
+      button, so a screen reader hears them in context and never needs these
+      labels. Hidden below 640px, where the columns fold.
+
+      The third column is deliberately unlabelled — "Agency" and "Freelance"
+      name themselves — and the fourth holds the toggle. Both keep their empty
+      span so the header row stays on the same four-column template as the rows.
     */}
     <div class="web__table">
       <div class="web__cols" aria-hidden="true">
         <span>Project</span>
         <span>Role</span>
-        <span>Year</span>
+        <span></span>
         <span></span>
       </div>
 
@@ -77,13 +81,15 @@ const { group } = Astro.props;
                   <span class="web__name">{item.name}</span>
 
                   {/*
-                    `display: contents` from 640px up, so role and year sit in
-                    their own table columns; below it the wrapper becomes the one
-                    muted line that folds under the name.
+                    `display: contents` from 640px up, so role and engagement
+                    sit in their own table columns; below it the wrapper becomes
+                    the one muted line that folds under the name.
                   */}
                   <span class="web__fold">
                     {item.role && <span class="web__role">{item.role}</span>}
-                    {item.year && <span class="web__year">{item.year}</span>}
+                    {item.engagement && (
+                      <span class="web__engagement">{item.engagement}</span>
+                    )}
                   </span>
 
                   {/* Drawn with two CSS bars, not a glyph, so it stays crisp. */}
@@ -218,7 +224,7 @@ const { group } = Astro.props;
    * --- The table ------------------------------------------------------------
    * One shared column template for the header row and every project row, so the
    * two stay locked together at each size. Mobile drops to name + toggle and
-   * folds role and year underneath.
+   * folds role and engagement underneath.
    */
   .web__cols,
   .web__row {
@@ -245,7 +251,7 @@ const { group } = Astro.props;
 
   /* --hairline-raised, not --hairline: on this ground --ink-700 is 1.25:1. */
   .web__item {
-    padding: 14px 0;
+    padding: 8px 0;
     border-top: var(--hairline-raised);
   }
 
@@ -284,21 +290,25 @@ const { group } = Astro.props;
   }
 
   .web__role,
-  .web__year {
+  .web__engagement {
     font-size: var(--fs-body-small);
     font-weight: var(--fw-regular);
     line-height: 1.4;
   }
 
-  .web__year {
+  .web__engagement {
     color: var(--paper-400);
-    font-variant-numeric: tabular-nums;
   }
 
   /*
-   * Below 640px role and year fold under the name as one muted line,
-   * "2014 · Web design · Frontend development" — the year first, with a middot
-   * between them. The wrapper is a real box only here.
+   * Below 640px role and engagement fold under the name as one muted line,
+   * "Web design · Frontend development · Agency", with a middot between them.
+   * The wrapper is a real box only here.
+   *
+   * The line follows DOM order — role, then engagement — so nothing is
+   * reordered in CSS: what a screen reader hears inside the button is what is
+   * on screen, at this size and at every size above it (WCAG 1.3.2, meaningful
+   * sequence).
    */
   .web__fold {
     grid-column: 1;
@@ -314,11 +324,7 @@ const { group } = Astro.props;
     color: inherit;
   }
 
-  .web__fold .web__year {
-    order: -1;
-  }
-
-  .web__fold .web__year + .web__role::before {
+  .web__fold .web__role + .web__engagement::before {
     content: '·';
     margin-right: var(--space-6);
   }
@@ -511,16 +517,24 @@ const { group } = Astro.props;
       display: grid;
     }
 
-    /* Role and year become table cells of their own. */
+    /* Role and engagement become table cells of their own. */
     .web__fold {
       display: contents;
     }
 
+    /*
+     * `display: contents` promotes role and engagement to grid items of the
+     * row, so they auto-place in DOM order — name, role, engagement, toggle —
+     * landing under the Project and Role labels and the unlabelled third
+     * column, with no `order` and no explicit placement. That is what keeps the
+     * visual columns and the button's reading order from ever drifting apart.
+     */
     .web__fold .web__role {
       color: var(--paper-200);
     }
 
-    .web__fold .web__year + .web__role::before {
+    /* The middot belongs to the folded line only. */
+    .web__fold .web__role + .web__engagement::before {
       content: none;
     }
 

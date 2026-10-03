@@ -126,10 +126,12 @@ export interface WebWorkItem {
   name: string;
   description: string;
   /**
-   * The year or year range the work shipped, rendered in its own column.
-   * Optional and omitted rather than guessed.
+   * How the work was engaged, rendered in its own column. The column it sits in
+   * has no label, so the two words carry the meaning on their own — which is
+   * why this is a closed set and not free text. Optional and omitted rather
+   * than guessed.
    */
-  year?: string;
+  engagement?: 'Agency' | 'Freelance';
   /**
    * What I did on the piece, in the one-line form the Selected work projects
    * use for their own `role`. Optional and rendered only when present, so an

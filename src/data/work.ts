@@ -63,8 +63,10 @@ export const projects: ProjectEntry[] = [
       "Figma",
     ],
     visual: {
-      kind: "diagram",
-      component: "design-system",
+      kind: "image",
+      src: "/images/ibe-booking.jpeg",
+      alt: "",
+      // component: "design-system",
       caption: "One token and component layer shared across several airlines.",
     },
   },
@@ -99,7 +101,7 @@ export const webWork: WebWorkGroup = {
   items: [
     {
       name: "Natura Selection",
-      year: "2014",
+      engagement: "Agency",
       description:
         "An ecommerce website designed to make a broad product catalogue clear, approachable and easy to browse.",
       role: "Web design · Frontend development",
@@ -118,7 +120,7 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "Boekie Boekie",
-      year: "2014",
+      engagement: "Agency",
       description:
         "A playful, non-linear digital experience for a Dutch children’s art and literature magazine, using animation and interaction to encourage exploration.",
       role: "Creative design · Frontend development",
@@ -139,7 +141,7 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "L'illa Diagonal",
-      year: "2013–14",
+      engagement: "Agency",
       description:
         "A digital presence for L’illa Diagonal, a shopping centre in Barcelona, combining web design and frontend development.",
       role: "Web design · Frontend development",
@@ -158,12 +160,7 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "Editorial Salvat — Collection websites",
-      /*
-       * TODO(launch): an approved placeholder, reproduced verbatim like the
-       * others in this file. The handoff's "to confirm before launch" list
-       * carries it; replace once the year is known.
-       */
-      year: "[year]",
+      engagement: "Agency",
       description:
         "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
       role: "Visual design · Frontend development",
@@ -171,7 +168,7 @@ export const webWork: WebWorkGroup = {
     },
     {
       name: "Bruguer — Colores del Mundo",
-      year: "2014",
+      engagement: "Agency",
       description:
         "An interactive product experience for Bruguer’s Vibrations paint range, bringing colour inspiration, product details and technical documentation together.",
       role: "Visual design · Frontend development",
