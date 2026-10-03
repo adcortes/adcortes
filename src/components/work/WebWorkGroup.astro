@@ -264,7 +264,7 @@ const { group } = Astro.props;
   /* The whole row is the hit area, and it clears 44px on its own. */
   .web__row {
     width: 100%;
-    min-height: 60px;
+    min-height: 36px;
     /* padding: 14px 0; */
     margin: 0;
     border: 0;
@@ -445,6 +445,7 @@ const { group } = Astro.props;
     max-width: 520px;
     font-size: var(--fs-body);
     line-height: 1.6;
+    padding-top: var(--space-10);
     text-wrap: pretty;
   }
 
@@ -549,7 +550,7 @@ const { group } = Astro.props;
   @media (min-width: 1024px) {
     .web__cols,
     .web__row {
-      grid-template-columns: 4fr 4fr 120px 44px;
+      grid-template-columns: 2.4fr 4fr 120px 44px;
       gap: 0 var(--space-24);
     }
 
