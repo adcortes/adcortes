@@ -1,12 +1,11 @@
 # adcortes — Asset inventory (Egg Theme)
 
-All files are in `handoff/assets/`: `hero-mountains.svg`, `moon.svg`, `hero-landscape.svg`, `favicon.svg`, `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png` and `og-image.png`. The SVGs contain no raster images, masks, filters or embedded fonts.
+All files are in `handoff/assets/`: `hero-mountains.svg`, `hero-landscape.svg`, `favicon.svg`, `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png` and `og-image.png`. The SVGs contain no raster images, masks, filters or embedded fonts.
 
 | Filename | Format | Size / viewBox | Purpose | Decorative or meaningful | Animatable | Implementation |
 |---|---|---|---|---|---|---|
 | `hero-mountains.svg` | SVG | `0 0 1600 700` | Hero mountains: 4 filled silhouettes in 3 groups | Decorative (`aria-hidden`) | Yes, per `<g>` | Inline SVG, full-bleed wrapper, `xMidYMax slice`, width 106%, CSS edge-fade mask on the wrapper |
-| `moon.svg` | SVG | `0 0 240 240` | Moon disc with its halo | Decorative (`aria-hidden`) | Technically yes, but by rule it stays static | Inline SVG, absolutely positioned (formula below) |
-| `hero-landscape.svg` | SVG | `0 0 1600 700` | Moon and mountains in one file, for reference, OG artwork and design tools | Decorative | Yes, per `<g>` | Not used on the page; source for the OG image |
+| `hero-landscape.svg` | SVG | `0 0 1600 700` | Mountains in one file, for reference, OG artwork and design tools | Decorative | Yes, per `<g>` | Not used on the page; source for the OG image |
 | Wordmark "adcortes." | Live HTML text | — | Home link and brand | Meaningful (`aria-label="adcortes, home"`) | No | HTML text; treatment in `design-system.md` §4. No SVG, because there are no custom letterforms |
 | `favicon.svg` | SVG | `0 0 64 64` | Browser tab (modern browsers) | Meaningful (brand) | No | `<link rel="icon" href="/favicon.svg" type="image/svg+xml">` |
 | `favicon.ico` | ICO (PNG-in-ICO) | 16, 32, 48 | Legacy tab and bookmark fallback | Meaningful (brand) | No | `<link rel="icon" href="/favicon.ico" sizes="48x48">`, served from the site root |
@@ -28,8 +27,6 @@ All files are in `handoff/assets/`: `hero-mountains.svg`, `moon.svg`, `hero-land
 ## og-image.png composition
 - 1200 × 630, background `#1D1E22`.
 - Wordmark "adcortes." in Schibsted Grotesk 500 at 30px, baseline at (72, 96).
-- Moon: disc r 14 at (208, 150), 22% `#D4D4DC`, halo r 98.
-- Headline "Clear paths from idea / to interface." in 600 at 66px, line height 1.08, -0.025em, `#D4D4DC`, first baseline at y 262.
 - Mountains: the same four paths as `hero-mountains.svg` at 0.85 scale, bottom-anchored and centred. They use the site's edge fades (left edge at 55%, bottom 10%). The highest peak is about 50px below the headline.
 - All text is converted to outlines, so it doesn't depend on fonts at render time. Regenerate the image if the copy changes.
 
@@ -57,15 +54,6 @@ svg  viewBox="0 0 1600 700"  preserveAspectRatio="xMidYMax slice"
               linear-gradient(to bottom, #000 90%, transparent);
   mask-composite: intersect; -webkit-mask-composite: source-in; }
 .hero-bg > svg { position: absolute; inset: 0 auto auto 0; width: 106%; height: 100%; }
-```
-
-## Moon placement
-The disc is 15 of 240 units in radius, so the SVG box is 8 × the disc size.
-```css
-.moon { position: absolute; z-index: 0; pointer-events: none;
-  width: calc(var(--moon) * 8); aspect-ratio: 1;
-  top:  calc(clamp(20px, 2.5vw, 36px) - var(--moon) * 3.5);
-  left: calc(1% + 100px - var(--moon) * 3.5); }
 ```
 
 ## Not required

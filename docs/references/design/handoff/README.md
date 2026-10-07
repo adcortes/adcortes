@@ -13,7 +13,7 @@ Approved design handoff for the **adcortes** portfolio. The Egg Theme is frozen:
 
 ## Folders
 
-- **`assets/`** — the approved implementation assets: `hero-mountains.svg`, `moon.svg`, `hero-landscape.svg`, `favicon.svg`, `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `og-image.png`.
+- **`assets/`** — the approved implementation assets: `hero-mountains.svg`, `hero-landscape.svg`, `favicon.svg`, `favicon.ico`, `favicon-32.png`, `apple-touch-icon.png`, `og-image.png`.
 - **`previews/`** — prototype HTML boards. Visual reference only; do not copy as production code.
 - **`screenshots/`** — desktop and tablet/mobile captures. Visual reference only; do not copy as production code.
 

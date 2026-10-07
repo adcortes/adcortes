@@ -1,36 +1,19 @@
-# adcortes
+# Adriana Cortes
 
-Personal portfolio of adcortes — a static, accessible, single-page site.
+**UX Engineer · design systems & accessible frontend**
 
-## Stack
+I work between product, design and frontend. I help teams turn ideas and decisions into clear, accessible interfaces that work in the real world.
 
-- **Astro** — static output, no adapter, zero client JavaScript
-- **TypeScript** — strict
-- **Plain CSS** — design tokens in `src/styles/tokens.css`, no framework or preprocessor
-- **Schibsted Grotesk** — self-hosted woff2, see [`public/fonts/README.md`](public/fonts/README.md)
+I started in product design in Rio de Janeiro and gradually moved closer to implementation. For more than 12 years, I’ve worked hands-on across UX, UI and frontend: from early product conversations and wireframes to semantic HTML, CSS, design systems and production code.
 
-## Commands
+Much of my recent work has been in airline products, combining frontend development with UX architecture and technical leadership. I enjoy connecting people, product needs and implementation — and caring about the small details that make an interface reliable.
 
-```bash
-npm install       # once
-npm run dev       # local dev server
-npm run check     # TypeScript + Astro diagnostics
-npm run build     # static build to dist/
-npm run preview   # serve the build
-```
+## Focus
 
-## Design handoff
+- Translating design into accessible, semantic HTML, detailed CSS and considered UI behaviours
+- Design systems that help teams work with consistency
+- Turning product workflows into clear, usable interfaces from UX architecture to implementation
 
-The approved visual handoff lives in [`docs/references/design/handoff/`](docs/references/design/handoff/)
-and is the source of truth for every visual and content decision. Read it before changing anything
-that is visible on the page.
+Currently building an end-to-end product to extend my practice across discovery, UX, frontend, backend and AI-assisted development.
 
-## Deployment
-
-The site will deploy to **Cloudflare Pages**. No domain is registered yet, so `site` is unset in
-`astro.config.mjs` and there is no canonical URL or absolute `og:image` — a `TODO(deploy)` there
-names the three tags to add once the origin exists.
-
-## Accessibility
-
-Target is WCAG 2.2 AA, with the AAA contrast pairs documented in the handoff's design system.
+[LinkedIn](https://www.linkedin.com/in/adcortes)

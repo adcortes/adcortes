@@ -16,7 +16,6 @@ This theme is frozen: every value below is final. Source screens: `[v1] Egg Them
 | `--ridge-2` | `#2D3039` | Mountains, middle-back layer |
 | `--ridge-3` | `#25272E` | Mountains, middle-front layer |
 | `--ridge-4` | `#1F2025` | Mountains, foreground layer |
-| `--moon` | `#D4D4DC` at 22% opacity | Moon disc; halo from 10% fading to 0 |
 
 ## 2. Semantic roles
 
@@ -130,7 +129,6 @@ The footer uses 16px. The monochrome version is simply the period in `currentCol
 - 6px: skip link, icon buttons, diagram panels
 - 8px: CTA
 - 10px: diagram frame
-- 50%: moon
 
 ## 9. Components
 
@@ -176,6 +174,5 @@ Use `:focus-visible`, never plain `:focus`, and never set `outline: none`.
   --section-y:clamp(56px,7vw,104px);
   --fs-display:clamp(34px,4.3vw,58px); --fs-sub:clamp(18px,1.5vw,21px);
   --fs-contact:clamp(28px,3vw,40px); --fs-lead:clamp(19px,1.7vw,23px);
-  --moon:clamp(20px,2.1vw,30px);
 }
 ```
