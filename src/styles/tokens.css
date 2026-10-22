@@ -1,32 +1,25 @@
 /*
- * Design tokens — Egg Theme
- * Source of truth: docs/references/design/handoff/design-system.md
+ * Shared design tokens — type, spacing, radii, layout.
+ * Source of truth: docs/references/design/handoff/design-system.md §4, §5,
+ * §7 and §8. These are identical across themes (see earth-theme/
+ * color-adjustments.md's "Unchanged" note): only color varies, and color
+ * tokens live in src/styles/themes/<name>.css, selected by data-theme on
+ * <html> (src/config/theme.ts).
  *
- * The §12 block below is copied verbatim from the handoff. Everything after it
- * is the same document's §4, §5, §7 and §8 expressed as tokens.
- *
- * This file is the ONLY place a colour literal may appear, with one exception:
- * the inlined hero SVGs, whose fills are part of the approved artwork.
+ * This file is the ONLY place a non-color literal may appear. Color must be
+ * a var() referencing a themes/*.css token, with one exception: the inlined
+ * hero SVG's fills, which read their colors from those same tokens via var().
  */
 
 :root {
-  /* --- design-system.md §12, verbatim --- */
-  --light-text: #ffffff;
-  --ink-900: #1d1e22;
-  --ink-700: #393f4d;
-  --ink-500: #555c6c;
-  --paper-200: #d4d4dc;
-  --paper-400: #adaeb8;
-  --accent: #feda6a;
-  --ridge-1: #353a46;
-  --ridge-2: #2d3039;
-  --ridge-3: #25272e;
-  --ridge-4: #1f2025;
+  /* --text-strong is pure white in both themes (project titles) — brighter
+     than --text by design, not a palette color, so it isn't theme-scoped. */
+  --text-strong: #ffffff;
   --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --container: 1240px;
   --gutter: clamp(20px, 4vw, 56px);
   --section-y: clamp(56px, 5vw, 104px);
-  --fs-display: clamp(34px, 4.3vw, 58px);
+  --fs-display: clamp(34px, 4.3vw, 54px);
   --fs-sub: clamp(18px, 1.5vw, 21px);
   --fs-contact: clamp(28px, 3vw, 40px);
   --fs-lead: clamp(19px, 1.7vw, 23px);
@@ -49,9 +42,9 @@
   --space-104: 104px;
 
   /* --- §5 area-specific spacing --- */
-  --hero-pad-top: clamp(72px, 11vw, 108px);
-  --hero-pad-bottom: clamp(72px, 9vw, 136px);
-  --contact-pad-bottom: clamp(72px, 9vw, 128px);
+  --hero-pad-top: clamp(56px, 4vw, 108px);
+  --hero-pad-bottom: clamp(56px, 16vw, 242px);
+  --contact-pad-bottom: clamp(56px, 8vw, 128px);
   --header-height: clamp(64px, 11vw, 88px);
   --column-gap: clamp(32px, 5vw, 80px);
   /* Space above and below each Selected work row, either side of its divider. */
@@ -92,18 +85,18 @@
    * that, where a fixed 1128px would sit a few pixels off the column.
    */
   --band-inner: calc(var(--container) - 2 * var(--gutter));
-  --hairline: 1px solid var(--ink-700);
+  --hairline: 1px solid var(--line);
 
   /*
    * --- Surfaces -------------------------------------------------------------
-   * Aliases of the §12 palette — no new colour values. A section may sit on a
-   * raised slate ground instead of the page's --ink-900. The two companions
+   * Aliases of the theme palette — no new colour values. A section may sit
+   * on a raised slate ground instead of the page's --bg. The two companions
    * keep its rules and chips reading at the weight they have on the page
    * ground, where a plain --hairline would drop to 1.25:1 and disappear.
    */
   --surface-raised: var(--ridge-2);
-  --hairline-raised: 1px solid var(--ink-500);
-  --chip-raised: var(--ink-700);
+  --hairline-raised: 1px solid var(--line-light);
+  --chip-raised: var(--line);
 
   /* --- §3 minimum target size --- */
   --target-min: 34px;

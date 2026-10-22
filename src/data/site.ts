@@ -4,13 +4,14 @@
  */
 
 import type { NavItem } from "../types/content";
+import { theme } from "../config/theme";
 
 export const site = {
   lang: "en",
   title: "adcortes — UX Engineer, design systems & accessible frontend",
   description:
     "UX Engineer working across product thinking, design systems and accessible frontend.",
-  ogImage: "/og-image.png",
+  ogImage: `/themes/${theme}/og-image.png`,
   ogImageAlt: "adcortes. UX Engineer — design systems &amp; accessible frontend",
 } as const;
 

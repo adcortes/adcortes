@@ -1,5 +1,5 @@
 /*
- * Base styles — Egg Theme
+ * Base styles — theme-agnostic.
  * Source of truth: docs/references/design/handoff/design-system.md §3, §4, §9, §10, §11
  */
 
@@ -64,8 +64,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--ink-900);
-  color: var(--paper-200);
+  background: var(--bg);
+  color: var(--text);
   font-family: var(--font);
   font-size: var(--fs-body);
   font-weight: var(--fw-regular);
@@ -121,7 +121,7 @@ a {
 
 .cta:focus-visible,
 .skip:focus-visible {
-  outline-color: var(--paper-200);
+  outline-color: var(--text);
   outline-offset: 3px;
 }
 
@@ -136,7 +136,7 @@ a {
   align-items: center;
   min-height: var(--target-min);
   background: var(--accent);
-  color: var(--ink-900);
+  color: var(--bg);
   font-size: var(--fs-body-small);
   font-weight: var(--fw-semibold);
   line-height: 1;
@@ -155,7 +155,7 @@ a {
   font-size: var(--fs-wordmark);
   font-weight: var(--fw-medium);
   line-height: 1;
-  color: var(--paper-200);
+  color: var(--text);
   text-decoration: none;
   display: inline-flex;
   align-items: baseline;
