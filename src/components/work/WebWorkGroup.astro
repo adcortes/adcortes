@@ -166,17 +166,27 @@ const { group } = Astro.props;
   /*
    * The band. The break after the Selected work projects is the change of
    * ground rather than a rule: it sits on --surface-raised, one step up from
-   * the page's --ink-900, which also gives the screenshots a neutral slate to
+   * the page's --bg, which also gives the screenshots a neutral slate to
    * sit on. No rule on either edge — a hairline and a surface change next to
    * each other read as two separate breaks — and no radius, since the band
    * meets both viewport edges. Its own --section-y padding carries the vertical
    * rhythm the capped sections take from the shell.
+   *
+   * Everything inside the band that would normally read --accent or
+   * --text-muted uses the *-on-band variant instead: on Earth's raised
+   * surface, plain --accent falls under WCAG AA (earth-theme/
+   * color-adjustments.md's contrast table). Egg's on-band variants are
+   * identical to the plain ones, so this costs it nothing.
    */
   .web {
     margin-inline: calc(50% - 50vw);
     background: var(--surface-raised);
     padding-block: var(--section-y);
     padding-inline: var(--gutter);
+  }
+
+  .web :focus-visible {
+    outline-color: var(--accent-on-band);
   }
 
   /* §6 — the band bleeds, its content does not: the same 1128px reading grid. */
@@ -205,7 +215,7 @@ const { group } = Astro.props;
     font-size: var(--fs-small);
     font-weight: var(--fw-medium);
     line-height: 1.4;
-    color: var(--accent);
+    color: var(--accent-on-band);
   }
 
   .web__title {
@@ -240,7 +250,7 @@ const { group } = Astro.props;
     font-size: var(--fs-x-small);
     font-weight: var(--fw-semibold);
     line-height: 1.4;
-    color: var(--paper-400);
+    color: var(--text-muted-on-band);
     padding-bottom: var(--space-10);
   }
 
@@ -249,7 +259,7 @@ const { group } = Astro.props;
     border-bottom: var(--hairline-raised);
   }
 
-  /* --hairline-raised, not --hairline: on this ground --ink-700 is 1.25:1. */
+  /* --hairline-raised, not --hairline: on this ground --line is 1.25:1. */
   .web__item {
     padding: 8px 0;
     border-top: var(--hairline-raised);
@@ -280,13 +290,13 @@ const { group } = Astro.props;
     font-size: var(--fs-about-item);
     font-weight: var(--fw-semibold);
     line-height: 1.35;
-    color: var(--paper-200);
+    color: var(--text);
   }
 
   /* Hover and the open state share one accent treatment; nothing else moves. */
   .web__row:hover .web__name,
   .web__row[aria-expanded='true'] .web__name {
-    color: var(--accent);
+    color: var(--accent-on-band);
   }
 
   .web__role,
@@ -297,7 +307,7 @@ const { group } = Astro.props;
   }
 
   .web__engagement {
-    color: var(--paper-400);
+    color: var(--text-muted-on-band);
   }
 
   /*
@@ -317,7 +327,7 @@ const { group } = Astro.props;
     align-items: baseline;
     gap: 0 var(--space-6);
     margin-top: var(--space-4);
-    color: var(--paper-400);
+    color: var(--text-muted-on-band);
   }
 
   .web__fold .web__role {
@@ -339,8 +349,8 @@ const { group } = Astro.props;
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    box-shadow: inset 0 0 0 1px var(--ink-500);
-    color: var(--paper-200);
+    box-shadow: inset 0 0 0 1px var(--line-light);
+    color: var(--text);
   }
 
   .web__icon::before,
@@ -360,7 +370,7 @@ const { group } = Astro.props;
 
   .web__row:hover .web__icon,
   .web__row[aria-expanded='true'] .web__icon {
-    color: var(--accent);
+    color: var(--accent-on-band);
   }
 
   /* Open: the vertical bar lies down on the horizontal one. */
@@ -405,9 +415,9 @@ const { group } = Astro.props;
   .web__shot {
     margin: 0;
     display: grid;
-    background: var(--ridge-1);
+    background: var(--figure-bg-on-band);
     border-radius: var(--radius-panel);
-    box-shadow: inset 0 0 0 1px var(--ink-500);
+    box-shadow: inset 0 0 0 1px var(--line-light);
     padding: 5% 5% 0;
   }
 
@@ -432,7 +442,7 @@ const { group } = Astro.props;
     place-content: center;
     font-size: var(--fs-small);
     line-height: 1.4;
-    color: var(--paper-400);
+    color: var(--text-muted-on-band);
   }
 
   .web__body {
@@ -457,7 +467,7 @@ const { group } = Astro.props;
     margin-top: var(--space-12);
     font-size: var(--fs-x-small);
     line-height: 1.4;
-    color: var(--paper-200);
+    color: var(--text);
   }
 
   .web__tags li {
@@ -482,12 +492,12 @@ const { group } = Astro.props;
     font-size: var(--fs-body-small);
     font-weight: var(--fw-semibold);
     line-height: 1.4;
-    color: var(--accent);
+    color: var(--accent-on-band);
     text-decoration: none;
   }
 
   .web__link:hover {
-    color: var(--paper-200);
+    color: var(--text);
   }
 
   /* §7 tablet and up — the intro moves beside the heading, the table opens. */
@@ -531,7 +541,7 @@ const { group } = Astro.props;
      * visual columns and the button's reading order from ever drifting apart.
      */
     .web__fold .web__role {
-      color: var(--paper-200);
+      color: var(--text);
     }
 
     /* The middot belongs to the folded line only. */

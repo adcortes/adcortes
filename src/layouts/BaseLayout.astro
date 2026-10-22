@@ -8,9 +8,12 @@
  * Keyboard order: skip link → wordmark → nav → (page content) → footer.
  */
 import { site } from '../data/site';
+import { theme } from '../config/theme';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import '../styles/tokens.css';
+import '../styles/themes/egg.css';
+import '../styles/themes/earth.css';
 import '../styles/base.css';
 
 interface Props {
@@ -22,17 +25,22 @@ const { title = site.title, description = site.description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang={site.lang}>
+<html lang={site.lang} data-theme={theme}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    {/* assets.md — favicons served from the site root. */}
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {/*
+      assets.md — favicons served from the active theme's own folder under
+      public/themes/, except favicon.ico: a legacy fallback that is not
+      recolored per theme (see color-adjustments.md's asset list), so it
+      stays shared at the site root.
+    */}
+    <link rel="icon" href={`/themes/${theme}/favicon.svg`} type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href={`/themes/${theme}/apple-touch-icon.png`} />
 
     {/*
       Self-hosted Schibsted Grotesk. One variable file covers 400/500/600, so a
