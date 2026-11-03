@@ -23,6 +23,9 @@
   --fs-sub: clamp(18px, 1.5vw, 21px);
   --fs-contact: clamp(28px, 3vw, 40px);
   --fs-lead: clamp(19px, 1.7vw, 23px);
+  /* The illustrated hero's sub-line (src/config/hero.ts) carries the three
+     areas at display weight, between --fs-sub and --fs-display. */
+  --fs-hero-subline: clamp(23px, 2.9vw, 38px);
 
   /* --- §5 spacing scale --- */
   --space-4: 4px;
@@ -75,6 +78,8 @@
   --radius-panel: 6px;
   --radius-cta: 8px;
   --radius-frame: 10px;
+  /* Fully rounded, not a step on the scale: the illustrated hero's CTA pill. */
+  --radius-pill: 999px;
 
   /* --- §6 layout --- */
   /*

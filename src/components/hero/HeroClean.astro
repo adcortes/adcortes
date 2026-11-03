@@ -1,0 +1,89 @@
+---
+/*
+ * Hero — "clean" variant (src/config/hero.ts).
+ * The hero copy without a background or illustration.
+ */
+import { hero } from '../../data/hero';
+---
+
+<section class="hero" aria-labelledby="hero-h">
+  <div class="hero__content">
+    <div class="hero__lead">
+      <p class="hero__eyebrow">{hero.eyebrow}</p>
+      <h1 id="hero-h" class="hero__title">{hero.title}</h1>
+      <p class="hero__subline">{hero.subline.classic}</p>
+    </div>
+
+    <div class="hero__aside">
+      <p class="hero__intro">{hero.intro}</p>
+      <p class="hero__jump">
+        <a class="hero__link" href={hero.jumpHref}>
+          {hero.jumpLabel} <span aria-hidden="true">↓</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--hero-pad-top) clamp(32px, 16vw, 62px);
+  }
+
+  .hero__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  .hero__eyebrow {
+    margin-bottom: var(--space-12);
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    line-height: 1.4;
+  }
+
+  .hero__title {
+    max-width: 17ch;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  .hero__subline {
+    margin-top: var(--space-20);
+    color: var(--accent);
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .hero__intro {
+    max-width: 480px;
+    font-size: var(--fs-body-large);
+    line-height: 1.65;
+  }
+
+  .hero__jump {
+    margin-top: var(--space-20);
+  }
+
+  .hero__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--target-min);
+    border-bottom: 1px solid currentColor;
+    color: var(--accent);
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    text-decoration: none;
+  }
+
+  .hero__link:hover {
+    color: var(--text);
+  }
+</style>

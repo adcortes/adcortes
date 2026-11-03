@@ -1,0 +1,369 @@
+---
+/*
+ * Hero — "illustrated" variant (src/config/hero.ts).
+ *
+ * The same copy as HeroClassic beside a built composition: the skill peaks
+ * (SkillPeaks.astro), the ground, the figure standing on it and a robot at
+ * her shoulder. The four ridge layers of HeroBackground are deliberately
+ * absent: this variant carries its own foreground, and the two together would
+ * be two ranges in one hero.
+ *
+ * The art is three separate images, not one flattened picture, so each can be
+ * placed, scaled and animated on its own. They are in src/assets/ rather than
+ * public/, which puts them through Astro's image pipeline: the sources are
+ * 1–2 MB PNGs and the hero cannot ship those. `<Image>` also writes real
+ * width/height attributes, so each layer's box is known before it loads.
+ *
+ * Layout is one stage — SkillPeaks' 612 x 584 box — with every layer placed
+ * as a percentage of it. Percentages, not pixels, are what keep the figure on the
+ * ground and the robot at her shoulder as the stage resizes. The stage's
+ * aspect-ratio reserves the whole composition's height up front, so nothing
+ * here can shift the page as it loads.
+ *
+ * Motion (§11): the base state is the finished state. Every entrance runs
+ * `backwards` from an offset, so switching the animations off leaves the hero
+ * complete rather than empty. Only the robot keeps moving afterwards.
+ */
+import { Image } from 'astro:assets';
+import SkillPeaks from './SkillPeaks.astro';
+import { hero } from '../../data/hero';
+import figure from '../../assets/hero/figure.png';
+/*
+ * The foreground she stands on. `rocks.png` is the granite outcrop of the
+ * reference board; `summit.png` — the alpine range — is the alternative, and
+ * swapping this one line is the whole change.
+ */
+import ground from '../../assets/hero/rocks.png';
+import robot from '../../assets/hero/robot.png';
+---
+
+<section class="hero" aria-labelledby="hero-h">
+  <div class="hero__content">
+    <div class="hero__lead">
+      <p class="hero__eyebrow">{hero.eyebrow}</p>
+      <h1 id="hero-h" class="hero__title">{hero.title}</h1>
+      <p class="hero__subline">{hero.subline.illustrated}</p>
+      <p class="hero__intro">{hero.intro}</p>
+      <p class="hero__jump">
+        <a class="hero__cta cta" href={hero.jumpHref}>
+          {hero.jumpLabel} <span aria-hidden="true">↓</span>
+        </a>
+      </p>
+    </div>
+
+    <div class="hero__art">
+      <SkillPeaks />
+
+      {/*
+        Ground and flourish. Both are decorative — scenery and a mascot — so
+        neither takes an alt. The figure does: it is a picture of the person
+        whose portfolio this is.
+
+        `width` caps what the pipeline emits at the largest size the layer is
+        ever drawn at (the stage tops out at 560px), and `sizes` describes the
+        two layouts, so no browser downloads more than it will paint.
+      */}
+      <Image
+        class="hero__ground"
+        src={ground}
+        alt=""
+        width={740}
+        widths={[370, 555, 740]}
+        sizes="(min-width: 1024px) min(370px, 33vw), min(370px, 59vw)"
+        loading="eager"
+      />
+
+      {/* A wrapper, so the entrance can own transform and the float can loop. */}
+      <div class="hero__robot">
+        <Image
+          class="hero__robot-img"
+          src={robot}
+          alt=""
+          width={224}
+          widths={[112, 168, 224]}
+          sizes="(min-width: 1024px) min(112px, 10vw), min(112px, 19vw)"
+          loading="eager"
+        />
+      </div>
+
+      <Image
+        class="hero__figure"
+        src={figure}
+        alt="Adriana, standing on a summit with a pack on."
+        width={560}
+        widths={[280, 420, 560]}
+        sizes="(min-width: 1024px) min(263px, 23vw), min(263px, 44vw)"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: clamp(24px, 2vw, 72px) clamp(24px, 2vw, 72px);
+  }
+
+  /*
+   * Mobile-first: copy, then the composition under it. From 1024px — the same
+   * breakpoint the section grid uses — they sit side by side, the art taking
+   * slightly the larger share, as the reference board shows.
+   */
+  .hero__content {
+    display: grid;
+    gap: var(--space-40);
+    align-items: center;
+  }
+
+  @media (min-width: 1024px) {
+    .hero__content {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: var(--column-gap);
+    }
+  }
+
+  /* §1 — muted, under 16px, never a heading. */
+  .hero__eyebrow {
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--text-muted);
+    margin-bottom: var(--space-12);
+  }
+
+  /*
+   * §4 Display. The measure is shorter than the classic hero's 17ch: in two
+   * columns the headline is meant to break after "idea", as the board shows.
+   */
+  .hero__title {
+    max-width: 13ch;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  /* The three areas, at the size the board gives them — the one accent string. */
+  .hero__subline {
+    margin-top: var(--space-16);
+    font-size: var(--fs-hero-subline);
+    font-weight: var(--fw-semibold);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--accent);
+  }
+
+  /* §4 — Body large, measure 460px. */
+  .hero__intro {
+    max-width: 560px;
+    margin-top: var(--space-28);
+    font-size: var(--fs-body-large);
+    line-height: 1.65;
+  }
+
+  .hero__jump {
+    margin-top: var(--space-32);
+  }
+
+  /*
+   * §9 button, filled: the board gives this hero a solid pill rather than the
+   * classic variant's underlined link. Its focus ring is the --text variant
+   * already set globally for .cta in base.css §10.
+   */
+  .hero__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--cta-height);
+    padding-inline: 28px;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    font-size: var(--fs-body);
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+    color: var(--bg);
+    text-decoration: none;
+    transition: background-color 180ms ease, color 180ms ease;
+  }
+
+  .hero__cta:hover {
+    background: transparent;
+    color: var(--accent);
+  }
+
+  /*
+   * --- The stage ----------------------------------------------------------
+   * SkillPeaks sets the stage's shape (612 / 584) and its own container; every
+   * other layer is placed against it in percentages. `isolation` keeps these
+   * z-indexes from reaching anything else on the page.
+   *
+   * Stacking, back to front: peaks, ground, robot, figure. The robot sits
+   * under the figure so it can come out from behind her.
+   */
+  .hero__art {
+    position: relative;
+    isolation: isolate;
+    width: 100%;
+    max-width: 560px;
+    margin-inline: auto;
+    margin-bottom: -24px;
+  }
+
+  .hero__ground,
+  .hero__robot,
+  .hero__figure {
+    position: absolute;
+    height: auto;
+  }
+
+  /* The wrapper is sized by the image it holds; the image fills it. */
+  .hero__robot-img {
+    width: 100%;
+    height: auto;
+  }
+
+  /*
+   * The three placements. Each number is a percentage of the stage, measured
+   * off the reference board; the transparent margin baked into each PNG is
+   * already accounted for, which is why none of them is a round number.
+   */
+  .hero__ground {
+    z-index: 1;
+    left: 26.5%;
+    bottom: -4%;
+    width: 66%;
+    max-width: 370px;
+  }
+
+  .hero__robot {
+    z-index: 2;
+    left: 67.5%;
+    bottom: 51%;
+    width: 22%;
+    max-width: 112px;
+  }
+
+  .hero__figure {
+    z-index: 3;
+    left: 34.3%;
+    bottom: 2.4%;
+    width: 50%;
+    max-width: 280px;
+  }
+
+  /*
+   * --- Entrance -----------------------------------------------------------
+   * Copy first, then the range grows (SkillPeaks runs on --peaks-delay), then
+   * the ground and the figure settle in, then the robot arrives. Everything
+   * moves on transform and opacity only, and no travel is longer than a few
+   * pixels, so nothing here can push the layout around.
+   */
+  .hero__eyebrow,
+  .hero__title,
+  .hero__subline,
+  .hero__intro,
+  .hero__jump {
+    animation: hero-rise 620ms cubic-bezier(0.22, 0.7, 0.3, 1) backwards;
+  }
+
+  .hero__eyebrow {
+    animation-delay: 40ms;
+  }
+  .hero__title {
+    animation-delay: 120ms;
+  }
+  .hero__subline {
+    animation-delay: 200ms;
+  }
+  .hero__intro {
+    animation-delay: 280ms;
+  }
+  .hero__jump {
+    animation-delay: 360ms;
+  }
+
+  .hero__art {
+    --peaks-delay: 300ms;
+  }
+
+  /* The ground arrives under the figure, a beat before her. */
+  .hero__ground {
+    animation: hero-settle 760ms cubic-bezier(0.22, 0.7, 0.3, 1) 1000ms backwards;
+  }
+
+  .hero__figure {
+    animation: hero-settle 760ms cubic-bezier(0.22, 0.7, 0.3, 1) 1120ms backwards;
+  }
+
+  /*
+   * The robot is the one thing still moving once the hero has settled. The
+   * wrapper carries the arrival and the image carries the loop, so the two
+   * never fight over `transform`; the float starts as the arrival ends.
+   *
+   * 5px over 4.6s with just over a degree of roll: at this size it reads as
+   * hovering rather than bobbing. The trail is part of the same PNG, so it
+   * travels with the robot without needing its own animation.
+   */
+  .hero__robot {
+    animation: robot-in 900ms cubic-bezier(0.22, 0.68, 0.32, 1) 1400ms backwards;
+  }
+
+  .hero__robot-img {
+    animation: robot-float 4600ms ease-in-out 2300ms infinite;
+  }
+
+  @keyframes hero-rise {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @keyframes hero-settle {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  /*
+   * Out from behind her: a short diagonal, expressed as a percentage of the
+   * robot's own box so the travel scales with the composition.
+   */
+  @keyframes robot-in {
+    from {
+      opacity: 0;
+      transform: translate(-42%, 22%) scale(0.86);
+    }
+  }
+
+  @keyframes robot-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-5px) rotate(-1.2deg);
+    }
+  }
+
+  /* §11 — the finished composition, immediately, and nothing left moving. */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__eyebrow,
+    .hero__title,
+    .hero__subline,
+    .hero__intro,
+    .hero__jump,
+    .hero__ground,
+    .hero__figure,
+    .hero__robot,
+    .hero__robot-img {
+      animation: none;
+    }
+
+    .hero__cta {
+      transition: none;
+    }
+  }
+</style>

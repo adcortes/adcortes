@@ -158,27 +158,27 @@ export const webWork: WebWorkGroup = {
         target: "_blank",
       },
     },
-    {
-      name: "Editorial Salvat — Collection websites",
-      engagement: "Agency",
-      description:
-        "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
-      role: "Visual design · Frontend development",
-      tags: ["Design system", "Frontend"],
-    },
-    {
-      name: "Bruguer — Colores del Mundo",
-      engagement: "Agency",
-      description:
-        "An interactive product experience for Bruguer’s Vibrations paint range, bringing colour inspiration, product details and technical documentation together.",
-      role: "Visual design · Frontend development",
-      tags: ["Interactive design", "CSS animation", "Product content"],
-      image: {
-        src: "/images/bruguer-vibrations.jpeg",
-        alt: "A Bruguer Vibrations colour page, pairing a painted interior photograph with the range’s colour swatches.",
-        width: 1024,
-        height: 637,
-      },
-    },
+    // {
+    //   name: "Editorial Salvat — Collection websites",
+    //   engagement: "Agency",
+    //   description:
+    //     "A reusable website template for editorial collections, designed to support a consistent structure while giving each series its own visual character.",
+    //   role: "Visual design · Frontend development",
+    //   tags: ["Design system", "Frontend"],
+    // },
+    // {
+    //   name: "Bruguer — Colores del Mundo",
+    //   engagement: "Agency",
+    //   description:
+    //     "An interactive product experience for Bruguer’s Vibrations paint range, bringing colour inspiration, product details and technical documentation together.",
+    //   role: "Visual design · Frontend development",
+    //   tags: ["Interactive design", "CSS animation", "Product content"],
+    //   image: {
+    //     src: "/images/bruguer-vibrations.jpeg",
+    //     alt: "A Bruguer Vibrations colour page, pairing a painted interior photograph with the range’s colour swatches.",
+    //     width: 1024,
+    //     height: 637,
+    //   },
+    // },
   ],
 };

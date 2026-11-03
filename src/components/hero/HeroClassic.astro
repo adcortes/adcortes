@@ -1,0 +1,136 @@
+---
+/*
+ * Hero — "classic" variant (src/config/hero.ts).
+ * The approved hero of design-system.md §5 and visual-direction.md §Hero,
+ * lifted out of src/pages/index.astro unchanged when the illustrated variant
+ * was added. Copy now comes from src/data/hero.ts so the two variants cannot
+ * drift apart; nothing else about it moved.
+ */
+import HeroBackground from './HeroBackground.astro';
+import { hero } from '../../data/hero';
+---
+
+<section class="hero" aria-labelledby="hero-h">
+  {/* Decorative, first in the DOM so every text node paints over it. */}
+  <HeroBackground />
+
+  <div class="hero__content">
+    <div class="hero__lead">
+      <p class="hero__eyebrow">{hero.eyebrow}</p>
+      <h1 id="hero-h" class="hero__title">{hero.title}</h1>
+      <p class="hero__subline">{hero.subline.classic}</p>
+    </div>
+
+    <div class="hero__aside">
+      <p class="hero__intro">{hero.intro}</p>
+      <p class="hero__jump">
+        <a class="hero__link" href={hero.jumpHref}>
+          {hero.jumpLabel} <span aria-hidden="true">↓</span>
+        </a>
+      </p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* §5 — hero padding. `isolation` keeps the decorative background's z-index 0
+     scoped to the hero, so it can never rise above anything else on the page. */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    padding-block: var(--hero-pad-top) var(--hero-pad-bottom);
+  }
+
+  /* Every text node sits on layer 1; the mountains are on layer 0. */
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-24);
+  }
+
+  /* §1 — muted, under 16px, never a heading. */
+  .hero__eyebrow {
+    font-size: var(--fs-small);
+    line-height: 1.4;
+    color: var(--text-muted);
+    margin-bottom: var(--space-12);
+  }
+
+  /* §4 — Display, used once per page. Measure 17ch. */
+  .hero__title {
+    max-width: 17ch;
+    font-size: var(--fs-display);
+    font-weight: var(--fw-semibold);
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+  }
+
+  /* §4 — Hero sub-line: the one accent string in the hero, kept short. */
+  .hero__subline {
+    margin-top: var(--space-20);
+    font-size: var(--fs-sub);
+    font-weight: var(--fw-medium);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    color: var(--accent);
+  }
+
+  /* §4 — Body large, measure 460px. */
+  .hero__intro {
+    max-width: 480px;
+    font-size: var(--fs-body-large);
+    line-height: 1.65;
+  }
+
+  .hero__jump {
+    margin-top: var(--space-20);
+  }
+
+  /*
+   * §9 content link, hero variant: 15px/600 accent, no underline, a 1px bottom
+   * border in the current colour and an aria-hidden trailing glyph. The 44px
+   * minimum target comes from min-height, which also sets the border far enough
+   * below the text to read as a rule rather than an underline.
+   */
+  .hero__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--target-min);
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1.4;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid currentColor;
+  }
+
+  .hero__link:hover {
+    color: var(--text);
+  }
+
+  /*
+   * §7 desktop — from 1024px the intro and its jump link move beside the
+   * headline, matching the section grid's breakpoint. The two columns are
+   * bottom-aligned, so the jump link sits on the sub-line's row exactly as the
+   * approved desktop board shows. Below 1024px everything stays in one column,
+   * as the tablet and mobile boards show.
+   */
+  @media (min-width: 1024px) {
+    .hero__content {
+      flex-direction: row;
+      align-items: flex-end;
+      gap: var(--column-gap);
+    }
+
+    .hero__lead {
+      flex: 1 1 auto;
+    }
+
+    .hero__aside {
+      flex: 0 1 480px;
+    }
+  }
+</style>
