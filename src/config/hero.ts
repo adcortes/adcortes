@@ -6,10 +6,11 @@
  * "illustrated" is the variant under evaluation: the same copy beside a
  * built composition — skill peaks, summit, figure, robot.
  * "clean" is the same text without a background or illustration.
+ * "animated-valley" uses the Earth valley layers with restrained GSAP motion.
  *
  * Changing this value swaps the hero at build time in src/pages/index.astro.
  * All variants read their copy from src/data/hero.ts, so none can drift.
  */
-export type HeroVariant = "classic" | "illustrated" | "clean";
+export type HeroVariant = "classic" | "illustrated" | "clean" | "animated-valley";
 
-export const heroVariant: HeroVariant = "clean";
+export const heroVariant: HeroVariant = "animated-valley";

@@ -18,7 +18,7 @@
   --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --container: 1240px;
   --gutter: clamp(20px, 4vw, 56px);
-  --section-y: clamp(56px, 5vw, 104px);
+  --section-y: clamp(24px, 4vw, 66px);
   --fs-display: clamp(34px, 4.3vw, 54px);
   --fs-sub: clamp(18px, 1.5vw, 21px);
   --fs-contact: clamp(28px, 3vw, 40px);
@@ -26,6 +26,9 @@
   /* The illustrated hero's sub-line (src/config/hero.ts) carries the three
      areas at display weight, between --fs-sub and --fs-display. */
   --fs-hero-subline: clamp(23px, 2.9vw, 38px);
+  /* Animated Valley's full-viewport hero uses the larger display scale. */
+  --fs-valley-title: clamp(40px, 8vw, 80px);
+  --fs-valley-subline: clamp(36px, 4vw, 62px);
 
   /* --- §5 spacing scale --- */
   --space-4: 4px;
@@ -71,6 +74,8 @@
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
+  --fw-bold: 700;
+  --fw-black: 900;
 
   /* --- §8 radii --- */
   --radius-focus: 2px;

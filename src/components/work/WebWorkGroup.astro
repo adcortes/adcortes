@@ -27,8 +27,8 @@
  * Progressive enhancement. The server renders every panel open and every button
  * `aria-expanded="true"`, so with no JavaScript the archive is a plain, fully
  * readable list. The inline script below sets `data-enhanced` on the section —
- * which is what arms the collapsing CSS — then closes every panel and opens the
- * first. It runs before first paint, so there is no flash of the open state.
+ * which is what arms the collapsing CSS — then closes every panel. It runs
+ * before first paint, so there is no flash of the open state.
  */
 import type { WebWorkGroup } from '../../types/content';
 
@@ -586,7 +586,7 @@ const { group } = Astro.props;
   /*
    * The archive's disclosure behaviour — the page's only script. It runs where
    * it sits, before first paint, so the open-by-default markup above is
-   * collapsed without a flash.
+   * collapsed without a flash. All rows start closed when JavaScript runs.
    *
    * Closing animates first and only then sets `hidden`, so the panel keeps its
    * 200ms collapse while still leaving the accessibility tree and the tab order
@@ -644,11 +644,5 @@ const { group } = Astro.props;
         if (!wasOpen) open(row);
       });
     }
-
-    // The first row starts open. No reflow flush here, so it simply is open on
-    // the first paint rather than animating into place.
-    rows[0].panel.hidden = false;
-    rows[0].panel.dataset.open = '';
-    rows[0].btn.setAttribute('aria-expanded', 'true');
   })();
 </script>

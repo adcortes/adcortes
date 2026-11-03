@@ -1,0 +1,276 @@
+---
+import { readFileSync } from 'node:fs';
+import { hero } from '../../data/hero';
+
+// The source SVGs contain one compound path each. In the forest files, each
+// closed subpath is a tree except the last one, which is the ground. Splitting
+// selected subpaths at build time preserves the exact drawing and source assets.
+const files = [
+  'hero-valley-1-ridge-far.svg',
+  'hero-valley-2-ridge-mid.svg',
+  'hero-valley-3-forest-back.svg',
+  'hero-valley-4-forest-mid.svg',
+  'hero-valley-5-forest-front.svg',
+] as const;
+
+const windTrees: Record<number, readonly number[]> = {
+  3: [15, 34, 58, 78, 105],
+  4: [8, 28, 50, 70, 88],
+};
+
+const titleBreak = ' to interface.';
+const titleFirstLine = hero.title.endsWith(titleBreak)
+  ? hero.title.slice(0, -titleBreak.length)
+  : hero.title;
+const titleSecondLine = hero.title.endsWith(titleBreak) ? titleBreak.trimStart() : '';
+
+const layers = files.map((file, layerIndex) => {
+  const source = readFileSync(new URL(`../../../public/themes/earth/hero-valley-layers/${file}`, import.meta.url), 'utf8');
+  const path = source.match(/<path\s+d="([^"]+)"\s+fill="([^"]+)"/);
+  if (!path) throw new Error(`Invalid valley layer: ${file}`);
+
+  const [, drawing, fill] = path;
+  const selected = new Set(windTrees[layerIndex] ?? []);
+  const subpaths = drawing.match(/M[^Z]*Z/g);
+  if (!subpaths || subpaths.join('') !== drawing.replace(/\s+(?=M)/g, '') || (selected.size && Math.max(...selected) >= subpaths.length - 1)) {
+    throw new Error(`Unexpected valley path structure: ${file}`);
+  }
+
+  let staticPath = '';
+  const shapes: string[] = [];
+  const flush = () => {
+    if (staticPath) shapes.push(`<path d="${staticPath}" fill="${fill}"/>`);
+    staticPath = '';
+  };
+
+  subpaths.forEach((shape, index) => {
+    if (selected.has(index)) {
+      flush();
+      shapes.push(`<path d="${shape}" fill="${fill}" data-wind="${layerIndex}-${index}"/>`);
+    } else {
+      staticPath += shape;
+    }
+  });
+  flush();
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">${shapes.join('')}</svg>`;
+});
+---
+
+<section class="hero" aria-labelledby="hero-h" data-animated-valley>
+  <div class="hero__landscape" aria-hidden="true">
+    {layers.map((svg, index) => (
+      <div class="hero__layer" data-valley-layer>
+        <div class="hero__parallax" data-valley-parallax={index < 2 ? index : undefined} set:html={svg} />
+      </div>
+    ))}
+  </div>
+
+  <div class="hero__content">
+    <p class="hero__eyebrow" data-valley-text>{hero.eyebrow}</p>
+    <h1 id="hero-h" class="hero__title" data-valley-text>
+      {titleFirstLine} {titleSecondLine}
+    </h1>
+    <p class="hero__subline" data-valley-text>{hero.subline.illustrated}</p>
+    <p class="hero__intro" data-valley-text>{hero.intro}</p>
+    <p class="hero__jump" data-valley-text>
+      <a class="hero__link" href={hero.jumpHref}>
+        {hero.jumpLabel} <span aria-hidden="true">↓</span>
+      </a>
+    </p>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const hero = document.querySelector<HTMLElement>('[data-animated-valley]');
+  if (hero) {
+    // Adjust the visual intensity and timing here without touching the SVGs.
+    const motion = {
+      layerRise: 10,
+      layerDuration: 0.78,
+      layerStagger: 0.12,
+      textRise: 9,
+      textDuration: 0.58,
+      textStagger: 0.085,
+      parallax: [2, 5],
+      parallaxDuration: 0.9,
+      windDegrees: [0.55, 0.8, 0.65, 1, 0.7, 0.85, 0.6, 1.1, 0.75, 0.9],
+      windDuration: [4.8, 5.5, 6.2, 5.1, 6.8],
+    };
+
+    const media = gsap.matchMedia();
+    media.add('(prefers-reduced-motion: no-preference)', () => {
+      const layers = hero.querySelectorAll<HTMLElement>('[data-valley-layer]');
+      const text = hero.querySelectorAll<HTMLElement>('[data-valley-text]');
+      gsap.timeline({ defaults: { ease: 'power2.out' } })
+        .from(layers, {
+          opacity: 0,
+          y: motion.layerRise,
+          duration: motion.layerDuration,
+          stagger: motion.layerStagger,
+        }, 0.04)
+        .from(text, {
+          opacity: 0,
+          y: motion.textRise,
+          duration: motion.textDuration,
+          stagger: motion.textStagger,
+        }, 0.16);
+    });
+
+    media.add('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
+      const ridges = Array.from(hero.querySelectorAll<HTMLElement>('[data-valley-parallax]'));
+      const move = ridges.map((ridge) => gsap.quickTo(ridge, 'x', {
+        duration: motion.parallaxDuration,
+        ease: 'power2.out',
+      }));
+      const onMove = (event: PointerEvent) => {
+        const bounds = hero.getBoundingClientRect();
+        const position = (event.clientX - bounds.left) / bounds.width - 0.5;
+        move.forEach((setX, index) => setX(position * 2 * motion.parallax[index]));
+      };
+      const onLeave = () => move.forEach((setX) => setX(0));
+      hero.addEventListener('pointermove', onMove, { passive: true });
+      hero.addEventListener('pointerleave', onLeave);
+
+      const trees = hero.querySelectorAll<SVGPathElement>('[data-wind]');
+      trees.forEach((tree, index) => {
+        gsap.to(tree, {
+          rotation: motion.windDegrees[index % motion.windDegrees.length] * (index % 2 ? -1 : 1),
+          duration: motion.windDuration[index % motion.windDuration.length],
+          delay: index * 0.17,
+          ease: 'sine.inOut',
+          yoyo: true,
+          repeat: -1,
+        });
+      });
+
+      return () => {
+        hero.removeEventListener('pointermove', onMove);
+        hero.removeEventListener('pointerleave', onLeave);
+      };
+    });
+  }
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    isolation: isolate;
+    min-height: calc(100vh - var(--header-height) - 1px);
+    min-height: calc(100dvh - var(--header-height) - 1px);
+    padding-block: clamp(56px, 4vw, 72px) var(--space-80);
+  }
+
+  .hero__landscape {
+    position: absolute;
+    inset: calc(-1 * var(--header-height) - 1px) auto 0 50%;
+    width: 100vw;
+    overflow: hidden;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .hero__layer,
+  .hero__parallax {
+    position: absolute;
+    inset: 0;
+  }
+
+  /* The moving ridges need a few spare pixels at each edge. */
+  .hero__parallax[data-valley-parallax] {
+    inset-inline: -8px;
+  }
+
+  .hero__parallax :global(svg) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+  }
+
+  .hero__parallax :global([data-wind]) {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 90%);
+    margin-top: 12vh;
+  }
+
+  .hero__eyebrow {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    line-height: 1.4;
+  }
+
+  .hero__title {
+    margin-top: var(--space-20);
+    font-size: var(--fs-valley-title);
+    font-weight: var(--fw-bold);
+    line-height: 1.04;
+    letter-spacing: -0.04em;
+  }
+
+  .hero__title span {
+    display: block;
+  }
+
+  .hero__subline {
+    margin-top: clamp(20px, 1vw, 32px);
+    color: var(--accent);
+    font-size: var(--fs-valley-subline);
+    font-weight: var(--fw-bold);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+
+  .hero__intro {
+    max-width: 500px;
+    margin-top: var(--space-28);
+    font-size: var(--fs-body-large);
+    line-height: 1.65;
+  }
+
+  .hero__jump {
+    margin-top: var(--space-28);
+  }
+
+  .hero__link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--cta-height);
+    padding-inline: var(--space-24);
+    border-radius: var(--radius-pill);
+    background: var(--accent);
+    color: var(--bg);
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .hero__link:hover {
+    background: var(--text);
+  }
+
+  .hero__link:focus-visible {
+    outline-color: var(--text);
+  }
+
+  @media (max-width: 639px) {
+    .hero {
+      padding-block: var(--space-56) var(--space-80);
+    }
+
+    .hero__subline {
+      max-width: 15ch;
+    }
+  }
+</style>

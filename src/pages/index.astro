@@ -13,6 +13,7 @@ import SectionShell from '../components/SectionShell.astro';
 import HeroClassic from '../components/hero/HeroClassic.astro';
 import HeroClean from '../components/hero/HeroClean.astro';
 import HeroIllustrated from '../components/hero/HeroIllustrated.astro';
+import HeroAnimatedValley from '../components/hero/HeroAnimatedValley.astro';
 import ProjectEntry from '../components/work/ProjectEntry.astro';
 import WebWorkGroup from '../components/work/WebWorkGroup.astro';
 import AboutList from '../components/AboutList.astro';
@@ -32,6 +33,8 @@ import { heroVariant } from '../config/hero';
   {
     heroVariant === 'illustrated' ? (
       <HeroIllustrated />
+    ) : heroVariant === 'animated-valley' ? (
+      <HeroAnimatedValley />
     ) : heroVariant === 'clean' ? (
       <HeroClean />
     ) : (

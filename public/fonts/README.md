@@ -12,9 +12,9 @@
 ### Why one file instead of three
 
 The handoff (`assets.md`) calls for woff2 at 400, 500 and 600. Google Fonts serves Schibsted Grotesk
-as a **variable** font: the `css2` API returns the *same* latin woff2 URL for all three weights, with
-the weight axis selected at render time. Self-hosting the single variable file therefore delivers all
-three required weights in 46 KB and one preload, instead of three files and three requests.
+as a **variable** font with a `wght` axis from 400 to 900. The `css2` API returns the *same* latin
+woff2 URL for the requested weights, with the weight axis selected at render time. Self-hosting the
+single variable file therefore also makes 700 and 900 available in 46 KB and one preload.
 
 This is the latin subset only (`U+0000-00FF` plus common punctuation and the arrow glyphs `U+2191`,
 `U+2193` used by the link affordances). The latin-ext subset is deliberately not shipped — no copy in
