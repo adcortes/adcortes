@@ -16,10 +16,10 @@ export const workSection = {
 } as const;
 
 /*
- * Groups 1 and 2. Both visuals are the approved HTML/CSS diagrams, which stand
- * in for confidential screens: the drawing is decorative and its meaning lives
- * in `caption`. A project may instead carry an image visual
- * (`{ kind: 'image', src, alt, … }`); no project uses one today.
+ * Groups 1 and 2. A project may carry an HTML/CSS diagram, an image visual
+ * (`{ kind: 'image', src, alt, … }`), or no visual (`{ kind: 'none' }`).
+ * Diagrams stand in for confidential screens: the drawing is decorative and
+ * its meaning lives in `caption`.
  *
  * TODO(launch): project 1's approved "Repository ↗" link has no known
  * destination yet. Per the repository constraint it is omitted rather than
@@ -40,7 +40,7 @@ export const projects: ProjectEntry[] = [
     visual: {
       kind: "diagram",
       component: "emr",
-      caption: "Records list and consultation form. All patient data is synthetic.",
+      // caption: "Records list and consultation form. All patient data is synthetic.",
     },
   },
   {
@@ -64,10 +64,10 @@ export const projects: ProjectEntry[] = [
     ],
     visual: {
       kind: "image",
-      src: "/images/ibe-booking.jpeg",
+      src: "/images/ibe-booking-1.png",
       alt: "",
       // component: "design-system",
-      caption: "One token and component layer shared across several airlines.",
+      // caption: "One token and component layer shared across several airlines.",
     },
   },
   {
@@ -83,7 +83,7 @@ export const projects: ProjectEntry[] = [
     visual: {
       kind: "diagram",
       component: "design-system",
-      caption: "One token and component layer shared across several airlines.",
+      // caption: "One token and component layer shared across several airlines.",
     },
   },
 ];

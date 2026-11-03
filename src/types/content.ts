@@ -20,13 +20,13 @@ export interface Link {
 export type DiagramId = "emr" | "design-system";
 
 /**
- * A project's visual. Both variants share the same <figure> slot, the same
- * responsive rules (shown from 640px up, design-system.md §7) and the same
- * caption treatment; only what sits above the caption differs.
+ * A project's visual. Diagram and image variants share the same <figure> slot,
+ * responsive rules (shown from 640px up, design-system.md §7) and caption
+ * treatment. A project may also have no visual.
  */
 interface ProjectVisualBase {
   /** Visible <figcaption>. Shown from 640px up. */
-  caption: string;
+  caption?: string;
 }
 
 /**
@@ -54,7 +54,11 @@ export interface ImageVisual extends ProjectVisualBase {
   height?: number;
 }
 
-export type ProjectVisual = DiagramVisual | ImageVisual;
+export interface NoVisual {
+  kind: "none";
+}
+
+export type ProjectVisual = DiagramVisual | ImageVisual | NoVisual;
 
 /**
  * Behaviours a project action button may perform.
@@ -87,7 +91,7 @@ export interface ButtonAction {
  */
 export type ProjectAction = LinkAction | ButtonAction;
 
-/** Selected work, groups 1 and 2 — a single project with metadata and a visual. */
+/** Selected work, groups 1 and 2 — a project with metadata and an optional visual. */
 export interface ProjectEntry {
   id: string;
   /** Accent label above the title. */
@@ -119,7 +123,7 @@ export interface WebWorkImage {
    * Which edge of the screenshot the 16:10 box keeps when it crops. Defaults to
    * the top crop every project but Boekie Boekie uses.
    */
-  crop?: 'top' | 'center';
+  crop?: "top" | "center";
 }
 
 export interface WebWorkItem {
@@ -131,7 +135,7 @@ export interface WebWorkItem {
    * why this is a closed set and not free text. Optional and omitted rather
    * than guessed.
    */
-  engagement?: 'Agency' | 'Freelance';
+  engagement?: "Agency" | "Freelance";
   /**
    * What I did on the piece, in the one-line form the Selected work projects
    * use for their own `role`. Optional and rendered only when present, so an

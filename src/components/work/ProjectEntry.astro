@@ -26,30 +26,32 @@ const diagrams = {
 const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
 ---
 
-<li class="project">
-  <figure class="project__figure">
-    {
-      /*
-       * Two variants, one slot. A diagram is drawn in CSS and is decorative,
-       * so its accessible text is the caption alone; an image is real content
-       * and carries its own meaningful alt.
-       */
-      visual.kind === 'image' ? (
-        <img
-          class="project__image"
-          src={visual.src}
-          alt={visual.alt}
-          width={visual.width}
-          height={visual.height}
-          loading="lazy"
-          decoding="async"
-        />
-      ) : (
-        Diagram && <Diagram />
-      )
-    }
-    <figcaption class="project__caption">{visual.caption}</figcaption>
-  </figure>
+<li class:list={['project', { 'project--without-visual': visual.kind === 'none' }]}>
+  {
+    visual.kind !== 'none' && (
+      <figure class="project__figure">
+        {/*
+         * A diagram is drawn in CSS and is decorative, so its accessible text
+         * is the caption alone; an image is real content and carries its own
+         * meaningful alt.
+         */}
+        {visual.kind === 'image' ? (
+          <img
+            class="project__image"
+            src={visual.src}
+            alt={visual.alt}
+            width={visual.width}
+            height={visual.height}
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          Diagram && <Diagram />
+        )}
+        {visual.caption && <figcaption class="project__caption">{visual.caption}</figcaption>}
+      </figure>
+    )
+  }
 
   <div class="project__body">
     <div class="project__head">
@@ -279,9 +281,13 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
   @media (min-width: 640px) {
     .project {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.6fr);
       gap: var(--space-32) clamp(28px, 4vw, 56px);
       align-items: start;
+    }
+
+    .project--without-visual {
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .project__summary {
