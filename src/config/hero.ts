@@ -13,4 +13,4 @@
  */
 export type HeroVariant = "classic" | "illustrated" | "clean" | "animated-valley";
 
-export const heroVariant: HeroVariant = "animated-valley";
+export const heroVariant: HeroVariant = "clean";

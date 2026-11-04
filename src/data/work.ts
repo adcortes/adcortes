@@ -21,10 +21,7 @@ export const workSection = {
  * Diagrams stand in for confidential screens: the drawing is decorative and
  * its meaning lives in `caption`.
  *
- * TODO(launch): project 1's approved "Repository ↗" link has no known
- * destination yet. Per the repository constraint it is omitted rather than
- * stubbed — add `action: { kind: 'link', label: 'Repository', href: '…' }` once
- * the URL exists, and the footer switches to its tags-and-action layout.
+ * Actions are optional and appear only when their destination exists.
  */
 export const projects: ProjectEntry[] = [
   {
@@ -37,6 +34,7 @@ export const projects: ProjectEntry[] = [
     outcome:
       "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
+    action: { kind: "link", label: "Read case study", href: "/work/emr/" },
     visual: {
       kind: "none",
       // component: "emr",

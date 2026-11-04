@@ -53,7 +53,16 @@ const layers = files.map((file, layerIndex) => {
   });
   flush();
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">${shapes.join('')}</svg>`;
+  // The two mask rectangles use the SVG's 1600 × 620 coordinates. One is
+  // fully opaque; the other adds a short alpha feather to the reveal edge.
+  // They are dormant unless JavaScript attaches the mask during the entrance.
+  const maskId = `valley-reveal-${layerIndex}`;
+  const featherId = `valley-feather-${layerIndex}`;
+  const markup = layerIndex === 0
+    ? shapes.join('')
+    : `<defs><linearGradient id="${featherId}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-opacity="1"/><stop offset="1" stop-opacity="0"/></linearGradient><mask id="${maskId}" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1600" height="620"><rect data-valley-solid x="0" y="0" width="1600" height="620" fill="currentColor"/><rect data-valley-feather x="0" y="620" width="1600" height="72" fill="url(#${featherId})"/></mask></defs><g data-valley-drawing>${shapes.join('')}</g>`;
+
+  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 620" preserveAspectRatio="xMidYMax slice" aria-hidden="true" focusable="false">${markup}</svg>`;
 });
 ---
 
@@ -87,84 +96,158 @@ const layers = files.map((file, layerIndex) => {
 
   const hero = document.querySelector<HTMLElement>('[data-animated-valley]');
   if (hero) {
+    const valley = motion.hero.valley;
+    const root = document.documentElement;
+    const layers = Array.from(hero.querySelectorAll<HTMLElement>('[data-valley-layer]'));
+    const text = Array.from(hero.querySelectorAll<HTMLElement>('[data-valley-text]'));
+    const drawings = Array.from(hero.querySelectorAll<SVGGElement>('[data-valley-drawing]'));
+    const solids = Array.from(hero.querySelectorAll<SVGRectElement>('[data-valley-solid]'));
+    const feathers = Array.from(hero.querySelectorAll<SVGRectElement>('[data-valley-feather]'));
+    const frontTrees = Array.from(hero.querySelectorAll<SVGPathElement>('[data-wind^="4-"]'));
     let entranceHandled = false;
+    let ambientStarted = false;
+    const ambientMedia = gsap.matchMedia();
+
+    const resetEntrance = () => {
+      delete root.dataset.heroMotion;
+      drawings.forEach((drawing) => drawing.removeAttribute('mask'));
+      solids.forEach((rect) => rect.setAttribute('height', '620'));
+      feathers.forEach((rect) => rect.setAttribute('y', '620'));
+      gsap.set([...layers, ...text, ...frontTrees], { clearProps: 'opacity,transform' });
+    };
+
+    const startAmbient = () => {
+      if (ambientStarted) return;
+      ambientStarted = true;
+      ambientMedia.add('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
+        const ridges = Array.from(hero.querySelectorAll<HTMLElement>('[data-valley-parallax]'));
+        const move = ridges.map((ridge) => gsap.quickTo(ridge, 'x', {
+          duration: valley.parallaxDuration,
+          ease: motion.pointerEase,
+        }));
+        const onMove = (event: PointerEvent) => {
+          const bounds = hero.getBoundingClientRect();
+          const position = (event.clientX - bounds.left) / bounds.width - 0.5;
+          move.forEach((setX, index) => setX(position * 2 * valley.parallax[index]));
+        };
+        const onLeave = () => move.forEach((setX) => setX(0));
+        hero.addEventListener('pointermove', onMove, { passive: true });
+        hero.addEventListener('pointerleave', onLeave);
+
+        const trees = hero.querySelectorAll<SVGPathElement>('[data-wind]');
+        trees.forEach((tree, index) => {
+          gsap.to(tree, {
+            rotation: valley.windDegrees[index % valley.windDegrees.length] * (index % 2 ? -1 : 1),
+            duration: valley.windDuration[index % valley.windDuration.length],
+            delay: index * 0.17,
+            ease: motion.windEase,
+            yoyo: true,
+            repeat: -1,
+          });
+        });
+
+        return () => {
+          hero.removeEventListener('pointermove', onMove);
+          hero.removeEventListener('pointerleave', onLeave);
+          gsap.killTweensOf(ridges);
+          gsap.set(ridges, { clearProps: 'transform' });
+        };
+      });
+    };
+
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
-      if (entranceHandled) return;
-      entranceHandled = true;
-      const root = document.documentElement;
-      if (root.dataset.heroMotion !== 'ready' || hero.getBoundingClientRect().bottom <= 0) {
-        delete root.dataset.heroMotion;
+      if (entranceHandled) {
+        startAmbient();
         return;
       }
-      const layers = hero.querySelectorAll<HTMLElement>('[data-valley-layer]');
-      const text = hero.querySelectorAll<HTMLElement>('[data-valley-text]');
-      const finish = () => {
-        delete root.dataset.heroMotion;
-        gsap.set([...layers, ...text], { clearProps: 'opacity,transform' });
+      entranceHandled = true;
+      if (root.dataset.heroMotion !== 'ready' || hero.getBoundingClientRect().bottom <= 0) {
+        resetEntrance();
+        startAmbient();
+        return;
+      }
+
+      drawings.forEach((drawing, index) => drawing.setAttribute('mask', `url(#valley-reveal-${index + 1})`));
+      const timeline = gsap.timeline({ defaults: { ease: motion.ease } });
+      const revealLayer = (layerIndex: number, settings: { start: number; duration: number; fade: number; ease: string }) => {
+        const solid = solids[layerIndex - 1];
+        const feather = feathers[layerIndex - 1];
+        timeline
+          .fromTo(solid, { attr: { height: 0 } }, {
+            attr: { height: 620 },
+            duration: settings.duration,
+            ease: settings.ease,
+          }, settings.start)
+          .fromTo(feather, { attr: { y: 0 } }, {
+            attr: { y: 620 },
+            duration: settings.duration,
+            ease: settings.ease,
+          }, settings.start)
+          .fromTo(layers[layerIndex], { opacity: 0 }, {
+            opacity: 1,
+            duration: settings.fade,
+            ease: 'sine.out',
+          }, settings.start);
       };
-      const timeline = gsap.timeline({ defaults: { ease: motion.ease }, onComplete: finish })
-        .fromTo(layers, { opacity: 0, y: motion.hero.valley.layerY }, {
+
+      timeline.fromTo(layers[0], { opacity: 0, scale: valley.distant.scale }, {
+        opacity: 1,
+        scale: 1,
+        transformOrigin: '50% 100%',
+        duration: valley.distant.duration,
+        ease: valley.distant.ease,
+      }, valley.distant.start);
+      revealLayer(1, valley.middle);
+      revealLayer(2, valley.forestBack);
+      revealLayer(3, valley.forestMiddle);
+      revealLayer(4, valley.forestFront);
+      timeline.fromTo(frontTrees, { opacity: 0 }, {
+        opacity: 1,
+        duration: valley.forestFront.treeDuration,
+        stagger: valley.forestFront.treeStagger,
+        ease: 'sine.out',
+      }, valley.forestFront.treeStart);
+
+      const addText = (index: number, settings: { start: number; duration: number }, ease: string) => {
+        timeline.fromTo(text[index], { opacity: 0, y: valley.text.y }, {
           opacity: 1,
           y: 0,
-          duration: motion.hero.valley.layerDuration,
-          stagger: motion.hero.valley.layerStagger,
-        }, motion.hero.valley.layerStart)
-        .fromTo(text[0], { opacity: 0, y: motion.hero.valley.textY }, {
-          opacity: 1,
-          y: 0,
-          duration: motion.hero.valley.eyebrowDuration,
-        }, motion.hero.valley.eyebrowStart)
-        .fromTo(Array.from(text).slice(1), { opacity: 0, y: motion.hero.valley.textY }, {
-          opacity: 1,
-          y: 0,
-          duration: motion.hero.valley.textDuration,
-          stagger: motion.hero.valley.textStagger,
-        }, motion.hero.valley.textStart);
+          duration: settings.duration,
+          ease,
+        }, settings.start);
+      };
+      addText(0, valley.text.eyebrow, 'power2.out');
+      addText(1, valley.text.title, motion.ease);
+      addText(2, valley.text.subline, motion.ease);
+      addText(3, valley.text.intro, 'power2.out');
+      addText(4, valley.text.action, 'power2.out');
+
+      let finished = false;
+      let fallback = 0;
+      const finish = () => {
+        if (finished) return;
+        finished = true;
+        window.clearTimeout(fallback);
+        resetEntrance();
+        startAmbient();
+      };
+      timeline.eventCallback('onComplete', finish);
+      // Covers a stalled timeline while preserving the static SVG fallback.
+      fallback = window.setTimeout(() => timeline.progress(1), 3000);
       const onFocusIn = () => timeline.progress(1);
       hero.addEventListener('focusin', onFocusIn, { once: true });
       return () => {
+        window.clearTimeout(fallback);
         hero.removeEventListener('focusin', onFocusIn);
         timeline.kill();
-        finish();
+        resetEntrance();
       };
     });
-
-    media.add('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
-      const ridges = Array.from(hero.querySelectorAll<HTMLElement>('[data-valley-parallax]'));
-      const move = ridges.map((ridge) => gsap.quickTo(ridge, 'x', {
-        duration: motion.hero.valley.parallaxDuration,
-        ease: motion.pointerEase,
-      }));
-      const onMove = (event: PointerEvent) => {
-        const bounds = hero.getBoundingClientRect();
-        const position = (event.clientX - bounds.left) / bounds.width - 0.5;
-        move.forEach((setX, index) => setX(position * 2 * motion.hero.valley.parallax[index]));
-      };
-      const onLeave = () => move.forEach((setX) => setX(0));
-      hero.addEventListener('pointermove', onMove, { passive: true });
-      hero.addEventListener('pointerleave', onLeave);
-
-      const trees = hero.querySelectorAll<SVGPathElement>('[data-wind]');
-      trees.forEach((tree, index) => {
-        gsap.to(tree, {
-          rotation: motion.hero.valley.windDegrees[index % motion.hero.valley.windDegrees.length] * (index % 2 ? -1 : 1),
-          duration: motion.hero.valley.windDuration[index % motion.hero.valley.windDuration.length],
-          delay: index * 0.17,
-          ease: motion.windEase,
-          yoyo: true,
-          repeat: -1,
-        });
-      });
-
-      return () => {
-        hero.removeEventListener('pointermove', onMove);
-        hero.removeEventListener('pointerleave', onLeave);
-        gsap.killTweensOf(ridges);
-        gsap.set(ridges, { clearProps: 'transform' });
-      };
-    });
-    document.addEventListener('astro:before-swap', () => media.revert(), { once: true });
+    document.addEventListener('astro:before-swap', () => {
+      media.revert();
+      ambientMedia.revert();
+    }, { once: true });
   }
 </script>
 
