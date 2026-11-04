@@ -1,14 +1,6 @@
-// Shared motion values. Component settings may vary, but entrances use the
-// same easing and a consistent relationship between opacity and translation.
+// Motion values for the GSAP hero variants.
 export const motion = {
   ease: 'power3.out',
-  reveal: {
-    duration: 0.75,
-    y: 20,
-    stagger: 0.12,
-    overlap: 0.45,
-    start: 'top bottom',
-  },
   hero: {
     clean: { y: 12, duration: 0.72, stagger: 0.14, start: 0.02 },
     valley: {
@@ -30,12 +22,4 @@ export const motion = {
   },
   pointerEase: 'power2.out',
   windEase: 'sine.inOut',
-  scroll: {
-    workLabel: { y: 14, duration: 0.6 },
-    project: { y: 20, duration: 0.75 },
-    aboutLabel: { y: 12, duration: 0.58 },
-    aboutContent: { y: 16, duration: 0.7 },
-    contactLabel: { y: 12, duration: 0.55 },
-    contactContent: { y: 16, duration: 0.68 },
-  },
 } as const;

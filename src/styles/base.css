@@ -51,7 +51,6 @@ svg {
 
 /* --- Document ------------------------------------------------------------- */
 html {
-  scroll-behavior: smooth;
   /* The header is not sticky, but in-page jumps should not land flush to the top edge. */
   scroll-padding-top: var(--space-24);
   -webkit-text-size-adjust: 100%;
@@ -166,12 +165,8 @@ a {
   line-height: 0;
 }
 
-/* --- Reduced motion, §11 verbatim ----------------------------------------- */
+/* --- Reduced motion -------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
   .hero-bg * {
     animation: none !important;
     transition: none !important;

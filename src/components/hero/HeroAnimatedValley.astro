@@ -236,7 +236,7 @@ const layers = files.map((file, layerIndex) => {
     font-size: var(--fs-valley-title);
     font-weight: var(--fw-bold);
     line-height: 1.04;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.02em;
   }
 
   .hero__title span {
@@ -289,6 +289,10 @@ const layers = files.map((file, layerIndex) => {
   @media (max-width: 639px) {
     .hero {
       padding-block: var(--space-56) var(--space-80);
+    }
+
+    .hero__content {
+      margin-top: 0;
     }
 
     .hero__subline {
