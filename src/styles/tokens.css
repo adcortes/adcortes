@@ -26,7 +26,7 @@
   /* The illustrated hero's sub-line (src/config/hero.ts) carries the three
      areas at display weight, between --fs-sub and --fs-display. */
   --fs-hero-subline: clamp(23px, 2.9vw, 38px);
-  /* Animated Valley's full-viewport hero uses the larger display scale. */
+  /* The full-viewport Clean and Animated Valley heroes share this display scale. */
   --fs-valley-title: clamp(40px, 8vw, 80px);
   --fs-valley-subline: clamp(36px, 4vw, 62px);
 

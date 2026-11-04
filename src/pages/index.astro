@@ -85,6 +85,24 @@ import { heroVariant } from '../config/hero';
   </SectionShell>
 </BaseLayout>
 
+<script>
+  import { initScrollReveals } from '../lib/scrollReveal';
+
+  let started = false;
+  const start = () => {
+    if (started) return;
+    started = true;
+    // pageshow runs after the browser restores a saved scroll position.
+    requestAnimationFrame(() => {
+      const cleanup = initScrollReveals();
+      document.addEventListener('astro:before-swap', cleanup, { once: true });
+    });
+  };
+
+  window.addEventListener('pageshow', start, { once: true });
+  if (document.readyState === 'complete') start();
+</script>
+
 <style>
   /* §4 — Section heading: 22px, deliberately small. */
   .section-heading {

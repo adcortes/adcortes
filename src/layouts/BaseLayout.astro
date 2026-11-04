@@ -29,6 +29,14 @@ const { title = site.title, description = site.description } = Astro.props;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>
+      // Prime only the existing GSAP hero entrance before the first paint.
+      // A missing or slow module leaves the static page visible after 800 ms.
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.documentElement.dataset.heroMotion = 'ready';
+        window.setTimeout(() => { delete document.documentElement.dataset.heroMotion; }, 800);
+      }
+    </script>
     <title>{title}</title>
     <meta name="description" content={description} />
 

@@ -83,52 +83,63 @@ const layers = files.map((file, layerIndex) => {
 
 <script>
   import { gsap } from 'gsap';
+  import { motion } from '../../lib/motion';
 
   const hero = document.querySelector<HTMLElement>('[data-animated-valley]');
   if (hero) {
-    // Adjust the visual intensity and timing here without touching the SVGs.
-    const motion = {
-      layerRise: 10,
-      layerDuration: 0.78,
-      layerStagger: 0.12,
-      textRise: 9,
-      textDuration: 0.58,
-      textStagger: 0.085,
-      parallax: [2, 5],
-      parallaxDuration: 0.9,
-      windDegrees: [0.55, 0.8, 0.65, 1, 0.7, 0.85, 0.6, 1.1, 0.75, 0.9],
-      windDuration: [4.8, 5.5, 6.2, 5.1, 6.8],
-    };
-
+    let entranceHandled = false;
     const media = gsap.matchMedia();
     media.add('(prefers-reduced-motion: no-preference)', () => {
+      if (entranceHandled) return;
+      entranceHandled = true;
+      const root = document.documentElement;
+      if (root.dataset.heroMotion !== 'ready' || hero.getBoundingClientRect().bottom <= 0) {
+        delete root.dataset.heroMotion;
+        return;
+      }
       const layers = hero.querySelectorAll<HTMLElement>('[data-valley-layer]');
       const text = hero.querySelectorAll<HTMLElement>('[data-valley-text]');
-      gsap.timeline({ defaults: { ease: 'power2.out' } })
-        .from(layers, {
-          opacity: 0,
-          y: motion.layerRise,
-          duration: motion.layerDuration,
-          stagger: motion.layerStagger,
-        }, 0.04)
-        .from(text, {
-          opacity: 0,
-          y: motion.textRise,
-          duration: motion.textDuration,
-          stagger: motion.textStagger,
-        }, 0.16);
+      const finish = () => {
+        delete root.dataset.heroMotion;
+        gsap.set([...layers, ...text], { clearProps: 'opacity,transform' });
+      };
+      const timeline = gsap.timeline({ defaults: { ease: motion.ease }, onComplete: finish })
+        .fromTo(layers, { opacity: 0, y: motion.hero.valley.layerY }, {
+          opacity: 1,
+          y: 0,
+          duration: motion.hero.valley.layerDuration,
+          stagger: motion.hero.valley.layerStagger,
+        }, motion.hero.valley.layerStart)
+        .fromTo(text[0], { opacity: 0, y: motion.hero.valley.textY }, {
+          opacity: 1,
+          y: 0,
+          duration: motion.hero.valley.eyebrowDuration,
+        }, motion.hero.valley.eyebrowStart)
+        .fromTo(Array.from(text).slice(1), { opacity: 0, y: motion.hero.valley.textY }, {
+          opacity: 1,
+          y: 0,
+          duration: motion.hero.valley.textDuration,
+          stagger: motion.hero.valley.textStagger,
+        }, motion.hero.valley.textStart);
+      const onFocusIn = () => timeline.progress(1);
+      hero.addEventListener('focusin', onFocusIn, { once: true });
+      return () => {
+        hero.removeEventListener('focusin', onFocusIn);
+        timeline.kill();
+        finish();
+      };
     });
 
     media.add('(min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
       const ridges = Array.from(hero.querySelectorAll<HTMLElement>('[data-valley-parallax]'));
       const move = ridges.map((ridge) => gsap.quickTo(ridge, 'x', {
-        duration: motion.parallaxDuration,
-        ease: 'power2.out',
+        duration: motion.hero.valley.parallaxDuration,
+        ease: motion.pointerEase,
       }));
       const onMove = (event: PointerEvent) => {
         const bounds = hero.getBoundingClientRect();
         const position = (event.clientX - bounds.left) / bounds.width - 0.5;
-        move.forEach((setX, index) => setX(position * 2 * motion.parallax[index]));
+        move.forEach((setX, index) => setX(position * 2 * motion.hero.valley.parallax[index]));
       };
       const onLeave = () => move.forEach((setX) => setX(0));
       hero.addEventListener('pointermove', onMove, { passive: true });
@@ -137,10 +148,10 @@ const layers = files.map((file, layerIndex) => {
       const trees = hero.querySelectorAll<SVGPathElement>('[data-wind]');
       trees.forEach((tree, index) => {
         gsap.to(tree, {
-          rotation: motion.windDegrees[index % motion.windDegrees.length] * (index % 2 ? -1 : 1),
-          duration: motion.windDuration[index % motion.windDuration.length],
+          rotation: motion.hero.valley.windDegrees[index % motion.hero.valley.windDegrees.length] * (index % 2 ? -1 : 1),
+          duration: motion.hero.valley.windDuration[index % motion.hero.valley.windDuration.length],
           delay: index * 0.17,
-          ease: 'sine.inOut',
+          ease: motion.windEase,
           yoyo: true,
           repeat: -1,
         });
@@ -149,12 +160,23 @@ const layers = files.map((file, layerIndex) => {
       return () => {
         hero.removeEventListener('pointermove', onMove);
         hero.removeEventListener('pointerleave', onLeave);
+        gsap.killTweensOf(ridges);
+        gsap.set(ridges, { clearProps: 'transform' });
       };
     });
+    document.addEventListener('astro:before-swap', () => media.revert(), { once: true });
   }
 </script>
 
 <style>
+  :global(html[data-hero-motion='ready'] [data-valley-layer]) {
+    opacity: 0;
+  }
+
+  :global(html[data-hero-motion='ready'] [data-valley-text]) {
+    opacity: 0;
+  }
+
   .hero {
     position: relative;
     isolation: isolate;
@@ -231,7 +253,7 @@ const layers = files.map((file, layerIndex) => {
   }
 
   .hero__intro {
-    max-width: 500px;
+    max-width: 680px;
     margin-top: var(--space-28);
     font-size: var(--fs-body-large);
     line-height: 1.65;
