@@ -22,9 +22,6 @@
 
   --figure-bg-on-band: #4c504a;
 
-  /* Hero mountains, back to front: olive fading toward the background. */
-  --ridge-1: #66744b;
+  /* Raised surfaces elsewhere on the page. */
   --ridge-2: #575c55;
-  --ridge-3: #4e4e58;
-  --ridge-4: #47445b;
 }

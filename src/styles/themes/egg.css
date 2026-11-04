@@ -25,9 +25,6 @@
   /* Screenshot/figure frame background on the raised band. */
   --figure-bg-on-band: #30343f;
 
-  /* Hero mountains, back to front. */
-  --ridge-1: #353a46;
+  /* Raised surfaces elsewhere on the page. */
   --ridge-2: #2d3039;
-  --ridge-3: #25272e;
-  --ridge-4: #1f2025;
 }

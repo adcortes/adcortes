@@ -7,8 +7,7 @@
  * <html> (src/config/theme.ts).
  *
  * This file is the ONLY place a non-color literal may appear. Color must be
- * a var() referencing a themes/*.css token, with one exception: the inlined
- * hero SVG's fills, which read their colors from those same tokens via var().
+ * a var() referencing a themes/*.css token.
  */
 
 :root {
@@ -23,12 +22,8 @@
   --fs-sub: clamp(18px, 1.5vw, 21px);
   --fs-contact: clamp(28px, 3vw, 40px);
   --fs-lead: clamp(19px, 1.7vw, 23px);
-  /* The illustrated hero's sub-line (src/config/hero.ts) carries the three
-     areas at display weight, between --fs-sub and --fs-display. */
-  --fs-hero-subline: clamp(23px, 2.9vw, 38px);
-  /* The full-viewport Clean and Animated Valley heroes share this display scale. */
-  --fs-valley-title: clamp(40px, 8vw, 80px);
-  --fs-valley-subline: clamp(36px, 4vw, 62px);
+  --fs-hero-title: clamp(40px, 5vw, 76px);
+  --fs-hero-subline: clamp(30px, 3vw, 44px);
 
   /* --- §5 spacing scale --- */
   --space-4: 4px;
@@ -48,8 +43,6 @@
   --space-104: 104px;
 
   /* --- §5 area-specific spacing --- */
-  --hero-pad-top: clamp(56px, 4vw, 108px);
-  --hero-pad-bottom: clamp(56px, 16vw, 242px);
   --contact-pad-bottom: clamp(56px, 8vw, 128px);
   --header-height: clamp(64px, 11vw, 88px);
   --column-gap: clamp(32px, 5vw, 80px);
@@ -75,7 +68,6 @@
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
-  --fw-black: 900;
 
   /* --- §8 radii --- */
   --radius-focus: 2px;
@@ -83,7 +75,7 @@
   --radius-panel: 6px;
   --radius-cta: 8px;
   --radius-frame: 10px;
-  /* Fully rounded, not a step on the scale: the illustrated hero's CTA pill. */
+  /* Fully rounded hero CTA pill. */
   --radius-pill: 999px;
 
   /* --- §6 layout --- */
