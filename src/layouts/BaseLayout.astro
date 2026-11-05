@@ -11,6 +11,7 @@ import { site } from '../data/site';
 import { theme } from '../config/theme';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import BackToTop from '../components/BackToTop.astro';
 import '../styles/tokens.css';
 import '../styles/themes/egg.css';
 import '../styles/themes/earth.css';
@@ -77,5 +78,6 @@ const { title = site.title, description = site.description } = Astro.props;
     </main>
 
     <SiteFooter />
+    <BackToTop />
   </body>
 </html>

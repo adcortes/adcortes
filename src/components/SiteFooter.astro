@@ -15,6 +15,7 @@ import { footer, repo, social } from '../data/site';
 import { mailtoHref } from '../lib/email';
 import LinkedIn from './icons/LinkedIn.astro';
 import GitHub from './icons/GitHub.astro';
+import Tooltip from './Tooltip.astro';
 
 const accessibilityMailto = mailtoHref('Accessibility barrier on the adcortes portfolio');
 
@@ -68,16 +69,18 @@ const hasSocial = Boolean(social.linkedin || social.github);
         <ul class="footer__social" aria-label="Social links">
           {social.linkedin && (
             <li>
-              <a class="icon-btn" href={social.linkedin} aria-label="adcortes on LinkedIn">
+              <a class="icon-btn" href={social.linkedin} aria-label="adcortes on LinkedIn" aria-describedby="linkedin-tooltip" data-tooltip-id="linkedin-tooltip">
                 <LinkedIn />
               </a>
+              <Tooltip id="linkedin-tooltip" label="LinkedIn profile" />
             </li>
           )}
           {social.github && (
             <li>
-              <a class="icon-btn" href={social.github} aria-label="adcortes on GitHub">
+              <a class="icon-btn" href={social.github} aria-label="adcortes on GitHub" aria-describedby="github-tooltip" data-tooltip-id="github-tooltip">
                 <GitHub />
               </a>
+              <Tooltip id="github-tooltip" label="GitHub profile" />
             </li>
           )}
         </ul>
@@ -102,7 +105,8 @@ const hasSocial = Boolean(social.linkedin || social.github);
     align-items: center;
     gap: var(--space-16);
     padding-inline: var(--gutter);
-    padding-block: var(--space-24) var(--space-32);
+    /* Leave room for the fixed back-to-top control at the end of the page. */
+    padding-block: var(--space-24) calc(var(--space-32) + var(--back-to-top-size) + var(--space-16));
   }
 
   .footer__identity {
@@ -143,6 +147,7 @@ const hasSocial = Boolean(social.linkedin || social.github);
     display: flex;
     align-items: center;
     gap: var(--space-4);
+    margin-right: calc(var(--back-to-top-size) + var(--space-16));
   }
 
   /* §9 — icon button: 44 × 44, radius 6, muted, hover accent. */
@@ -163,6 +168,10 @@ const hasSocial = Boolean(social.linkedin || social.github);
   @media (max-width: 639px) {
     .footer__inner {
       justify-content: flex-start;
+    }
+
+    .footer__social {
+      margin-right: 0;
     }
   }
 </style>

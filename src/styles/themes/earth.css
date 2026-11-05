@@ -10,6 +10,7 @@
  */
 :root[data-theme="earth"] {
   --bg: #1d1e22;
+  --bg-darken: #0d0e10;
   --text: #f6f6f2;
   --text-muted: #cfcdd8;
   --text-muted-on-band: #daddd6;
