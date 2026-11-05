@@ -34,7 +34,7 @@ export const projects: ProjectEntry[] = [
     outcome:
       "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
-    action: { kind: "link", label: "Read case study", href: "/work/emr/" },
+    // action: { kind: "link", label: "Read case study", href: "/work/emr/" },
     visual: {
       kind: "none",
       // component: "emr",
