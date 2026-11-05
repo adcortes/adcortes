@@ -10,9 +10,7 @@
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionShell from '../components/SectionShell.astro';
-import HeroClassic from '../components/hero/HeroClassic.astro';
-import HeroClean from '../components/hero/HeroClean.astro';
-import HeroIllustrated from '../components/hero/HeroIllustrated.astro';
+import Hero from '../components/hero/Hero.astro';
 import ProjectEntry from '../components/work/ProjectEntry.astro';
 import WebWorkGroup from '../components/work/WebWorkGroup.astro';
 import AboutList from '../components/AboutList.astro';
@@ -20,26 +18,12 @@ import { projects, webWork, workSection } from '../data/work';
 import { about, aboutItems } from '../data/about';
 import { contact } from '../data/site';
 import { mailtoHref } from '../lib/email';
-import { heroVariant } from '../config/hero';
 ---
 
 <BaseLayout>
-  {/*
-    The hero variant is chosen at build time in src/config/hero.ts. Each
-    variant owns its markup and styles, using the shared copy
-    (src/data/hero.ts); nothing about the hero is left here.
-  */}
-  {
-    heroVariant === 'illustrated' ? (
-      <HeroIllustrated />
-    ) : heroVariant === 'clean' ? (
-      <HeroClean />
-    ) : (
-      <HeroClassic />
-    )
-  }
+  <Hero />
 
-  <SectionShell id="work" labelledBy="work-h" topRule>
+  <SectionShell id="work" labelledBy="work-h">
     <h2 slot="label" id="work-h" class="section-heading">{workSection.heading}</h2>
     <p slot="label" class="work__intro">
       {workSection.intro}

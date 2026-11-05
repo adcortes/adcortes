@@ -26,9 +26,8 @@
  *
  * Progressive enhancement. The server renders every panel open and every button
  * `aria-expanded="true"`, so with no JavaScript the archive is a plain, fully
- * readable list. The inline script below sets `data-enhanced` on the section —
- * which is what arms the collapsing CSS — then closes every panel and opens the
- * first. It runs before first paint, so there is no flash of the open state.
+ * readable list. The inline script below closes every panel before first paint,
+ * so there is no flash of the open state.
  */
 import type { WebWorkGroup } from '../../types/content';
 
@@ -340,8 +339,7 @@ const { group } = Astro.props;
   }
 
   /*
-   * The toggle: a 28px ring with two bars. The vertical one rotates a quarter
-   * turn onto the horizontal one when the row opens, so + becomes −.
+   * The toggle: a 28px ring with two bars. The open state shows a minus.
    */
   .web__icon {
     position: relative;
@@ -365,7 +363,6 @@ const { group } = Astro.props;
 
   .web__icon::after {
     transform: rotate(90deg);
-    transition: transform 150ms cubic-bezier(0.2, 0.7, 0.2, 1);
   }
 
   .web__row:hover .web__icon,
@@ -380,31 +377,13 @@ const { group } = Astro.props;
 
   /*
    * --- The panel ------------------------------------------------------------
-   * Static by default, which is the no-JavaScript state: every panel is simply
-   * open. `data-enhanced` — set by the script once it has taken over — is what
-   * turns the panel into the collapsing 0fr/1fr grid.
+   * Static by default, which is the no-JavaScript state: every panel is open.
+   * JavaScript uses the native `hidden` attribute for instant disclosure.
    */
   .web__panel-inner {
     display: grid;
     gap: var(--space-20);
     /* padding: 4px 0 28px; */
-    /* The row that collapses; it must be able to reach zero. */
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  .web[data-enhanced] .web__panel {
-    display: grid;
-    grid-template-rows: 0fr;
-    opacity: 0;
-    transition:
-      grid-template-rows 200ms cubic-bezier(0.2, 0.7, 0.2, 1),
-      opacity 200ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-
-  .web[data-enhanced] .web__panel[data-open] {
-    grid-template-rows: 1fr;
-    opacity: 1;
   }
 
   /*
@@ -573,24 +552,12 @@ const { group } = Astro.props;
     }
   }
 
-  /* Panels open instantly; the icon still changes, it just does not swing. */
-  @media (prefers-reduced-motion: reduce) {
-    .web[data-enhanced] .web__panel,
-    .web__icon::after {
-      transition: none;
-    }
-  }
 </style>
 
 <script is:inline>
   /*
-   * The archive's disclosure behaviour — the page's only script. It runs where
-   * it sits, before first paint, so the open-by-default markup above is
-   * collapsed without a flash.
-   *
-   * Closing animates first and only then sets `hidden`, so the panel keeps its
-   * 200ms collapse while still leaving the accessibility tree and the tab order
-   * once it is shut.
+   * The archive's disclosure behavior runs before first paint, so the
+   * open-by-default markup is closed without a flash when JavaScript runs.
    */
   (() => {
     const root = document.querySelector('[data-ewp]');
@@ -601,41 +568,20 @@ const { group } = Astro.props;
       .filter((row) => row.panel);
     if (!rows.length) return;
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
     const isOpen = (row) => row.btn.getAttribute('aria-expanded') === 'true';
 
     const close = (row) => {
       row.btn.setAttribute('aria-expanded', 'false');
-      delete row.panel.dataset.open;
-
-      if (reduced.matches) {
-        row.panel.hidden = true;
-        return;
-      }
-
-      // Runs on transitionend, and again on a timer for any browser that
-      // decides not to transition the grid row at all.
-      const settle = () => {
-        row.panel.removeEventListener('transitionend', settle);
-        if (!('open' in row.panel.dataset)) row.panel.hidden = true;
-      };
-      row.panel.addEventListener('transitionend', settle);
-      window.setTimeout(settle, 400);
+      row.panel.hidden = true;
     };
 
     const open = (row) => {
       row.panel.hidden = false;
-      // Flush the 0fr state so the opening transition has somewhere to start.
-      void row.panel.offsetHeight;
-      row.panel.dataset.open = '';
       row.btn.setAttribute('aria-expanded', 'true');
     };
 
-    // Arms the collapsing CSS, then takes the whole list down.
-    root.dataset.enhanced = '';
     for (const row of rows) {
       row.btn.setAttribute('aria-expanded', 'false');
-      delete row.panel.dataset.open;
       row.panel.hidden = true;
 
       row.btn.addEventListener('click', () => {
@@ -644,11 +590,5 @@ const { group } = Astro.props;
         if (!wasOpen) open(row);
       });
     }
-
-    // The first row starts open. No reflow flush here, so it simply is open on
-    // the first paint rather than animating into place.
-    rows[0].panel.hidden = false;
-    rows[0].panel.dataset.open = '';
-    rows[0].btn.setAttribute('aria-expanded', 'true');
   })();
 </script>

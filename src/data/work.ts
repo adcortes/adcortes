@@ -21,10 +21,7 @@ export const workSection = {
  * Diagrams stand in for confidential screens: the drawing is decorative and
  * its meaning lives in `caption`.
  *
- * TODO(launch): project 1's approved "Repository ↗" link has no known
- * destination yet. Per the repository constraint it is omitted rather than
- * stubbed — add `action: { kind: 'link', label: 'Repository', href: '…' }` once
- * the URL exists, and the footer switches to its tags-and-action layout.
+ * Actions are optional and appear only when their destination exists.
  */
 export const projects: ProjectEntry[] = [
   {
@@ -37,9 +34,10 @@ export const projects: ProjectEntry[] = [
     outcome:
       "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
+    action: { kind: "link", label: "Read case study", href: "/work/emr/" },
     visual: {
-      kind: "diagram",
-      component: "emr",
+      kind: "none",
+      // component: "emr",
       // caption: "Records list and consultation form. All patient data is synthetic.",
     },
   },
@@ -63,9 +61,9 @@ export const projects: ProjectEntry[] = [
       "Figma",
     ],
     visual: {
-      kind: "image",
-      src: "/images/ibe-booking-1.png",
-      alt: "",
+      kind: "none",
+      // src: "/images/ibe-booking-1.png",
+      // alt: "",
       // component: "design-system",
       // caption: "One token and component layer shared across several airlines.",
     },
@@ -81,8 +79,8 @@ export const projects: ProjectEntry[] = [
       "A reusable template foundation applied to multiple airline brands, tested across Gmail, Outlook, Apple Mail and mobile/desktop email environments.",
     tags: ["Email design", "Responsive HTML", "Accessibility", "Design systems"],
     visual: {
-      kind: "diagram",
-      component: "design-system",
+      kind: "none",
+      // component: "design-system",
       // caption: "One token and component layer shared across several airlines.",
     },
   },

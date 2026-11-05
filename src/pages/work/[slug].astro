@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EmrDiagram from '../../components/work/diagrams/EmrDiagram.astro';
+import { caseStudies, type CaseStudy } from '../../data/case-studies';
+
+export function getStaticPaths() {
+  return caseStudies.map((study) => ({ params: { slug: study.slug }, props: { study } }));
+}
+
+interface Props {
+  study: CaseStudy;
+}
+
+const { study } = Astro.props;
+---
+
+<BaseLayout title={`${study.title} — adcortes`} description={study.introduction}>
+  <article class="case-study">
+    <a class="case-study__back" href="/#work">
+      <span aria-hidden="true">←</span> 
+      <span class="case-study__back-text">All work</span>
+    </a>
+
+    <header class="case-study__header">
+      <p class="case-study__category">{study.category}</p>
+      <h1>{study.title}</h1>
+      <p class="case-study__intro">{study.introduction}</p>
+    </header>
+
+    <dl class="case-study__meta">
+      {study.metadata.map(({ label, value }) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
+    </dl>
+
+    <div class="case-study__sections">
+      {study.sections.map((section) => (
+        <section class="case-study__section">
+          <h2>{section.heading}</h2>
+          {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+          {section.quote && <blockquote>“{section.quote}”</blockquote>}
+          {section.steps && (
+            <ol class="case-study__steps">
+              {section.steps.map((step) => <li>{step}</li>)}
+            </ol>
+          )}
+          {section.figure === 'emr' && (
+            <figure class="case-study__figure">
+              <EmrDiagram />
+              {section.figureCaption && <figcaption>{section.figureCaption}</figcaption>}
+            </figure>
+          )}
+          {section.findings && (
+            <ul class="case-study__findings">
+              {section.findings.map((finding) => <li>{finding}</li>)}
+            </ul>
+          )}
+        </section>
+      ))}
+    </div>
+
+    <ul class="case-study__tags" aria-label="Technologies and topics">
+      {study.tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+
+    <a class="case-study__end-link" href="/#work"><span aria-hidden="true">←</span> All work</a>
+  </article>
+</BaseLayout>
+
+<style>
+  .case-study {
+    max-width: 680px;
+    margin-inline: auto;
+    padding-block: var(--section-y);
+  }
+
+  .case-study__back,
+  .case-study__end-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--target-min);
+    color: var(--text-muted);
+    font-size: var(--fs-body-small);
+    text-decoration: none;
+  }
+
+
+  .case-study__back:hover,
+  .case-study__end-link:hover {
+    color: var(--accent);
+  }
+
+  .case-study__back-text {
+    text-decoration: underline;
+  }
+
+  .case-study__header {
+    margin-top: var(--space-40);
+  }
+
+  .case-study__category {
+    color: var(--accent);
+    font-size: var(--fs-body-small);
+    font-weight: var(--fw-medium);
+  }
+
+  .case-study h1 {
+    margin-top: var(--space-12);
+    color: var(--text-strong);
+    font-size: var(--fs-display);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+
+  .case-study__intro {
+    margin-top: var(--space-28);
+    font-size: var(--fs-lead);
+    line-height: 1.5;
+  }
+
+  .case-study__meta {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-24);
+    margin-top: var(--space-40);
+    padding-block: var(--space-20);
+    border-block: var(--hairline);
+  }
+
+  .case-study__meta dt {
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .case-study__meta dd {
+    margin-top: var(--space-4);
+    font-size: var(--fs-body-small);
+    line-height: 1.5;
+  }
+
+  .case-study__sections {
+    display: grid;
+    gap: var(--space-56);
+    margin-top: var(--space-56);
+  }
+
+  .case-study__section h2 {
+    margin-bottom: var(--space-12);
+    color: var(--text-strong);
+    font-size: clamp(var(--fs-project-title), 3vw, 30px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .case-study__section p,
+  .case-study__steps,
+  .case-study__findings {
+    font-size: clamp(var(--fs-body), 2vw, 20px);
+    line-height: 1.7;
+  }
+
+  .case-study__section p + p {
+    margin-top: var(--space-28);
+  }
+
+  .case-study__section blockquote {
+    margin-top: var(--space-32);
+    padding-left: var(--space-24);
+    border-left: 3px solid var(--accent);
+    color: var(--text-strong);
+    font-size: var(--fs-project-title);
+    line-height: 1.5;
+  }
+
+  .case-study__steps {
+    padding-left: var(--space-28);
+    margin-block: var(--space-28) 0;
+  }
+
+  .case-study__steps li {
+    padding-left: var(--space-6);
+    margin-top: var(--space-10);
+  }
+
+  .case-study__figure {
+    margin-top: var(--space-40);
+  }
+
+  .case-study__figure figcaption {
+    margin-top: var(--space-10);
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+  }
+
+  .case-study__findings {
+    padding: var(--space-24) var(--space-32);
+    background: var(--surface-raised);
+    border-radius: var(--radius-frame);
+  }
+
+  .case-study__findings li {
+    display: flex;
+    gap: var(--space-16);
+  }
+
+  .case-study__findings li + li {
+    margin-top: var(--space-16);
+  }
+
+  .case-study__findings li::before {
+    content: '';
+    flex: 0 0 var(--space-8);
+    width: var(--space-8);
+    height: var(--space-8);
+    margin-top: 0.8em;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .case-study__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-6);
+    margin-top: var(--space-56);
+    color: var(--text-muted);
+    font-size: var(--fs-x-small);
+  }
+
+  .case-study__tags li {
+    padding: 3px 6px;
+    border: var(--hairline);
+    border-radius: var(--radius-chip);
+  }
+
+  .case-study__end-link {
+    display: flex;
+    width: fit-content;
+    margin-top: var(--space-56);
+    padding-top: var(--space-20);
+    border-top: var(--hairline);
+  }
+
+  @media (max-width: 639px) {
+    .case-study {
+      padding-block: var(--space-40) var(--space-80);
+    }
+
+    .case-study__header {
+      margin-top: var(--space-24);
+    }
+
+    .case-study__meta {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .case-study__findings {
+      padding: var(--space-20);
+    }
+  }
+</style>

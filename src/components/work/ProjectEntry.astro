@@ -72,12 +72,8 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
       </div>
     </dl>
 
-    {/*
-      Two deliberate footer layouts, chosen by the data rather than by flex
-      wrapping: tags alone take the full width; tags with an action split into
-      two columns, the action on the right.
-    */}
-    <div class:list={['project__footer', { 'project__footer--with-action': action }]}>
+    {/* An optional action sits below the tags, aligned with the project copy. */}
+    <div class="project__footer">
       {/* §9 tags: plain text, no borders, fills or pills. */}
       <ul class="project__tags" aria-label="Tags">
         {entry.tags.map((tag) => <li>{tag}</li>)}
@@ -92,7 +88,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
         action &&
           (action.kind === 'link' ? (
             <a class="project__action" href={action.href}>
-              {action.label} <span aria-hidden="true">↗</span>
+              {action.label} <span aria-hidden="true">{action.href.startsWith('/') ? '→' : '↗'}</span>
             </a>
           ) : (
             <button class="project__action" type="button" data-behaviour={action.behaviour}>
@@ -202,26 +198,11 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     line-height: 1.55;
   }
 
-  /*
-   * Tags-only: one column, so the tags have the whole footer width to run in.
-   * The modifier below is the only thing that introduces a second column.
-   */
   .project__footer {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    align-items: center;
-    gap: var(--space-12) var(--space-24);
-  }
-
-  /*
-   * Tags and action: the action keeps its own column on the right and takes only
-   * the width it needs. Stacked below 640px, where the single column is narrow
-   * and the 44px target would otherwise crowd the tags.
-   */
-  @media (min-width: 640px) {
-    .project__footer--with-action {
-      grid-template-columns: minmax(0, 1fr) auto;
-    }
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-20);
   }
 
   .project__tags {
@@ -252,7 +233,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     display: inline-flex;
     align-items: center;
     gap: var(--space-6);
-    min-height: var(--target-min);
+    min-height: 44px;
     padding: 0;
     background: none;
     border: 0;
@@ -263,6 +244,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     color: var(--accent);
     text-align: left;
     text-decoration: none;
+    border-bottom: 1px solid currentColor;
   }
 
   button.project__action {

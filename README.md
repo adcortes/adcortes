@@ -1,19 +1,19 @@
-# Adriana Cortes
+# Hi, I am Adriana Cortes
 
-**UX Engineer · design systems & accessible frontend**
+UX Engineer working between product, design and frontend.
 
-I work between product, design and frontend. I help teams turn ideas and decisions into clear, accessible interfaces that work in the real world.
+I enjoy building accessible interfaces, working with design
+systems, and paying attention to the little details that
+make things work.
 
-I started in product design in Rio de Janeiro and gradually moved closer to implementation. For more than 12 years, I’ve worked hands-on across UX, UI and frontend: from early product conversations and wireframes to semantic HTML, CSS, design systems and production code.
+[Portfolio](TU_WEB) · [LinkedIn](TU_LINKEDIN)
 
-Much of my recent work has been in airline products, combining frontend development with UX architecture and technical leadership. I enjoy connecting people, product needs and implementation — and caring about the small details that make an interface reliable.
+```
+<about-me>
+  Adriana Cortes
+  UX Engineer · Barcelona
 
-## Focus
-
-- Translating design into accessible, semantic HTML, detailed CSS and considered UI behaviours
-- Design systems that help teams work with consistency
-- Turning product workflows into clear, usable interfaces from UX architecture to implementation
-
-Currently building an end-to-end product to extend my practice across discovery, UX, frontend, backend and AI-assisted development.
-
-[LinkedIn](https://www.linkedin.com/in/adcortes)
+  Product · Design · Frontend
+  Accessibility · Design Systems
+</about-me>
+```

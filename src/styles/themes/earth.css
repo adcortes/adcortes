@@ -9,7 +9,7 @@
  * WCAG AA on the raised band (Moss grey).
  */
 :root[data-theme="earth"] {
-  --bg: #363348;
+  --bg: #1d1e22;
   --text: #f6f6f2;
   --text-muted: #cfcdd8;
   --text-muted-on-band: #daddd6;
@@ -17,14 +17,11 @@
   --accent: #acc12f;
   --accent-on-band: #d2e36b;
 
-  --line: #5c5972;
-  --line-light: #7e7b94;
+  --line: #414349;
+  --line-light: #5f6066;
 
   --figure-bg-on-band: #4c504a;
 
-  /* Hero mountains, back to front: olive fading toward the background. */
-  --ridge-1: #66744b;
+  /* Raised surfaces elsewhere on the page. */
   --ridge-2: #575c55;
-  --ridge-3: #4e4e58;
-  --ridge-4: #47445b;
 }
