@@ -45,6 +45,7 @@
   /* --- §5 area-specific spacing --- */
   --contact-pad-bottom: clamp(56px, 8vw, 128px);
   --header-height: clamp(64px, 11vw, 88px);
+  --header-compact-height: clamp(46px, 8vw, 54px);
   --column-gap: clamp(32px, 5vw, 80px);
   /* Space above and below each Selected work row, either side of its divider. */
   --work-row-gap: clamp(40px, 5vw, 64px);
@@ -59,6 +60,7 @@
   --fs-body-small: 15px;
   --fs-nav: 15px;
   --fs-wordmark: 28px;
+  --fs-wordmark-compact: 22px;
   --fs-wordmark-footer: 16px;
   --fs-small: 14px;
   --fs-x-small: 12px;
@@ -102,6 +104,7 @@
 
   /* --- §3 minimum target size --- */
   --target-min: 34px;
+  --header-link-target: 44px;
   --back-to-top-size: 44px;
   --cta-height: 48px;
 }

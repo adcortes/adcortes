@@ -37,13 +37,45 @@ const isHome = Astro.url.pathname === '/';
   </div>
 </header>
 
+<script>
+  const header = document.querySelector<HTMLElement>('.site-header');
+
+  if (header) {
+    const updateCompactState = () => {
+      const compact = window.scrollY > 80;
+      if (compact !== header.classList.contains('site-header--compact')) {
+        header.classList.toggle('site-header--compact', compact);
+      }
+    };
+
+    updateCompactState();
+    window.addEventListener('scroll', updateCompactState, { passive: true });
+  }
+</script>
+
 <style>
   .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    /* The flow height stays constant while the visible bar gets shorter. */
+    height: var(--header-height);
+    pointer-events: none;
+  }
+
+  .site-header::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: var(--header-height);
     border-bottom: var(--hairline);
+    background: var(--bg);
+    transition: height 200ms ease;
   }
 
   /* §6 gutters, but no container cap — the header runs to the viewport edges. */
   .site-header__inner {
+    position: relative;
     max-width: var(--container);
     margin-inline: auto;
     display: flex;
@@ -52,11 +84,24 @@ const isHome = Astro.url.pathname === '/';
     align-items: center;
     gap: var(--space-16);
     min-height: var(--header-height);
+    pointer-events: auto;
+    transition: min-height 200ms ease;
+  }
+
+  .site-header--compact::before {
+    height: var(--header-compact-height);
+  }
+
+  .site-header--compact .site-header__inner {
+    min-height: var(--header-compact-height);
+  }
+  .site-header--compact .wordmark {
+    font-size: var(--fs-wordmark-compact);
   }
 
   .site-header__logo {
     /* §3 — 44px minimum target. */
-    min-height: var(--target-min);
+    min-height: var(--header-link-target);
     display: flex;
     align-items: center;
     text-decoration: none;
@@ -72,7 +117,7 @@ const isHome = Astro.url.pathname === '/';
   .nav__link {
     display: inline-flex;
     align-items: center;
-    min-height: var(--target-min);
+    min-height: var(--header-link-target);
     font-size: var(--fs-nav);
     font-weight: var(--fw-medium);
     line-height: 1;
@@ -82,5 +127,12 @@ const isHome = Astro.url.pathname === '/';
 
   .nav__link:hover {
     color: var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header::before,
+    .site-header__inner {
+      transition: none;
+    }
   }
 </style>
