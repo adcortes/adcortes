@@ -5,6 +5,13 @@
 
 /* --- Font face ------------------------------------------------------------
  * The self-hosted variable file covers weights 400–900. See public/fonts/README.md.
+ *
+ * The unicode-range below matches the file's actual coverage (227 codepoints).
+ * Of the arrows, it contains only U+2191 and U+2193 — so the "→", "←" and "↗"
+ * used in the CTA, the case-study back links and the "Visit site" links have no
+ * glyph here and render from the fallback stack. Adding them to this range
+ * would not change that; the only fixes are a font file that includes them or
+ * inline SVG arrows, as BackToTop.astro already uses.
  */
 @font-face {
   font-family: "Schibsted Grotesk";
