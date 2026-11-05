@@ -1,0 +1,121 @@
+---
+interface Props {
+  id: string;
+  label: string;
+}
+
+const { id, label } = Astro.props;
+---
+
+<span id={id} class="tooltip" role="tooltip">{label}</span>
+
+<script>
+  const controls = document.querySelectorAll<HTMLElement>('[data-tooltip-id]');
+  const hoverQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+
+  controls.forEach((control) => {
+    const tooltip = document.getElementById(control.dataset.tooltipId ?? '');
+    if (!tooltip) return;
+
+    let showTimer: number | undefined;
+    let dismissed = false;
+
+    const hide = () => {
+      window.clearTimeout(showTimer);
+      tooltip.classList.remove('tooltip--visible');
+    };
+
+    const place = () => {
+      const rect = control.getBoundingClientRect();
+      const margin = 4;
+      const gap = 4;
+      const width = tooltip.offsetWidth;
+      const height = tooltip.offsetHeight;
+      const left = Math.max(margin, Math.min(rect.left + rect.width / 2 - width / 2, window.innerWidth - width - margin));
+      const above = rect.top - height - gap;
+      const below = rect.bottom + gap;
+      const top = above >= margin || below + height > window.innerHeight - margin
+        ? Math.max(margin, above)
+        : below;
+
+      tooltip.style.left = `${left}px`;
+      tooltip.style.top = `${top}px`;
+    };
+
+    const show = () => {
+      if (dismissed) return;
+      window.clearTimeout(showTimer);
+      showTimer = window.setTimeout(() => {
+        place();
+        tooltip.classList.add('tooltip--visible');
+      }, 250);
+    };
+
+    control.addEventListener('pointerenter', (event) => {
+      if (event.pointerType === 'mouse' && hoverQuery.matches) show();
+    });
+    control.addEventListener('pointerleave', () => {
+      dismissed = false;
+      hide();
+    });
+    control.addEventListener('focus', () => {
+      if (control.matches(':focus-visible')) show();
+    });
+    control.addEventListener('blur', () => {
+      dismissed = false;
+      hide();
+    });
+    control.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') {
+        dismissed = true;
+        hide();
+      }
+    });
+    control.addEventListener('click', hide);
+    window.addEventListener('scroll', () => {
+      if (control.inert) {
+        hide();
+        return;
+      }
+      if (tooltip.classList.contains('tooltip--visible')) place();
+    }, { passive: true });
+    window.addEventListener('resize', () => {
+      if (tooltip.classList.contains('tooltip--visible')) place();
+    });
+  });
+</script>
+
+<style is:global>
+  .tooltip {
+    position: fixed;
+    z-index: 20;
+    width: max-content;
+    max-width: calc(100vw - 2 * var(--space-8));
+    padding: var(--space-6) var(--space-10);
+    border-radius: var(--radius-panel);
+    background: var(--bg-darken);
+    color: var(--text);
+    font-size: var(--fs-x-small);
+    font-weight: var(--fw-medium);
+    line-height: 1.2;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(var(--space-4));
+    transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+  }
+
+  .tooltip--visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tooltip {
+      transition: none;
+      transform: none;
+    }
+  }
+</style>

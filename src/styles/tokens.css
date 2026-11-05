@@ -102,5 +102,6 @@
 
   /* --- §3 minimum target size --- */
   --target-min: 34px;
+  --back-to-top-size: 44px;
   --cta-height: 48px;
 }

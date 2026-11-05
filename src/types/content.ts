@@ -158,10 +158,8 @@ export interface WebWorkGroup {
 }
 
 export interface AboutItem {
-  /** Accent numeral, e.g. "01". */
   number: string;
   title: string;
-  /** Items 01–03 carry prose; item 04 carries bullets instead. */
   body?: string;
   bullets?: string[];
 }
