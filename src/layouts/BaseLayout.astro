@@ -33,15 +33,10 @@ const { title = site.title, description = site.description } = Astro.props;
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    {/*
-      assets.md — favicons served from the active theme's own folder under
-      public/themes/, except favicon.ico: a legacy fallback that is not
-      recolored per theme (see color-adjustments.md's asset list), so it
-      stays shared at the site root.
-    */}
-    <link rel="icon" href={`/themes/${theme}/favicon.svg`} type="image/svg+xml" />
+    {/* Fixed Earth palette favicon across all site themes. */}
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.ico" sizes="48x48" />
-    <link rel="apple-touch-icon" href={`/themes/${theme}/apple-touch-icon.png`} />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     {/*
       Self-hosted Schibsted Grotesk. One variable file covers 400–900, so a
