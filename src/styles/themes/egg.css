@@ -5,26 +5,17 @@
  * Semantic color tokens only. Everything else (type, spacing, radii...) is
  * shared across themes and lives in ../tokens.css.
  */
-:root[data-theme='egg'] {
+:root[data-theme="egg"] {
   --bg: #1d1e22;
   --text: #d4d4dc;
   --text-muted: #adaeb8;
-  /* No band-contrast problem in Egg, so this reuses --text-muted's value. */
   --text-muted-on-band: #adaeb8;
 
   --accent: #feda6a;
-  /* No band-contrast problem in Egg, so this reuses --accent's value. */
   --accent-on-band: #feda6a;
 
-  /* Hairlines, dividers, diagram default-weight stroke. */
   --line: #393f4d;
-  /* Lighter-weight stroke: diagram emphasis, figure/icon outlines, the
-     raised band's own hairline. */
   --line-light: #555c6c;
 
-  /* Screenshot/figure frame background on the raised band. */
   --figure-bg-on-band: #30343f;
-
-  /* Raised surfaces elsewhere on the page. */
-  --ridge-2: #2d3039;
 }

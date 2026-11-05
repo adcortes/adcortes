@@ -96,7 +96,7 @@
    * keep its rules and chips reading at the weight they have on the page
    * ground, where a plain --hairline would drop to 1.25:1 and disappear.
    */
-  --surface-raised: var(--ridge-2);
+  --surface-raised: #acc12f1f;
   --hairline-raised: 1px solid var(--line-light);
   --chip-raised: var(--line);
 

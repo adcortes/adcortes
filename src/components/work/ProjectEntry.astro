@@ -134,12 +134,13 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     gap: var(--space-10);
   }
 
-  /* §4 — project category: 14px/500 accent, a short string on a dark ground. */
   .project__category {
-    font-size: var(--fs-small);
-    font-weight: var(--fw-medium);
+    font-size: var(--fs-x-small);
+    font-weight: var(--fw-semibold);
     line-height: 1.4;
     color: var(--accent);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   /* §4 — project title, the only use of 24px on the page. */

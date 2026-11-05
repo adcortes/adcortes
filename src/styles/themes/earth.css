@@ -15,13 +15,11 @@
   --text-muted-on-band: #daddd6;
 
   --accent: #acc12f;
+  --accent-hover: #cee54b;
   --accent-on-band: #d2e36b;
 
   --line: #414349;
   --line-light: #5f6066;
 
   --figure-bg-on-band: #4c504a;
-
-  /* Raised surfaces elsewhere on the page. */
-  --ridge-2: #575c55;
 }

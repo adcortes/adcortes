@@ -107,14 +107,16 @@ import { hero } from '../../data/hero';
     font-weight: var(--fw-semibold);
     line-height: 1;
     text-decoration: none;
+    transition: transform 0.18s ease;
   }
 
   .hero__link:hover {
-    background: var(--text);
+    background: var(--accent-hover);
+    transform: translate(1px, 1px);
   }
 
   .hero__link:focus-visible {
-    outline-color: var(--text);
+    outline-color: var(--accent-hover);
   }
 
   .hero__art {
