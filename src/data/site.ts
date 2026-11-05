@@ -12,7 +12,8 @@ export const site = {
   description:
     "UX Engineer working across product thinking, design systems and accessible frontend.",
   ogImage: `/themes/${theme}/og-image.png`,
-  ogImageAlt: "adcortes. UX Engineer — design systems &amp; accessible frontend",
+  /* Literal "&", like `title` above: Astro escapes attribute values itself. */
+  ogImageAlt: "adcortes. UX Engineer — design systems & accessible frontend",
 } as const;
 
 export const nav: NavItem[] = [
