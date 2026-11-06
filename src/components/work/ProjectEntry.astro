@@ -1,11 +1,9 @@
 ---
 /*
  * Selected work, groups 1 and 2 — one project: its diagram paired with its text.
- * content.md §Selected work; design-system.md §4, §7, §9.
  *
- * Below 640px the diagram and the summary are both dropped (§7), leaving
- * category, title, role, outcome and tags — the mobile reduction described in
- * visual-direction.md §Responsive intent.
+ * Below 640px the diagram and the summary are both dropped, leaving category,
+ * title, role, outcome and tags.
  */
 import type { ProjectEntry } from '../../types/content';
 import EmrDiagram from './diagrams/EmrDiagram.astro';
@@ -60,7 +58,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
       <p class="project__summary">{entry.summary}</p>
     </div>
 
-    {/* §9 metadata <dl>: auto-fit columns over a 1px top rule. */}
+    {/* Metadata <dl>: auto-fit columns over a 1px top rule. */}
     <dl class="project__meta">
       <div>
         <dt>Role</dt>
@@ -74,7 +72,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
 
     {/* An optional action sits below the tags, aligned with the project copy. */}
     <div class="project__footer">
-      {/* §9 tags: plain text, no borders, fills or pills. */}
+      {/* Tags: plain text, no borders, fills or pills. */}
       <ul class="project__tags" aria-label="Tags">
         {entry.tags.map((tag) => <li>{tag}</li>)}
       </ul>
@@ -102,7 +100,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
 
 <style>
   /*
-   * §9 — the 1px divider is the only structural line; there are no cards. The
+   * The 1px divider is the only structural line; there are no cards. The
    * first project needs none, because the section already carries a top rule.
    */
   .project {
@@ -143,7 +141,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     text-transform: uppercase;
   }
 
-  /* §4 — project title, the only use of 24px on the page. */
+  /* The project title, the only use of this size on the page. */
   .project__title {
     color: var(--text-strong);
     font-size: var(--fs-project-title);
@@ -152,20 +150,20 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     letter-spacing: -0.015em;
   }
 
-  /* §4 — body 16. §7 — hidden below 640px together with the diagram. */
+  /* Hidden below 640px together with the diagram. */
   .project__summary {
     display: none;
     font-size: var(--fs-body);
     line-height: 1.65;
   }
 
-  /* §7 — diagrams are tablet and desktop only. */
+  /* Diagrams are tablet and desktop only. */
   .project__figure {
     display: none;
   }
 
   /* An image visual fills the figure column and keeps the diagram's frame
-     radius (§8), so either variant sits the same way in the row. */
+     radius, so either variant sits the same way in the row. */
   .project__image {
     width: 100%;
     height: auto;
@@ -223,11 +221,10 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
   }
 
   /*
-   * §9 content link: 15px/600 accent, no underline, aria-hidden trailing glyph,
    * 44px minimum target. One rule covers both action elements, so a link and a
    * button are the same control to look at; the button resets the UA's own
    * background, border and font. Focus comes from the global :focus-visible in
-   * base.css (§10) and is never overridden here.
+   * base.css and is never overridden here.
    */
   .project__action {
     justify-self: start;
@@ -257,7 +254,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
   }
 
   /*
-   * §7 tablet and up — the diagram sits beside its text. A two-column grid
+   * Tablet and up — the diagram sits beside its text. A two-column grid
    * rather than wrapped flex, so the pairing holds across the whole 640–1023px
    * range instead of collapsing again at the narrow end.
    */

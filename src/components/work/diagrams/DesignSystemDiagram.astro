@@ -1,14 +1,12 @@
 ---
 /*
  * Airline design-system diagram — the "Tokens → Components → Products" ladder.
- * Reference: handoff/previews (visual reference only) + assets.md ("Project
- * diagram (Airline DS)"); labels from content.md §Selected work, project 2.
  *
  * Three rows, each a label beside the thing it names, joined by a short vertical
  * connector so the ladder reads downward. The whole drawing is aria-hidden — the
  * <figcaption> rendered by ProjectEntry carries the meaning — so the three row
- * labels are part of the picture, not accessible text. Rebuilt from the
- * documented tokens; no prototype markup, CSS or script is reproduced here.
+ * labels are part of the picture, not accessible text. Drawn from the shared
+ * tokens; no prototype markup, CSS or script is reproduced here.
  *
  * One grid holds every row, so the label column is as wide as its longest label
  * at any size and the connectors line up with the column they descend into.
@@ -44,8 +42,8 @@
 </div>
 
 <style>
-  /* §8 — 10px diagram frame, 4px diagram chips. Same 220px floor and fluid
-     padding as the other diagram, so the two sit at the same scale. */
+  /* Same 220px floor and fluid padding as the other diagram, so the two sit
+     at the same scale. */
   .ladder {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
@@ -58,8 +56,7 @@
     border-radius: var(--radius-frame);
   }
 
-  /* §4 — smallest documented size, muted. The prototype's 13px is not on the
-     type scale, so these sit at 14px. */
+  /* The smallest size on the type scale, muted. */
   .ladder__label {
     font-size: var(--fs-small);
     line-height: 1.4;

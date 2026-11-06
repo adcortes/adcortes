@@ -2,10 +2,8 @@
 /*
  * The one route.
  *
- * Page order is fixed at every size (visual-direction.md §Page order):
- * Header, Hero, Selected work, Earlier web projects band, About, Contact,
- * Footer. The band stands where the handoff put the "Selected collaborations"
- * band it replaced.
+ * Page order is fixed at every size: Header, Hero, Selected work, Earlier web
+ * projects band, About, Contact, Footer.
  */
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SectionShell from '../components/SectionShell.astro';
@@ -53,9 +51,9 @@ import { mailtoHref } from '../lib/email';
     <h2 id="contact-h" class="contact-heading">{contact.heading}</h2>
     <p class="contact__body">{contact.body}</p>
     {/*
-      §9 — the one button on the page. It is a link, not a <button>: it
-      navigates, and the address is assembled in src/lib/email.ts so it is
-      never printed on screen or in the HTML source (visual-direction.md §6).
+      The one button on the page. It is a link, not a <button>: it navigates,
+      and the address is assembled in src/lib/email.ts so it is never printed
+      on screen or in the HTML source.
     */}
     <p class="contact__action">
       <a class="cta" href={mailtoHref()}>
@@ -66,7 +64,7 @@ import { mailtoHref } from '../lib/email';
 </BaseLayout>
 
 <style>
-  /* §4 — Section heading: 22px, deliberately small. */
+  /* The section heading stays deliberately small. */
   .section-heading {
     font-size: var(--fs-section);
     font-weight: var(--fw-semibold);
@@ -75,8 +73,8 @@ import { mailtoHref } from '../lib/email';
   }
 
   /*
-   * §4 — body small, muted: the one line under the Work heading. On mobile only
-   * its first sentence shows, because the diagrams it refers to are hidden (§7).
+   * The one line under the Work heading. On mobile only its first sentence
+   * shows, because the diagrams it refers to are hidden below 640px.
    */
   .work__intro {
     margin-top: var(--space-10);
@@ -91,7 +89,7 @@ import { mailtoHref } from '../lib/email';
     flex-direction: column;
   }
 
-  /* §4 — About lead: the one reflective paragraph. Measure 44ch. */
+  /* The one reflective paragraph. Measure 44ch. */
   .about__lead {
     max-width: 44ch;
     font-size: var(--fs-lead);
@@ -108,7 +106,7 @@ import { mailtoHref } from '../lib/email';
     color: var(--text);
   }
 
-  /* §4 — Contact heading, fluid. Measure 52ch on the body copy that follows. */
+  /* Fluid. Measure 52ch on the body copy that follows. */
   .contact-heading {
     font-size: var(--fs-contact);
     font-weight: var(--fw-semibold);
@@ -116,7 +114,7 @@ import { mailtoHref } from '../lib/email';
     letter-spacing: -0.02em;
   }
 
-  /* §4 — body, measure 52ch. */
+  /* Measure 52ch. */
   .contact__body {
     max-width: 52ch;
     margin-top: var(--space-20);
@@ -127,9 +125,9 @@ import { mailtoHref } from '../lib/email';
   }
 
   /*
-   * §9 primary button — the only button on the page. 48px tall, 22px side
-   * padding, accent border and text, filling with accent on hover. Its focus
-   * ring is the paper-200 variant already set globally in base.css §10.
+   * The only button on the page: accent border and text, filling with accent
+   * on hover. Its focus ring is the paper-200 variant already set globally in
+   * base.css.
    */
   .cta {
     display: inline-flex;

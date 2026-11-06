@@ -1,7 +1,4 @@
-/*
- * Site-level copy and metadata.
- * Source of truth: docs/references/design/handoff/content.md (§Header, §Footer, §Meta)
- */
+/* Site-level copy and metadata. */
 
 import type { NavItem } from "../types/content";
 import { theme } from "../config/theme";
@@ -59,7 +56,7 @@ export const repo: { url: string; forks?: number } = {
  * URL is present here, so a profile can be dropped without touching markup.
  *
  * The contact address is not in this file: it is assembled in src/lib/email.ts
- * so the literal string never reaches the HTML source (visual-direction.md §6).
+ * so the literal string never reaches the HTML source.
  */
 export const social: { linkedin?: string; github?: string } = {
   linkedin: "https://www.linkedin.com/in/adcortes/",

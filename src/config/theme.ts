@@ -1,8 +1,6 @@
 /*
  * The one switch for the site's visual theme.
- * Source of truth for each theme's values: src/styles/themes/<name>.css and
- * docs/references/design/handoff/ (design-system.md for Egg, earth-theme/
- * color-adjustments.md for Earth).
+ * Each theme's values live in src/styles/themes/<name>.css.
  *
  * Changing this value re-skins the whole site at build time: colors (via
  * data-theme on <html>, read by src/styles/themes/*.css) and the themed

@@ -1,6 +1,5 @@
 /*
  * Theme — Egg
- * Source of truth: docs/references/design/handoff/design-system.md §1, §12.
  *
  * Semantic color tokens only. Everything else (type, spacing, radii...) is
  * shared across themes and lives in ../tokens.css.

@@ -1,17 +1,15 @@
 ---
 /*
  * EMR project diagram — the stand-in for confidential screens.
- * Reference: handoff/previews (visual reference only) + assets.md ("Project
- * diagram (EMR)" — HTML/CSS, about 560 × 220, fluid, decorative).
  *
  * It is a drawing, not an image and not a screenshot: a records list beside a
  * consultation form, reduced to the frame, two panels, and bars standing in for
  * rows and fields. The whole thing is aria-hidden; the <figcaption> rendered by
- * ProjectEntry carries the meaning. Rebuilt from the documented tokens — no
+ * ProjectEntry carries the meaning. Drawn from the shared tokens — no
  * prototype markup, CSS or script is reproduced here.
  *
- * Only `--line` and `--line-light` draw structure (§1: decorative strokes only,
- * never text), with two single accent marks for "selected" (§Colour usage).
+ * Only `--line` and `--line-light` draw structure — decorative strokes, never
+ * text — with two single accent marks for "selected".
  */
 ---
 
@@ -35,7 +33,6 @@
 
 <style>
   /*
-   * §8 — 10px diagram frame, 6px diagram panels, 4px diagram chips.
    * The frame keeps a 220px floor and otherwise grows with its column, so the
    * drawing stays in proportion from 640px up without a fixed width.
    */
@@ -108,8 +105,8 @@
     flex: 0 0 70%;
   }
 
-  /* §Colour usage — accent marks the one selected record and the one checked
-     field. Two short marks, never a fill. */
+  /* Accent marks the one selected record and the one checked field. Two short
+     marks, never a fill. */
   .emr__row--current .emr__bar {
     background: var(--line-light);
   }

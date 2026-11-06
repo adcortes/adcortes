@@ -1,8 +1,6 @@
 ---
 /*
- * The four numbered About items.
- * content.md §About; design-system.md §4 (About item title), §7 (2 × 2 from
- * the tablet board, 1 column below 640px).
+ * The four numbered About items. 2 × 2 from 640px up, one column below it.
  *
  * An <ol> carries the numbering semantically, so the visible numerals are
  * decorative and hidden from assistive tech rather than read twice.
@@ -51,7 +49,7 @@ const { items } = Astro.props;
     column-gap: clamp(28px, 4vw, 56px);
   }
 
-  /* §9 — a hairline is the only structural line; the items are not cards. */
+  /* A hairline is the only structural line; the items are not cards. */
   .about__item {
     border-top: var(--hairline);
     padding-block: var(--space-20) var(--space-32);
@@ -67,7 +65,7 @@ const { items } = Astro.props;
     line-height: 1.4;
   }
 
-  /* §1 — the About numerals are one of the accent's approved short strings. */
+  /* The accent is used only in short strings; these numerals are one. */
   .about__number {
     font-weight: var(--fw-medium);
     color: var(--accent);
