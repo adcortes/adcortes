@@ -12,7 +12,8 @@ export const site = {
   description:
     "UX Engineer working across product thinking, design systems and accessible frontend.",
   ogImage: `/themes/${theme}/og-image.png`,
-  ogImageAlt: "adcortes. UX Engineer — design systems &amp; accessible frontend",
+  /* Literal "&", like `title` above: Astro escapes attribute values itself. */
+  ogImageAlt: "adcortes. UX Engineer — design systems & accessible frontend",
 } as const;
 
 export const nav: NavItem[] = [
@@ -40,17 +41,17 @@ export const footer = {
 } as const;
 
 /*
- * This site's own source. `forks` is a static field on purpose: the page ships
- * no client-side JavaScript, so there is no runtime call to the GitHub API, and
- * a build-time one would make the number stale the moment it was fetched
- * anyway. Update it by hand when it is worth saying.
+ * This site's own source. `forks` is a static field on purpose: the footer is
+ * rendered at build time, so a GitHub API call would either make the number
+ * stale the moment it was fetched or add a runtime request for one word.
+ * Update it by hand when it is worth saying.
  *
  * It is optional, and the footer renders the fork count only when it is set to
  * a positive number — so leaving it out, or letting it fall back to 0, simply
  * drops that part of the line and the rest stays correct.
  */
 export const repo: { url: string; forks?: number } = {
-  url: "https://github.com/adcortes/portfolio",
+  url: "https://github.com/adcortes/adcortes",
 };
 
 /*

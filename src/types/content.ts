@@ -60,21 +60,20 @@ export interface NoVisual {
 
 export type ProjectVisual = DiagramVisual | ImageVisual | NoVisual;
 
-/**
- * Behaviours a project action button may perform.
- *
- * The page ships no client-side JavaScript, so no button behaviour exists yet
- * and this union is deliberately empty. That makes `ButtonAction` impossible to
- * construct, which is the point: a button can only appear once a real behaviour
- * is added here, never as an inert or disabled control. Replace `never` with the
- * behaviour keys when there is one.
- */
 /** An action with a real destination. */
 export interface LinkAction extends Link {
   kind: "link";
 }
 
-/** An action with a real behaviour. */
+/**
+ * An action with a real behaviour.
+ *
+ * `behaviour: never` is a deliberate guard, not a placeholder type: no project
+ * action currently needs a button, so there is no behaviour key to name, and
+ * `never` makes `ButtonAction` impossible to construct. The renderer therefore
+ * cannot be handed an inert or disabled control. Replace `never` with a union of
+ * behaviour keys when a button earns its place.
+ */
 export interface ButtonAction {
   kind: "button";
   label: string;

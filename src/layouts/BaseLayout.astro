@@ -23,6 +23,15 @@ interface Props {
 }
 
 const { title = site.title, description = site.description } = Astro.props;
+
+/*
+ * Absolute URLs for the canonical link and the social card, both resolved from
+ * `site` in astro.config.mjs. While `site` is unset these stay undefined and
+ * the tags that need them are omitted, rather than emitted against a guessed
+ * origin — the same "absent rather than invented" rule the content types follow.
+ */
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
+const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
 ---
 
 <!doctype html>
@@ -32,6 +41,7 @@ const { title = site.title, description = site.description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {canonical && <link rel="canonical" href={canonical.href} />}
 
     {/* Fixed Earth palette favicon across all site themes. */}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -52,14 +62,23 @@ const { title = site.title, description = site.description } = Astro.props;
     />
 
     {/*
-      Social card. og:image:alt and the card type are set here; the absolute
-      og:image URL and <link rel="canonical"> are deliberately absent until
-      Cloudflare Pages is configured — see TODO(deploy) in astro.config.mjs.
+      Social card. The image, its alt and og:url all depend on an absolute
+      origin, so they travel together: with `site` unset none of them is
+      emitted, and an og:image:alt never ships describing an absent image.
+      See TODO(deploy) in astro.config.mjs.
     */}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image:alt" content={site.ogImageAlt} />
+    {canonical && <meta property="og:url" content={canonical.href} />}
+    {
+      ogImage && (
+        <>
+          <meta property="og:image" content={ogImage.href} />
+          <meta property="og:image:alt" content={site.ogImageAlt} />
+        </>
+      )
+    }
     <meta name="twitter:card" content="summary_large_image" />
   </head>
 

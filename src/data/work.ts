@@ -2,9 +2,8 @@
  * Selected work — the three approved groups.
  * Source of truth: docs/references/design/handoff/content.md (§Selected work)
  *
- * Every `[bracketed]` string below is an approved launch placeholder and is
- * reproduced verbatim. See handoff/README.md §"Content placeholders to replace
- * before launch" for the full list.
+ * The handoff's `[bracketed]` launch placeholders have all been replaced with
+ * final copy here; `content.md` keeps its brackets because the theme is frozen.
  */
 
 import type { ProjectEntry, WebWorkGroup } from "../types/content";
@@ -34,7 +33,6 @@ export const projects: ProjectEntry[] = [
     outcome:
       "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
-    // action: { kind: "link", label: "Read case study", href: "/work/emr/" },
     visual: {
       kind: "none",
       // component: "emr",
@@ -87,10 +85,11 @@ export const projects: ProjectEntry[] = [
 ];
 
 /*
- * Group 3 is text-based and has no diagram.
- *
- * TODO(launch): item 1's approved "Visit site ↗" link has no known destination
- * yet and is omitted for the same reason as above.
+ * Group 3 is text-based and has no diagram. Every active item carries a `link`
+ * to a live site; `link` stays optional so an item whose site is gone can ship
+ * without one rather than against an invented URL. The two commented-out items
+ * below are kept in place rather than deleted: the copy is approved and only
+ * their inclusion is on hold.
  */
 export const webWork: WebWorkGroup = {
   category: "Agency & freelance",

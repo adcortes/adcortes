@@ -1,10 +1,29 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import EmrDiagram from '../../components/work/diagrams/EmrDiagram.astro';
-import { caseStudies, type CaseStudy } from '../../data/case-studies';
+/*
+ * The case study layout, kept out of `src/pages/` so no route is generated:
+ * the site ships as a single page and no work detail page is published yet.
+ * Recovered unchanged from `src/pages/work/[slug].astro` — structure and
+ * styling are as built; only the EMR draft copy and its diagram were dropped.
+ *
+ * To publish one, add a page under `src/pages/` that passes a `study` object.
+ */
+import BaseLayout from './BaseLayout.astro';
 
-export function getStaticPaths() {
-  return caseStudies.map((study) => ({ params: { slug: study.slug }, props: { study } }));
+export interface CaseStudySection {
+  heading: string;
+  paragraphs?: string[];
+  steps?: string[];
+  quote?: string;
+  findings?: string[];
+}
+
+export interface CaseStudy {
+  category: string;
+  title: string;
+  introduction: string;
+  metadata: { label: string; value: string }[];
+  sections: CaseStudySection[];
+  tags: string[];
 }
 
 interface Props {
@@ -46,12 +65,6 @@ const { study } = Astro.props;
             <ol class="case-study__steps">
               {section.steps.map((step) => <li>{step}</li>)}
             </ol>
-          )}
-          {section.figure === 'emr' && (
-            <figure class="case-study__figure">
-              <EmrDiagram />
-              {section.figureCaption && <figcaption>{section.figureCaption}</figcaption>}
-            </figure>
           )}
           {section.findings && (
             <ul class="case-study__findings">
@@ -186,6 +199,8 @@ const { study } = Astro.props;
     margin-top: var(--space-10);
   }
 
+  /* Kept for a future case study figure; the EMR diagram it was written for
+     left with the draft copy. */
   .case-study__figure {
     margin-top: var(--space-40);
   }

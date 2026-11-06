@@ -8,8 +8,9 @@
  * the central reading column.
  *
  * The social icon links render only when their URLs exist in src/data/site.ts.
- * No `href="#"` placeholders — see the approved plan, §8.2. The footer is the
- * one place they appear, at every width.
+ * No `href="#"` placeholders anywhere (AGENTS.md §Constraints): a link with no
+ * known destination is omitted instead. The footer is the one place the icon
+ * links appear, at every width.
  */
 import { footer, repo, social } from '../data/site';
 import { mailtoHref } from '../lib/email';
