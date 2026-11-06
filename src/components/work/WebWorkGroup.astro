@@ -26,8 +26,17 @@
  *
  * Progressive enhancement. The server renders every panel open and every button
  * `aria-expanded="true"`, so with no JavaScript the archive is a plain, fully
- * readable list. The inline script below closes every panel before first paint,
- * so there is no flash of the open state.
+ * readable list. The script below closes every panel on load.
+ *
+ * That script is deliberately NOT `is:inline`: Astro only emits CSP hashes for
+ * scripts it processes, and an inline one would be blocked by the policy
+ * `security.csp` generates (astro.config.mjs). The cost is that a bundled
+ * script is a module, so it runs at DOMContentLoaded rather than at parse
+ * position. On a fast connection the panels still close before first paint; on
+ * a heavily throttled one they can stay open for a few hundred ms after it.
+ * That is invisible in practice because this band starts more than two
+ * viewport-heights below the fold at every size, so the open state is never
+ * on screen while it lasts.
  */
 import type { WebWorkGroup } from '../../types/content';
 
@@ -549,28 +558,30 @@ const { group } = Astro.props;
 
 </style>
 
-<script is:inline>
+<script>
   /*
-   * The archive's disclosure behavior runs before first paint, so the
-   * open-by-default markup is closed without a flash when JavaScript runs.
+   * The archive's disclosure behavior. Processed rather than `is:inline` so
+   * Astro bundles it and covers it with a CSP hash — see the header comment.
    */
+  type Row = { btn: HTMLButtonElement; panel: HTMLElement };
+
   (() => {
     const root = document.querySelector('[data-ewp]');
     if (!root) return;
 
-    const rows = Array.from(root.querySelectorAll('button[aria-controls]'))
-      .map((btn) => ({ btn, panel: document.getElementById(btn.getAttribute('aria-controls')) }))
-      .filter((row) => row.panel);
+    const rows = Array.from(root.querySelectorAll<HTMLButtonElement>('button[aria-controls]'))
+      .map((btn) => ({ btn, panel: document.getElementById(btn.getAttribute('aria-controls') ?? '') }))
+      .filter((row): row is Row => row.panel !== null);
     if (!rows.length) return;
 
-    const isOpen = (row) => row.btn.getAttribute('aria-expanded') === 'true';
+    const isOpen = (row: Row) => row.btn.getAttribute('aria-expanded') === 'true';
 
-    const close = (row) => {
+    const close = (row: Row) => {
       row.btn.setAttribute('aria-expanded', 'false');
       row.panel.hidden = true;
     };
 
-    const open = (row) => {
+    const open = (row: Row) => {
       row.panel.hidden = false;
       row.btn.setAttribute('aria-expanded', 'true');
     };
