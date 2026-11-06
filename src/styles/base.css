@@ -1,7 +1,4 @@
-/*
- * Base styles — theme-agnostic.
- * Source of truth: docs/references/design/handoff/design-system.md §3, §4, §9, §10, §11
- */
+/* Base styles — theme-agnostic. */
 
 /* --- Font face ------------------------------------------------------------
  * The self-hosted variable file covers weights 400–900. See public/fonts/README.md.
@@ -86,7 +83,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* §4 — sentence case throughout; nothing heavier than 600. */
+/* Sentence case throughout; nothing heavier than 600. */
 h1,
 h2,
 h3 {
@@ -107,14 +104,14 @@ a {
 }
 
 /* --- Layout primitives ---------------------------------------------------- */
-/* §6 — container and gutters. */
+/* Container and gutters. */
 .container {
   max-width: var(--container);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-/* --- Focus-visible, §10 verbatim ------------------------------------------
+/* --- Focus-visible --------------------------------------------------------
  * Never :focus, never outline: none.
  */
 :focus-visible {
@@ -137,13 +134,13 @@ a {
   outline-offset: 3px;
 }
 
-/* --- Skip link, §9 -------------------------------------------------------- */
+/* --- Skip link ------------------------------------------------------------ */
 .skip {
   position: absolute;
   left: -9999px;
   top: 0;
   z-index: 100;
-  /* §3 — 44px minimum target; padding alone landed at 43px. */
+  /* 44px minimum target; padding alone landed at 43px. */
   display: inline-flex;
   align-items: center;
   min-height: var(--target-min);
@@ -162,7 +159,7 @@ a {
   top: var(--space-12);
 }
 
-/* §4 — live text, no SVG. */
+/* Live text, no SVG. */
 .wordmark {
   font-size: var(--fs-wordmark);
   font-weight: var(--fw-medium);

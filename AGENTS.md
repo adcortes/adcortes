@@ -1,11 +1,15 @@
 # Agent guidance
 
-Canonical, tool-neutral guidance for coding agents working in this repository. See
-[`README.md`](README.md) for what the project is, the stack and the commands.
+Canonical, tool-neutral guidance for coding agents working in this repository.
+
+A static, single-page personal portfolio: Astro 7 with static output, strict TypeScript, plain CSS
+and a self-hosted variable font. Node 24 and pnpm. `pnpm dev` to run it, `pnpm check` and
+`pnpm build` to verify.
 
 ## Architecture
 
-A single-route Astro site with static output and no adapter.
+A single-route Astro site with static output and no adapter. The code is the source of truth for
+every visual and content decision; there is no separate design specification to consult.
 
 - `src/pages/index.astro` — the one route. Sections are composed from `SectionShell.astro`.
 - `src/data/*.ts` — all copy and metadata, typed by `src/types/content.ts`. Change content here,
@@ -25,15 +29,7 @@ A single-route Astro site with static output and no adapter.
   else references a `var()`.
 - `src/styles/base.css` — theme-agnostic base, reset, font-face and focus styles.
 - Component-scoped CSS lives in the component's own `<style>` block.
-
-## Design handoff
-
-Inspect [`docs/references/design/handoff/`](docs/references/design/handoff/) before making any
-visual or content decision. Its README lists the source-of-truth documents and the three places the
-shipped page deliberately diverges from them.
-
-`screenshots/` is **visual reference only** — never copy it as production code. The build uses real
-media queries at 640px and 1024px and the documented tokens.
+- Responsive behaviour uses real media queries at 640px and 1024px.
 
 ## Constraints
 
@@ -50,9 +46,9 @@ media queries at 640px and 1024px and the documented tokens.
 
 ## Comments
 
-Comments cite the handoff document and section they implement (`design-system.md §9`). Keep those
-citations accurate when changing the code they describe, and keep comments that record an
-accessibility exception or a non-obvious decision.
+Keep comments that record an accessibility exception, a layout constraint or a non-obvious
+decision, and keep them accurate when changing the code they describe. Do not add comments that
+restate what the code already says.
 
 ## Before reporting completion
 

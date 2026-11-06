@@ -1,7 +1,4 @@
-/*
- * Content types — Egg Theme
- * Source of truth: docs/references/design/handoff/content.md
- */
+/* Content types for the page's copy and metadata. */
 
 /**
  * A link with a real destination.
@@ -21,7 +18,7 @@ export type DiagramId = "emr" | "design-system";
 
 /**
  * A project's visual. Diagram and image variants share the same <figure> slot,
- * responsive rules (shown from 640px up, design-system.md §7) and caption
+ * responsive rules (shown from 640px up) and caption
  * treatment. A project may also have no visual.
  */
 interface ProjectVisualBase {
@@ -96,7 +93,7 @@ export interface ProjectEntry {
   /** Accent label above the title. */
   category: string;
   title: string;
-  /** Hidden below 640px, per design-system.md §7. */
+  /** Hidden below 640px. */
   summary: string;
   role: string;
   outcome: string;

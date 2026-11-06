@@ -1,8 +1,6 @@
 ---
 /*
  * Selected work, group 3 — the Earlier web projects archive.
- * Source of truth: handoff/earlier-web-projects.md (option 5b), content.md
- * §Selected work "3. Agency & freelance", design-system.md §4, §7.
  *
  * An archive table with inline disclosure: one row per project, each row a
  * button that opens its own details and screenshot in place. Only one row is
@@ -10,19 +8,17 @@
  * piece was engaged — and the disclosure pattern works on touch, keyboard and
  * screen readers without depending on hover.
  *
- * The one full-bleed band on the page (§6: "bleeds to full width; its inner
- * content is capped at 1128px"), carrying the raised slate ground that marks
- * the break after the Selected work projects. It sits as a direct child of
+ * The one full-bleed band on the page — it bleeds to full width while its
+ * inner content stays capped at the 1128px reading grid — carrying the raised
+ * slate ground that marks the break after the Selected work projects. It sits as a direct child of
  * `main.container`, so it breaks out with the documented negative-margin
  * trick: that containing block is centred, so `calc(50% - 50vw)` on each side
  * lands the edges exactly on the viewport edges, and `html { overflow-x: clip }`
  * in base.css already absorbs the scrollbar overhang. `--band-inner` then puts
  * the content back on the same grid as every capped section above it.
  *
- * Its heading keeps h3: the level the group had inside Selected work, and the
- * one the approved type scale draws. The region is named by it, which puts each
- * project's own heading at h4 — one level below the handoff's sketch, because
- * there the section stood alone.
+ * Its heading keeps h3: the level the group had inside Selected work. The
+ * region is named by it, which puts each project's own heading at h4.
  *
  * Progressive enhancement. The server renders every panel open and every button
  * `aria-expanded="true"`, so with no JavaScript the archive is a plain, fully
@@ -182,8 +178,7 @@ const { group } = Astro.props;
    *
    * Everything inside the band that would normally read --accent or
    * --text-muted uses the *-on-band variant instead: on Earth's raised
-   * surface, plain --accent falls under WCAG AA (earth-theme/
-   * color-adjustments.md's contrast table). Egg's on-band variants are
+   * surface, plain --accent falls under WCAG AA. Egg's on-band variants are
    * identical to the plain ones, so this costs it nothing.
    */
   .web {
@@ -197,7 +192,7 @@ const { group } = Astro.props;
     outline-color: var(--accent-on-band);
   }
 
-  /* §6 — the band bleeds, its content does not: the same 1128px reading grid. */
+  /* The band bleeds, its content does not: the same 1128px reading grid. */
   .web__inner {
     max-width: var(--band-inner);
     margin-inline: auto;
@@ -218,7 +213,7 @@ const { group } = Astro.props;
     gap: var(--space-10);
   }
 
-  /* §4 — same category and title styles as the two projects above. */
+  /* Same category and title styles as the two projects above. */
   .web__category {
     font-size: var(--fs-small);
     font-weight: var(--fw-medium);
@@ -288,7 +283,7 @@ const { group } = Astro.props;
     cursor: pointer;
   }
 
-  /* §4 — 17px/600, the same weight and size as an About item title. */
+  /* The same weight and size as an About item title. */
   .web__name {
     font-size: var(--fs-about-item);
     font-weight: var(--fw-semibold);
@@ -442,7 +437,7 @@ const { group } = Astro.props;
     text-wrap: pretty;
   }
 
-  /* §9 tags: plain text on a subtle chip, as in the projects above. */
+  /* Tags: plain text on a subtle chip, as in the projects above. */
   .web__tags {
     display: flex;
     flex-wrap: wrap;
@@ -461,9 +456,8 @@ const { group } = Astro.props;
   }
 
   /*
-   * §9 content link. 44px rather than the page's --target-min: the archive's
-   * own acceptance check asks for 44px targets, and this link sits inside a
-   * dense list where the extra room is worth having.
+   * 44px rather than the page's --target-min: this link sits inside a dense
+   * list where the extra room is worth having.
    */
   .web__link {
     align-self: flex-start;
@@ -483,7 +477,7 @@ const { group } = Astro.props;
     color: var(--text);
   }
 
-  /* §7 tablet and up — the intro moves beside the heading, the table opens. */
+  /* Tablet and up — the intro moves beside the heading, the table opens. */
   @media (min-width: 640px) {
     .web__head {
       flex-direction: row;
@@ -542,7 +536,7 @@ const { group } = Astro.props;
     }
   }
 
-  /* §7 desktop — the handoff's wider table and wider screenshot. */
+  /* Desktop — wider table, wider screenshot. */
   @media (min-width: 1024px) {
     .web__cols,
     .web__row {

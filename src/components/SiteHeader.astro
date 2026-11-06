@@ -1,7 +1,6 @@
 ---
 /*
  * Site header — wordmark + primary nav.
- * design-system.md §4 (wordmark), §9 (nav link); content.md §Header.
  *
  * Three inline text links at every size: no pills, no hamburger.
  *
@@ -73,7 +72,7 @@ const isHome = Astro.url.pathname === '/';
     transition: height 200ms ease;
   }
 
-  /* §6 gutters, but no container cap — the header runs to the viewport edges. */
+  /* Gutters, but no container cap — the header runs to the viewport edges. */
   .site-header__inner {
     position: relative;
     max-width: var(--container);
@@ -97,7 +96,7 @@ const isHome = Astro.url.pathname === '/';
   }
 
   .site-header__logo {
-    /* §3 — 44px minimum target. */
+    /* 44px minimum target. */
     min-height: var(--header-link-target);
     display: flex;
     align-items: center;
@@ -110,7 +109,7 @@ const isHome = Astro.url.pathname === '/';
     gap: var(--nav-gap);
   }
 
-  /* §9 — 15px/500, 44px row, hover to accent. */
+  /* 44px row, hover to accent. */
   .nav__link {
     display: inline-flex;
     align-items: center;

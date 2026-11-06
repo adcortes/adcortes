@@ -1,12 +1,10 @@
 /*
  * Mailto assembly.
  *
- * visual-direction.md §6: "Contact and the footer link are `mailto:` links.
- * Assemble the address at runtime or encode it, and never print it on screen."
- *
- * The address is therefore never rendered as text anywhere in the markup, and
- * the href is percent-encoded so the literal string does not appear in the HTML
- * source either. `@` and `.` stay literal — they are mailto delimiters, and
+ * The contact address is never printed on screen: it is assembled here instead.
+ * It is not rendered as text anywhere in the markup, and the href is
+ * percent-encoded so the literal string does not appear in the HTML source
+ * either. `@` and `.` stay literal — they are mailto delimiters, and
  * encoding them is not reliably parsed by mail clients.
  */
 

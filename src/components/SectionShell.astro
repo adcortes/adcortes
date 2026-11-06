@@ -1,7 +1,6 @@
 ---
 /*
  * The label-column / content-column pairing shared by Work, About and Contact.
- * design-system.md §6 (section grid), §7 (breakpoints).
  *
  * Below 1024px the label sits above the content; from 1024px it sits beside it.
  * This is a real media query — the prototype switched on window.innerWidth and
@@ -16,7 +15,7 @@ interface Props {
   labelledBy: string;
   /** Sections after the hero carry a 1px top rule; About does not. */
   topRule?: boolean;
-  /** The last section on the page takes the deeper §5 bottom padding. */
+  /** The last section on the page takes the deeper bottom padding. */
   closing?: boolean;
 }
 
@@ -51,12 +50,12 @@ const { id, labelledBy, topRule = false, closing = false } = Astro.props;
     border-top: var(--hairline);
   }
 
-  /* §5 — Contact bottom, the one section-padding value that is not --section-y. */
+  /* Contact bottom, the one section-padding value that is not --section-y. */
   .section--closing {
     padding-bottom: var(--contact-pad-bottom);
   }
 
-  /* §6 — label column 1 1 200px capped at 280px, content column 3.4 1 620px. */
+  /* Label column 1 1 200px capped at 280px, content column 3.4 1 620px. */
   @media (min-width: 1024px) {
     .section {
       flex-direction: row;

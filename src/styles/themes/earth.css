@@ -1,12 +1,10 @@
 /*
  * Theme — Earth
- * Source of truth: docs/references/design/handoff/earth-theme/color-adjustments.md.
  *
- * Same layout, type, spacing, components and copy as Egg (../egg.css) —
- * only the colors change. See that file's token map for the Egg → Earth
- * swap and its contrast table for why --accent-on-band and
- * --text-muted-on-band exist: plain --accent and --text-muted fall under
- * WCAG AA on the raised band (Moss grey).
+ * Same layout, type, spacing, components and copy as Egg (../egg.css) — only
+ * the colors change. --accent-on-band and --text-muted-on-band exist because
+ * plain --accent and --text-muted fall under WCAG AA on the raised band
+ * (Moss grey).
  */
 :root[data-theme="earth"] {
   --bg: #1d1e22;

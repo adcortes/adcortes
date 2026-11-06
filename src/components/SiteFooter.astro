@@ -1,7 +1,6 @@
 ---
 /*
  * Site footer.
- * content.md §Footer; design-system.md §9 (footer inline link, icon button).
  *
  * Fluid rather than capped at the container: its content sits --gutter from the
  * viewport edges at every size, so it frames the page instead of lining up with
@@ -98,7 +97,7 @@ const hasSocial = Boolean(social.linkedin || social.github);
     color: var(--text-muted);
   }
 
-  /* §6 gutters, but no container cap — the footer runs to the viewport edges. */
+  /* Gutters, but no container cap — the footer runs to the viewport edges. */
   .footer__inner {
     display: flex;
     flex-wrap: wrap;
@@ -121,14 +120,12 @@ const hasSocial = Boolean(social.linkedin || social.github);
   }
 
   .footer__statement {
-    /* Inherits 14px muted; the link itself is paper-200 and underlined (§9). */
+    /* Inherits 14px muted; the link itself is paper-200 and underlined. */
     max-width: 52ch;
   }
 
   /*
-   * §9 — footer inline link: inherits 14px, paper-200, underlined.
-   *
-   * This is the one interactive target under 44px, and deliberately so: WCAG 2.2
+   * The one interactive target under 44px, and deliberately so: WCAG 2.2
    * SC 2.5.8 exempts a target "in a sentence or block of text", which is exactly
    * what this is. Padding it out to 44px would break the sentence it sits in.
    */
@@ -151,7 +148,7 @@ const hasSocial = Boolean(social.linkedin || social.github);
     margin-right: calc(var(--back-to-top-size) + var(--space-16));
   }
 
-  /* §9 — icon button: 44 × 44, radius 6, muted, hover accent. */
+  /* Icon button: 44 × 44, muted, hover accent. */
   .icon-btn {
     display: inline-flex;
     align-items: center;

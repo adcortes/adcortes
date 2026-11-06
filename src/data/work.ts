@@ -1,10 +1,4 @@
-/*
- * Selected work — the three approved groups.
- * Source of truth: docs/references/design/handoff/content.md (§Selected work)
- *
- * The handoff's `[bracketed]` launch placeholders have all been replaced with
- * final copy here; `content.md` keeps its brackets because the theme is frozen.
- */
+/* Selected work — the three groups rendered in the Work section. */
 
 import type { ProjectEntry, WebWorkGroup } from "../types/content";
 

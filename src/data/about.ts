@@ -1,6 +1,5 @@
 /*
  * About — the lead paragraph and the four numbered items.
- * Source of truth: docs/references/design/handoff/content.md (§About)
  *
  * Items 01–03 carry prose; item 04 carries the three approved strengths as
  * bullets. That split is modelled in `AboutItem` (body vs bullets).

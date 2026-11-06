@@ -1,10 +1,8 @@
 /*
  * Shared design tokens — type, spacing, radii, layout.
- * Source of truth: docs/references/design/handoff/design-system.md §4, §5,
- * §7 and §8. These are identical across themes (see earth-theme/
- * color-adjustments.md's "Unchanged" note): only color varies, and color
- * tokens live in src/styles/themes/<name>.css, selected by data-theme on
- * <html> (src/config/theme.ts).
+ * These are identical across themes: only color varies, and color tokens live
+ * in src/styles/themes/<name>.css, selected by data-theme on <html>
+ * (src/config/theme.ts).
  *
  * This file is the ONLY place a non-color literal may appear. Color must be
  * a var() referencing a themes/*.css token.
@@ -25,7 +23,7 @@
   --fs-hero-title: clamp(40px, 8vw, 76px);
   --fs-hero-subline: clamp(30px, 5vw, 44px);
 
-  /* --- §5 spacing scale --- */
+  /* --- spacing scale --- */
   --space-4: 4px;
   --space-6: 6px;
   --space-8: 8px;
@@ -42,7 +40,7 @@
   --space-80: 80px;
   --space-104: 104px;
 
-  /* --- §5 area-specific spacing --- */
+  /* --- area-specific spacing --- */
   --contact-pad-bottom: clamp(56px, 8vw, 128px);
   --header-height: clamp(64px, 11vw, 88px);
   --header-compact-height: clamp(46px, 8vw, 54px);
@@ -51,7 +49,7 @@
   --work-row-gap: clamp(40px, 5vw, 64px);
   --nav-gap: clamp(20px, 3vw, 40px);
 
-  /* --- §4 fixed type sizes --- */
+  /* --- fixed type sizes --- */
   --fs-section: 22px;
   --fs-project-title: 24px;
   --fs-about-item: 17px;
@@ -65,13 +63,13 @@
   --fs-small: 14px;
   --fs-x-small: 12px;
 
-  /* --- §4 weights --- */
+  /* --- weights --- */
   --fw-regular: 400;
   --fw-medium: 500;
   --fw-semibold: 600;
   --fw-bold: 700;
 
-  /* --- §8 radii --- */
+  /* --- radii --- */
   --radius-focus: 2px;
   --radius-chip: 4px;
   --radius-panel: 6px;
@@ -80,11 +78,11 @@
   /* Fully rounded hero CTA pill. */
   --radius-pill: 999px;
 
-  /* --- §6 layout --- */
+  /* --- layout --- */
   /*
    * A full-bleed band's inner cap: the container's own content box, so a band
    * that bleeds puts its content back on exactly the reading column every
-   * capped section uses. It resolves to the 1128px §6 documents wherever the
+   * capped section uses. It resolves to 1128px wherever the
    * gutter is at its 56px maximum (≥1400px), and tracks the container below
    * that, where a fixed 1128px would sit a few pixels off the column.
    */
@@ -102,7 +100,7 @@
   --hairline-raised: 1px solid var(--line-light);
   --chip-raised: var(--line);
 
-  /* --- §3 minimum target size --- */
+  /* --- minimum target size --- */
   --target-min: 34px;
   --header-link-target: 44px;
   --back-to-top-size: 44px;
