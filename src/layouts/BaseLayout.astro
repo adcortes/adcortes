@@ -23,12 +23,6 @@ interface Props {
 
 const { title = site.title, description = site.description } = Astro.props;
 
-/*
- * Absolute URLs for the canonical link and the social card, both resolved from
- * `site` in astro.config.mjs. While `site` is unset these stay undefined and
- * the tags that need them are omitted, rather than emitted against a guessed
- * origin — the same "absent rather than invented" rule the content types follow.
- */
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
 ---
@@ -60,12 +54,6 @@ const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
       crossorigin
     />
 
-    {/*
-      Social card. The image, its alt and og:url all depend on an absolute
-      origin, so they travel together: with `site` unset none of them is
-      emitted, and an og:image:alt never ships describing an absent image.
-      See TODO(deploy) in astro.config.mjs.
-    */}
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
