@@ -95,6 +95,10 @@ const isHome = Astro.url.pathname === '/';
     min-height: var(--header-compact-height);
   }
 
+  .site-header--compact .wordmark {
+    transform: scale(0.8); 
+  }
+
   .site-header__logo {
     /* 44px minimum target. */
     min-height: var(--header-link-target);
