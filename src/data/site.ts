@@ -1,14 +1,13 @@
 /* Site-level copy and metadata. */
 
 import type { NavItem } from "../types/content";
-import { theme } from "../config/theme";
 
 export const site = {
   lang: "en",
   title: "adcortes — UX Engineer, design systems & accessible frontend",
   description:
     "UX Engineer working across product thinking, design systems and accessible frontend.",
-  ogImage: `/themes/${theme}/og-image.png`,
+  ogImage: `/og-image.png`,
   /* Literal "&", like `title` above: Astro escapes attribute values itself. */
   ogImageAlt: "adcortes. UX Engineer — design systems & accessible frontend",
 } as const;
