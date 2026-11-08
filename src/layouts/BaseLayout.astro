@@ -11,6 +11,7 @@ import { theme } from '../config/theme';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
 import BackToTop from '../components/BackToTop.astro';
+import Analytics from '@vercel/analytics/astro';
 import '../styles/tokens.css';
 import '../styles/themes/egg.css';
 import '../styles/themes/earth.css';
@@ -67,6 +68,7 @@ const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
       )
     }
     <meta name="twitter:card" content="summary_large_image" />
+    <Analytics />
   </head>
 
   <body>
