@@ -1,4 +1,4 @@
-# Hi, I'm Adriana 👋
+# Hi, I'm Adriana.
 
 UX Engineer - product, design and frontend.
 
@@ -10,4 +10,4 @@ UX Engineer - product, design and frontend.
 
 ## Find me
 
-[Portfolio](https://github.com/adcortes) · [LinkedIn](https://www.linkedin.com/in/adcortes/)
+[Web](https://adcortes.vercel.app/) · [LinkedIn](https://www.linkedin.com/in/adcortes/)
