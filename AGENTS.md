@@ -1,61 +1,32 @@
 # Agent guidance
 
-Canonical, tool-neutral guidance for coding agents working in this repository.
+Canonical, tool-neutral guidance for this Astro 7 portfolio. Use Node 24 and pnpm.
+`README.md` is the owner's GitHub profile README; keep project maintenance notes in `docs/`.
 
-A static, single-page personal portfolio: Astro 7 with static output, strict TypeScript, plain CSS
-and a self-hosted variable font. Node 24 and pnpm. `pnpm dev` to run it, `pnpm check` and
-`pnpm build` to verify.
+## Architecture and content
 
-## Architecture
+- Astro builds static HTML without an adapter. `src/pages/index.astro` is the only published route; keep the server-rendered page usable without JavaScript.
+- Edit portfolio copy and metadata in `src/data/*.ts`, with related types in `src/types/content.ts`. The hero display mode is in `src/config/hero.ts`.
+- `src/layouts/CaseStudyLayout.astro` is unpublished because it is outside `src/pages/`. Review routes and content types before adding case studies; see `docs/maintenance.md`.
+- `src/lib/email.ts` assembles contact links. Preserve its source-obfuscation convention.
+- Do not add a UI framework, CMS, animation library, or external service unless requested.
 
-A single-route Astro site with static output and no adapter. The code is the source of truth for
-every visual and content decision; there is no separate design specification to consult.
+## Visual system
 
-- `src/pages/index.astro` — the one route. Sections are composed from `SectionShell.astro`.
-- `src/data/*.ts` — all copy and metadata, typed by `src/types/content.ts`. Change content here,
-  not in markup.
-- `src/config/theme.ts` — the one switch between the `egg` and `earth` themes. It sets `data-theme`
-  on `<html>` and selects the themed OG image.
-- `src/layouts/CaseStudyLayout.astro` — intentionally outside `src/pages/`, so it generates no
-  route. Leave it in place; its header comment explains how to publish one.
-- `src/lib/email.ts` — assembles the contact address so the literal string never reaches the HTML.
+- `src/config/theme.ts` selects `earth` or `egg` at build time through `data-theme` on `<html>`. Shared type, spacing, and layout tokens are in `src/styles/tokens.css`; theme palettes are in `src/styles/themes/`.
+- Prefer semantic color tokens. Existing exceptions include fixed colors in `tokens.css`, a translucent color in `ProjectEntry.astro`, and inline artwork. Do not assume every value is theme-specific or every non-color literal is a token.
+- Keep component styles with their Astro components. Check responsive behavior at the actual breakpoints used by the affected component, including 640px, 960px, and 1024px where relevant.
 
-## Styles
+## Accessibility and scripts
 
-- `src/styles/tokens.css` — type, spacing, radii and layout, shared by both themes. The only place
-  a non-colour literal belongs.
-- `src/styles/themes/egg.css` and `themes/earth.css` — **colour tokens live here, one file per
-  theme.** No colour literal belongs anywhere else, approved inlined artwork excepted. Everything
-  else references a `var()`.
-- `src/styles/base.css` — theme-agnostic base, reset, font-face and focus styles.
-- Component-scoped CSS lives in the component's own `<style>` block.
-- Responsive behaviour uses real media queries at 640px and 1024px.
+- Preserve semantic landmarks, meaningful image alternatives, keyboard access, visible focus, and reduced-motion behavior. Aim for WCAG 2.2 AA.
+- Use real destinations. Omit unavailable links or actions; never add `href="#"`, invented routes, or placeholder controls.
+- Client scripts must progressively enhance the complete HTML. Astro's CSP is enabled in `astro.config.mjs`; keep component scripts processed by Astro rather than using `is:inline`, so the generated policy covers them.
 
-## Constraints
+## Publishing and verification
 
-- Do not add a UI framework, CMS, animation library, or external service unless explicitly
-  requested.
-- Client-side JavaScript is allowed but must be progressive enhancement: the server-rendered page
-  stays complete and readable without it, as the header, back-to-top, tooltip and archive-disclosure
-  scripts already are.
-- Preserve semantic HTML, keyboard access, visible focus, reduced-motion support, and real link
-  destinations. **Never use `href="#"`** — a link with no known destination is modelled as optional
-  and omitted. The same rule covers invented routes and inert or disabled controls.
-- Target WCAG 2.2 AA.
-- `site` stays unset in `astro.config.mjs` until a real origin exists; see the `TODO(deploy)` there.
+- `astro.config.mjs` sets the canonical origin to `https://adcortes.vercel.app`. `BaseLayout.astro` generates canonical and Open Graph URLs from it; the shared OG image is `public/og-image.png`.
+- `vercel.json` disables Git-triggered deployments. See `docs/maintenance.md` for the manual publishing checklist.
+- Before reporting completion, run `pnpm check`, `pnpm build`, and `git diff --check`. Confirm the build has `dist/index.html` and no other HTML page.
 
-## Comments
-
-Keep comments that record an accessibility exception, a layout constraint or a non-obvious
-decision, and keep them accurate when changing the code they describe. Do not add comments that
-restate what the code already says.
-
-## Before reporting completion
-
-```bash
-pnpm check
-pnpm build
-git diff --check
-```
-
-The build must produce `dist/index.html` and no other page.
+Keep comments that explain accessibility exceptions, layout constraints, or non-obvious decisions accurate. Avoid comments that repeat the code.
