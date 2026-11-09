@@ -1,16 +1,13 @@
 /*
  * Shared design tokens — type, spacing, radii, layout.
- * These are identical across themes: only color varies, and color tokens live
- * in src/styles/themes/<name>.css, selected by data-theme on <html>
- * (src/config/theme.ts).
- *
- * This file is the ONLY place a non-color literal may appear. Color must be
- * a var() referencing a themes/*.css token.
+ * These are shared across themes. Theme palette values live in
+ * src/styles/themes/<name>.css, selected by data-theme on <html>
+ * (src/config/theme.ts). Fixed --text-strong and --surface-raised values are
+ * exceptions here; component styles also contain local literals.
  */
 
 :root {
-  /* --text-strong is pure white in both themes (project titles) — brighter
-     than --text by design, not a palette color, so it isn't theme-scoped. */
+  /* --text-strong is fixed white for project titles in both themes. */
   --text-strong: #ffffff;
   --font: "Schibsted Grotesk", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --container: 1240px;
@@ -91,8 +88,7 @@
 
   /*
    * --- Surfaces -------------------------------------------------------------
-   * Aliases of the theme palette — no new colour values. A section may sit
-   * on a raised slate ground instead of the page's --bg. The two companions
+   * A section may sit on a raised slate ground instead of the page's --bg. The two companions
    * keep its rules and chips reading at the weight they have on the page
    * ground, where a plain --hairline would drop to 1.25:1 and disappear.
    */

@@ -50,11 +50,7 @@ import { mailtoHref } from '../lib/email';
 
     <h2 id="contact-h" class="contact-heading">{contact.heading}</h2>
     <p class="contact__body">{contact.body}</p>
-    {/*
-      The one button on the page. It is a link, not a <button>: it navigates,
-      and the address is assembled in src/lib/email.ts so it is never printed
-      on screen or in the HTML source.
-    */}
+    {/* This navigates to the assembled contact address, which is not printed in the HTML source. */}
     <p class="contact__action">
       <a class="cta" href={mailtoHref()}>
         {contact.ctaLabel} <span aria-hidden="true">→</span>
@@ -72,10 +68,6 @@ import { mailtoHref } from '../lib/email';
     letter-spacing: -0.015em;
   }
 
-  /*
-   * The one line under the Work heading. On mobile only its first sentence
-   * shows, because the diagrams it refers to are hidden below 640px.
-   */
   .work__intro {
     margin-top: var(--space-10);
     font-size: var(--fs-body-small);
@@ -124,11 +116,6 @@ import { mailtoHref } from '../lib/email';
     margin-top: var(--space-32);
   }
 
-  /*
-   * The only button on the page: accent border and text, filling with accent
-   * on hover. Its focus ring is the paper-200 variant already set globally in
-   * base.css.
-   */
   .cta {
     display: inline-flex;
     align-items: center;
