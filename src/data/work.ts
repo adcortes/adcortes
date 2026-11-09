@@ -1,6 +1,7 @@
 /* Selected work — the three groups rendered in the Work section. */
 
 import type { ProjectEntry, WebWorkGroup } from "../types/content";
+import { airlineCaseStudy } from "./airlineCaseStudy";
 
 export const workSection = {
   heading: "Selected work",
@@ -17,22 +18,6 @@ export const workSection = {
  * Actions are optional and appear only when their destination exists.
  */
 export const projects: ProjectEntry[] = [
-  {
-    id: "emr",
-    category: "Product",
-    title: "A lightweight EMR for small clinics",
-    summary:
-      "A role-based web application for managing patients, appointments and clinical workflows in a small practice — designed around clear scheduling rules, reliable data and accessible UI.",
-    role: "Product definition, UX engineering and full-stack development.",
-    outcome:
-      "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
-    tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
-    visual: {
-      kind: "none",
-      // component: "emr",
-      // caption: "Records list and consultation form. All patient data is synthetic.",
-    },
-  },
   {
     id: "airline",
     category: "Product & design systems",
@@ -52,12 +37,31 @@ export const projects: ProjectEntry[] = [
       "Technical leadership",
       "Figma",
     ],
+    action: import.meta.env.DEV
+      ? { kind: "link", label: "Read case study", href: `/preview/${airlineCaseStudy.slug}` }
+      : undefined,
     visual: {
       kind: "none",
       // src: "/images/ibe-booking-1.png",
       // alt: "",
       // component: "design-system",
       // caption: "One token and component layer shared across several airlines.",
+    },
+  },
+  {
+    id: "emr",
+    category: "Product",
+    title: "A lightweight EMR for small clinics",
+    summary:
+      "A role-based web application for managing patients, appointments and clinical workflows in a small practice — designed around clear scheduling rules, reliable data and accessible UI.",
+    role: "Product definition, UX engineering and full-stack development.",
+    outcome:
+      "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
+    tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
+    visual: {
+      kind: "none",
+      // component: "emr",
+      // caption: "Records list and consultation form. All patient data is synthetic.",
     },
   },
   {

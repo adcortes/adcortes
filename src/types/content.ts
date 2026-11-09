@@ -164,3 +164,46 @@ export interface NavItem {
   label: string;
   href: string;
 }
+
+/** Long-form case studies are separate from homepage ProjectEntry summaries. */
+interface CaseStudyMediaBase {
+  caption: string;
+}
+
+export interface CaseStudyImage extends CaseStudyMediaBase {
+  kind: "image";
+  /** Required for a real screenshot or diagram; describes information beyond the caption. */
+  alt: string;
+  src: string;
+  width: number;
+  height: number;
+}
+
+export interface CaseStudyPlaceholder extends CaseStudyMediaBase {
+  kind: "placeholder";
+  /** Short label displayed in the empty media frame during drafting. */
+  label: string;
+}
+
+export type CaseStudyMedia = CaseStudyImage | CaseStudyPlaceholder;
+
+export interface CaseStudySection {
+  id: string;
+  heading: string;
+  paragraphs: string[];
+  bullets?: string[];
+  media?: CaseStudyMedia;
+  /** Editorial reminder, visibly marked as draft rather than a project claim. */
+  inputNeeded?: string;
+}
+
+export interface CaseStudy {
+  slug: string;
+  category: string;
+  title: string;
+  introduction: string;
+  status: "mock" | "published";
+  metadata: { label: string; value: string }[];
+  sections: CaseStudySection[];
+  topics: string[];
+}

@@ -1,0 +1,15 @@
+---
+import CaseStudyLayout from '../../layouts/CaseStudyLayout.astro';
+import { airlineCaseStudy } from '../../data/airlineCaseStudy';
+
+// Astro generates this route for local development only. Production emits no HTML for it.
+export function getStaticPaths() {
+  return import.meta.env.DEV
+    ? [{ params: { slug: airlineCaseStudy.slug }, props: { study: airlineCaseStudy } }]
+    : [];
+}
+
+const { study } = Astro.props;
+---
+
+<CaseStudyLayout study={study} />

@@ -20,9 +20,11 @@ import '../styles/base.css';
 interface Props {
   title?: string;
   description?: string;
+  /** Local editorial preview: omit public URL metadata and analytics. */
+  draft?: boolean;
 }
 
-const { title = site.title, description = site.description } = Astro.props;
+const { title = site.title, description = site.description, draft = false } = Astro.props;
 
 const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : undefined;
 const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
@@ -35,7 +37,8 @@ const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {canonical && <link rel="canonical" href={canonical.href} />}
+    {draft && <meta name="robots" content="noindex, nofollow" />}
+    {!draft && canonical && <link rel="canonical" href={canonical.href} />}
 
     {/* Fixed Earth palette favicon across all site themes. */}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
@@ -58,7 +61,7 @@ const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
     <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    {canonical && <meta property="og:url" content={canonical.href} />}
+    {!draft && canonical && <meta property="og:url" content={canonical.href} />}
     {
       ogImage && (
         <>
@@ -68,7 +71,7 @@ const ogImage = Astro.site ? new URL(site.ogImage, Astro.site) : undefined;
       )
     }
     <meta name="twitter:card" content="summary_large_image" />
-    <Analytics />
+    {!draft && <Analytics />}
   </head>
 
   <body>

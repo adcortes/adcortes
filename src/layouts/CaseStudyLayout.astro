@@ -1,277 +1,101 @@
 ---
-/*
- * The case study layout, kept out of `src/pages/` so no route is generated:
- * the site ships as a single page and no work detail page is published yet.
- * The current `study` interface is unpublished. Review routes and content
- * types before using this layout for a future case study.
- */
 import BaseLayout from './BaseLayout.astro';
+import type { CaseStudy } from '../types/content';
 
-export interface CaseStudySection {
-  heading: string;
-  paragraphs?: string[];
-  steps?: string[];
-  quote?: string;
-  findings?: string[];
-}
-
-export interface CaseStudy {
-  category: string;
-  title: string;
-  introduction: string;
-  metadata: { label: string; value: string }[];
-  sections: CaseStudySection[];
-  tags: string[];
-}
-
-interface Props {
-  study: CaseStudy;
-}
-
+interface Props { study: CaseStudy }
 const { study } = Astro.props;
 ---
 
-<BaseLayout title={`${study.title} — adcortes`} description={study.introduction}>
-  <article class="case-study">
-    <a class="case-study__back" href="/#work">
-      <span aria-hidden="true">←</span> 
-      <span class="case-study__back-text">All work</span>
-    </a>
-
-    <header class="case-study__header">
-      <p class="case-study__category">{study.category}</p>
+<BaseLayout title={`${study.title} — adcortes`} description={study.introduction} draft={study.status === 'mock'}>
+  <article class="study">
+    <a class="back" href="/#work"><span aria-hidden="true">←</span> All work</a>
+    <header class="hero">
+      <p class="eyebrow">{study.category}</p>
       <h1>{study.title}</h1>
-      <p class="case-study__intro">{study.introduction}</p>
+      <p class="intro">{study.introduction}</p>
+      {study.status === 'mock' && <p class="draft"><strong>Fictional prototype.</strong> All scenarios and decisions below are mock examples for layout review, not verified project claims.</p>}
     </header>
 
-    <dl class="case-study__meta">
-      {study.metadata.map(({ label, value }) => (
-        <div>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
-        </div>
-      ))}
+    <dl class="meta">
+      {study.metadata.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
     </dl>
 
-    <div class="case-study__sections">
+    <nav class="contents" aria-label="On this page">
+      <p>On this page</p>
+      <ol>{study.sections.map((section) => <li><a href={`#${section.id}`}>{section.heading}</a></li>)}</ol>
+    </nav>
+
+    <div class="sections">
       {study.sections.map((section) => (
-        <section class="case-study__section">
-          <h2>{section.heading}</h2>
-          {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
-          {section.quote && <blockquote>“{section.quote}”</blockquote>}
-          {section.steps && (
-            <ol class="case-study__steps">
-              {section.steps.map((step) => <li>{step}</li>)}
-            </ol>
+        <section class="section" id={section.id} aria-labelledby={`${section.id}-heading`}>
+          <h2 id={`${section.id}-heading`}>{section.heading}</h2>
+          {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+          {section.bullets && <ul class="bullets">{section.bullets.map((item) => <li>{item}</li>)}</ul>}
+          {section.media && (
+            <figure class="figure">
+              {section.media.kind === 'image'
+                ? <img src={section.media.src} alt={section.media.alt} width={section.media.width} height={section.media.height} loading="lazy" />
+                : <div class="media-placeholder" aria-hidden="true"><span>{section.media.label}</span></div>}
+              <figcaption>{section.media.caption}</figcaption>
+            </figure>
           )}
-          {section.findings && (
-            <ul class="case-study__findings">
-              {section.findings.map((finding) => <li>{finding}</li>)}
-            </ul>
-          )}
+          {section.inputNeeded && <div class="input"><strong>To replace with real content</strong><p>{section.inputNeeded}</p></div>}
         </section>
       ))}
     </div>
 
-    <ul class="case-study__tags" aria-label="Technologies and topics">
-      {study.tags.map((tag) => <li>{tag}</li>)}
-    </ul>
-
-    <a class="case-study__end-link" href="/#work"><span aria-hidden="true">←</span> All work</a>
+    <div class="closing">
+      <p class="eyebrow">Topics in this draft</p>
+      <ul class="topics" aria-label="Topics">{study.topics.map((topic) => <li>{topic}</li>)}</ul>
+      <a class="back" href="/#work"><span aria-hidden="true">←</span> All work</a>
+    </div>
   </article>
 </BaseLayout>
 
 <style>
-  .case-study {
-    max-width: 680px;
-    margin-inline: auto;
-    padding-block: var(--section-y);
-  }
-
-  .case-study__back,
-  .case-study__end-link {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--space-8);
-    min-height: var(--target-min);
-    color: var(--text-muted);
-    font-size: var(--fs-body-small);
-    text-decoration: none;
-  }
-
-
-  .case-study__back:hover,
-  .case-study__end-link:hover {
-    color: var(--accent);
-  }
-
-  .case-study__back-text {
-    text-decoration: underline;
-  }
-
-  .case-study__header {
-    margin-top: var(--space-40);
-  }
-
-  .case-study__category {
-    color: var(--accent);
-    font-size: var(--fs-body-small);
-    font-weight: var(--fw-medium);
-  }
-
-  .case-study h1 {
-    margin-top: var(--space-12);
-    color: var(--text-strong);
-    font-size: var(--fs-display);
-    line-height: 1.1;
-    letter-spacing: -0.025em;
-  }
-
-  .case-study__intro {
-    margin-top: var(--space-28);
-    font-size: var(--fs-lead);
-    line-height: 1.5;
-  }
-
-  .case-study__meta {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: var(--space-24);
-    margin-top: var(--space-40);
-    padding-block: var(--space-20);
-    border-block: var(--hairline);
-  }
-
-  .case-study__meta dt {
-    color: var(--text-muted);
-    font-size: var(--fs-small);
-  }
-
-  .case-study__meta dd {
-    margin-top: var(--space-4);
-    font-size: var(--fs-body-small);
-    line-height: 1.5;
-  }
-
-  .case-study__sections {
-    display: grid;
-    gap: var(--space-56);
-    margin-top: var(--space-56);
-  }
-
-  .case-study__section h2 {
-    margin-bottom: var(--space-12);
-    color: var(--text-strong);
-    font-size: clamp(var(--fs-project-title), 3vw, 30px);
-    line-height: 1.25;
-    letter-spacing: -0.015em;
-  }
-
-  .case-study__section p,
-  .case-study__steps,
-  .case-study__findings {
-    font-size: clamp(var(--fs-body), 2vw, 20px);
-    line-height: 1.7;
-  }
-
-  .case-study__section p + p {
-    margin-top: var(--space-28);
-  }
-
-  .case-study__section blockquote {
-    margin-top: var(--space-32);
-    padding-left: var(--space-24);
-    border-left: 3px solid var(--accent);
-    color: var(--text-strong);
-    font-size: var(--fs-project-title);
-    line-height: 1.5;
-  }
-
-  .case-study__steps {
-    padding-left: var(--space-28);
-    margin-block: var(--space-28) 0;
-  }
-
-  .case-study__steps li {
-    padding-left: var(--space-6);
-    margin-top: var(--space-10);
-  }
-
-  /* Kept for a future case study figure; the EMR diagram it was written for
-     left with the draft copy. */
-  .case-study__figure {
-    margin-top: var(--space-40);
-  }
-
-  .case-study__figure figcaption {
-    margin-top: var(--space-10);
-    color: var(--text-muted);
-    font-size: var(--fs-small);
-  }
-
-  .case-study__findings {
-    padding: var(--space-24) var(--space-32);
-    background: var(--surface-raised);
-    border-radius: var(--radius-frame);
-  }
-
-  .case-study__findings li {
-    display: flex;
-    gap: var(--space-16);
-  }
-
-  .case-study__findings li + li {
-    margin-top: var(--space-16);
-  }
-
-  .case-study__findings li::before {
-    content: '';
-    flex: 0 0 var(--space-8);
-    width: var(--space-8);
-    height: var(--space-8);
-    margin-top: 0.8em;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-
-  .case-study__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-6);
-    margin-top: var(--space-56);
-    color: var(--text-muted);
-    font-size: var(--fs-x-small);
-  }
-
-  .case-study__tags li {
-    padding: 3px 6px;
-    border: var(--hairline);
-    border-radius: var(--radius-chip);
-  }
-
-  .case-study__end-link {
-    display: flex;
-    width: fit-content;
-    margin-top: var(--space-56);
-    padding-top: var(--space-20);
-    border-top: var(--hairline);
-  }
-
+  .study { width: min(100%, 760px); margin-inline: auto; padding-block: var(--space-40) var(--space-104); }
+  .back { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--header-link-target); color: var(--text-muted); font-size: var(--fs-body-small); text-decoration: underline; text-underline-offset: 3px; }
+  .back:hover, .contents a:hover { color: var(--accent); }
+  .hero { margin-top: var(--space-40); }
+  .eyebrow { color: var(--accent); font-size: var(--fs-body-small); font-weight: var(--fw-medium); }
+  h1 { max-width: 18ch; margin-top: var(--space-12); color: var(--text-strong); font-size: var(--fs-display); line-height: 1.1; letter-spacing: -0.025em; }
+  .intro { max-width: 62ch; margin-top: var(--space-28); font-size: var(--fs-lead); line-height: 1.55; }
+  .draft, .input { border-left: 3px solid var(--accent); background: var(--surface-raised); border-radius: 0 var(--radius-panel) var(--radius-panel) 0; }
+  .draft { margin-top: var(--space-32); padding: var(--space-16) var(--space-20); font-size: var(--fs-body-small); }
+  .meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-20); margin-top: var(--space-40); padding-block: var(--space-20); border-block: var(--hairline); }
+  .meta dt { color: var(--text-muted); font-size: var(--fs-small); }
+  .meta dd { margin-top: var(--space-4); font-size: var(--fs-body-small); line-height: 1.5; overflow-wrap: anywhere; }
+  .contents { margin-top: var(--space-40); padding: var(--space-24); border: var(--hairline); border-radius: var(--radius-frame); }
+  .contents p { font-weight: var(--fw-semibold); }
+  .contents ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-32); row-gap: var(--space-8); margin: var(--space-12) 0 0; padding-left: var(--space-24); }
+  .contents li { padding-left: var(--space-4); }
+  .contents a { display: inline-block; padding-block: var(--space-4); color: var(--text); text-underline-offset: 3px; }
+  .sections { display: grid; gap: var(--space-80); margin-top: var(--space-80); }
+  .section { scroll-margin-top: calc(var(--header-height) + var(--space-24)); }
+  .section h2 { margin-bottom: var(--space-20); color: var(--text-strong); font-size: clamp(var(--fs-project-title), 3vw, 32px); line-height: 1.25; letter-spacing: -0.015em; }
+  .section > p, .bullets { max-width: 64ch; font-size: var(--fs-body-large); line-height: 1.75; }
+  .section > p + p { margin-top: var(--space-20); }
+  .bullets { margin: var(--space-24) 0 0; padding-left: var(--space-24); }
+  .bullets li + li { margin-top: var(--space-8); }
+  .figure { margin-top: var(--space-32); }
+  .figure img, .media-placeholder { width: 100%; border: var(--hairline); border-radius: var(--radius-frame); }
+  .figure img { height: auto; }
+  .media-placeholder { display: grid; min-height: clamp(190px, 32vw, 320px); place-items: center; padding: var(--space-24); background: var(--surface-raised); color: var(--text-muted); text-align: center; font-size: var(--fs-body-small); }
+  .figure figcaption { max-width: 64ch; margin-top: var(--space-10); color: var(--text-muted); font-size: var(--fs-small); line-height: 1.55; }
+  .input { margin-top: var(--space-32); padding: var(--space-16) var(--space-20); font-size: var(--fs-body-small); }
+  .input strong { color: var(--accent); font-weight: var(--fw-semibold); }
+  .input p { margin-top: var(--space-4); }
+  .closing { margin-top: var(--space-80); padding-top: var(--space-24); border-top: var(--hairline); }
+  .topics { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-10); }
+  .topics li { padding: var(--space-4) var(--space-8); border: var(--hairline); border-radius: var(--radius-chip); color: var(--text-muted); font-size: var(--fs-small); }
+  .closing .back { margin-top: var(--space-40); }
   @media (max-width: 639px) {
-    .case-study {
-      padding-block: var(--space-40) var(--space-80);
-    }
-
-    .case-study__header {
-      margin-top: var(--space-24);
-    }
-
-    .case-study__meta {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .case-study__findings {
-      padding: var(--space-20);
-    }
+    .study { padding-block: var(--space-24) var(--space-80); }
+    .hero { margin-top: var(--space-24); }
+    .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .contents { padding: var(--space-20); }
+    .contents ol { display: block; }
+    .contents li + li { margin-top: var(--space-4); }
+    .sections { gap: var(--space-64); margin-top: var(--space-64); }
   }
 </style>
