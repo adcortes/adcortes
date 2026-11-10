@@ -31,8 +31,27 @@ Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install 
 4. Inspect the production preview for image sharpness and dimensions, font loading, layout shifts, console or CSP errors, and avoidable large assets. Check canonical, description, Open Graph, favicon, and social-preview assets against the intended public URL.
 5. After manual deployment, open the live page and repeat the key link, responsive, and metadata checks.
 
-## Future case studies
+## Case studies
 
-`src/data/work.ts` holds short homepage summaries. The unpublished airline prototype has a separate narrative in `src/data/airlineCaseStudy.ts`, typed in `src/types/content.ts` and rendered by `src/layouts/CaseStudyLayout.astro`. All prototype copy is fictional and each section marks the real input it needs.
+`src/data/work.ts` holds the short homepage summaries. Long-form studies are separate: `src/data/airlineCaseStudy.ts` holds the airline narrative, typed as `CaseStudy` in `src/types/content.ts` and rendered by `src/layouts/CaseStudyLayout.astro`.
 
-Run `pnpm dev` and use the airline project's "Read case study" link in Selected work, or open `/preview/airline-booking-disruption` directly. The homepage action and `src/pages/preview/[slug].astro` route exist only in development; production builds emit neither a preview link nor preview HTML. Before publishing a real case study, replace and verify the mock material, review any media for disclosure, then add an explicit static route such as `src/pages/work/[slug].astro` with an approved slug. Replace the development action with the published destination only when that route exists. Confirm the build output and metadata again before deployment.
+A study is a header — back-link, category, H1, lead paragraphs, and a metadata list — followed by chapters. Each chapter is an `id`, an H2 `heading`, an optional `number`, and a list of editorial `blocks` rendered in order.
+
+A `number` such as `"01/"` prints before the heading in the accent colour, the same treatment the About items use. It is decorative wayfinding and is hidden from assistive technology, so keep the heading meaningful on its own and omit the number from closing chapters that are not part of the sequence.
+
+The block kinds are:
+
+- `prose` — one or more paragraphs.
+- `subheading` — an H3 for a sub-topic inside the chapter.
+- `image` — one `CaseStudyFigure` (`src`, `alt`, intrinsic `width`/`height`, optional `caption`), rendered by `src/components/case-study/Figure.astro`.
+- `comparison` — two or more figures side by side, each with its own label, under an optional shared caption, rendered by `src/components/case-study/Comparison.astro`; the images stack below 960px.
+- `placeholder` — a reserved media slot, rendered by `src/components/case-study/MediaPlaceholder.astro` and **only while `status` is `mock`**. It holds the editorial rhythm for review before the real screenshots exist and is visibly labelled as a placeholder. A published study renders nothing for it, so a forgotten slot cannot reach the live page as an empty frame.
+- `note` — a short observation about the figure above it.
+
+Copy keeps a fixed reading measure. The three media blocks default to `width: "wide"`, which applies the `.media-wide` primitive in `src/styles/base.css`: the block runs out to the container's own content box so interface detail stays legible, while the paragraphs around it keep their measure. Pass `width: "reading"` for a screenshot that does not need the extra room. The width collapses to the reading column once the viewport is narrower than it, so wide media never causes sideways scrolling.
+
+Chapters are deliberately not uniform, so a new study need not reuse the airline chapters or its image placement. Omit a block rather than stubbing it: a chapter with no `image` block renders with no media frame, and the page carries no placeholder or editorial TODO. The layout adds no client script. Add a `nextProject` link only once a second study is actually published.
+
+Only use real material. Omit a metadata row rather than guessing it — the airline study has no Period row because no verified employment dates exist in this project. Place screenshots in `public/images/` and record their intrinsic dimensions; give each one alt text that describes information the caption does not repeat, and review it for disclosure before publishing.
+
+Run `pnpm dev` and use the airline project's "Read case study" link in Selected work, or open `/preview/airline-booking-disruption` directly. The homepage action and `src/pages/preview/[slug].astro` route exist only in development; production builds emit neither a preview link nor preview HTML, and `status: "mock"` also keeps the preview out of search engines and analytics. To publish a study, add an explicit static route such as `src/pages/work/[slug].astro` with an approved slug, set `status` to `published`, and replace the development-only action with the published destination. Confirm the build output and metadata again before deployment.

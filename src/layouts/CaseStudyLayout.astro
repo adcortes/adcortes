@@ -1,101 +1,197 @@
 ---
+/*
+ * Case study layout — reusable across studies.
+ *
+ * A study is a header (back-link, category, H1, lead, metadata) followed by
+ * chapters, each a list of editorial blocks in reading order. Chapters are not
+ * uniform: a chapter carries only the blocks its story needs, so one with no
+ * image renders with no media frame at all.
+ *
+ * Copy keeps a fixed reading measure; media may run wider (`.media-wide` in
+ * src/styles/base.css) so interface detail stays legible without widening the
+ * paragraphs. Reserved media slots render only while the study is a draft.
+ *
+ * There is no table of contents and no client script — the page is complete
+ * HTML.
+ */
 import BaseLayout from './BaseLayout.astro';
+import Figure from '../components/case-study/Figure.astro';
+import Comparison from '../components/case-study/Comparison.astro';
+import ImageWithText from '../components/case-study/ImageWithText.astro';
+import MediaPlaceholder from '../components/case-study/MediaPlaceholder.astro';
 import type { CaseStudy } from '../types/content';
 
 interface Props { study: CaseStudy }
 const { study } = Astro.props;
 ---
 
-<BaseLayout title={`${study.title} — adcortes`} description={study.introduction} draft={study.status === 'mock'}>
+<BaseLayout
+  title={`${study.title} — adcortes`}
+  description={study.introduction[0]}
+  draft={study.status === 'mock'}
+>
   <article class="study">
-    <a class="back" href="/#work"><span aria-hidden="true">←</span> All work</a>
-    <header class="hero">
+    <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to work</a>
+
+    <header class="intro">
       <p class="eyebrow">{study.category}</p>
       <h1>{study.title}</h1>
-      <p class="intro">{study.introduction}</p>
-      {study.status === 'mock' && <p class="draft"><strong>Fictional prototype.</strong> All scenarios and decisions below are mock examples for layout review, not verified project claims.</p>}
+      {study.introduction.map((paragraph) => <p class="lead">{paragraph}</p>)}
     </header>
 
     <dl class="meta">
-      {study.metadata.map(({ label, value }) => <div><dt>{label}</dt><dd>{value}</dd></div>)}
+      {study.metadata.map(({ label, value }) => (
+        <div>
+          <dt>{label}</dt>
+          <dd>{value}</dd>
+        </div>
+      ))}
     </dl>
 
-    <nav class="contents" aria-label="On this page">
-      <p>On this page</p>
-      <ol>{study.sections.map((section) => <li><a href={`#${section.id}`}>{section.heading}</a></li>)}</ol>
-    </nav>
-
-    <div class="sections">
-      {study.sections.map((section) => (
-        <section class="section" id={section.id} aria-labelledby={`${section.id}-heading`}>
-          <h2 id={`${section.id}-heading`}>{section.heading}</h2>
-          {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
-          {section.bullets && <ul class="bullets">{section.bullets.map((item) => <li>{item}</li>)}</ul>}
-          {section.media && (
-            <figure class="figure">
-              {section.media.kind === 'image'
-                ? <img src={section.media.src} alt={section.media.alt} width={section.media.width} height={section.media.height} loading="lazy" />
-                : <div class="media-placeholder" aria-hidden="true"><span>{section.media.label}</span></div>}
-              <figcaption>{section.media.caption}</figcaption>
-            </figure>
-          )}
-          {section.inputNeeded && <div class="input"><strong>To replace with real content</strong><p>{section.inputNeeded}</p></div>}
+    <div class="chapters">
+      {study.chapters.map((chapter) => (
+        <section class="chapter" id={chapter.id} aria-labelledby={`${chapter.id}-heading`}>
+          <h2 id={`${chapter.id}-heading`}>
+            {chapter.number && (
+              <span class="number" aria-hidden="true">
+                {chapter.number}
+              </span>
+            )}
+            {chapter.heading}
+          </h2>
+          {chapter.blocks.map((block) => {
+            switch (block.kind) {
+              case 'prose':
+                return block.paragraphs.map((paragraph) => <p>{paragraph}</p>);
+              case 'subheading':
+                return <h3>{block.text}</h3>;
+              case 'image':
+                return <Figure figure={block.figure} width={block.width} />;
+              case 'image-text':
+                return (
+                  <ImageWithText text={block.text} figure={block.figure} />
+                );
+              case 'comparison':
+                return (
+                  <Comparison figures={block.figures} caption={block.caption} width={block.width} />
+                );
+              case 'placeholder':
+                return study.status === 'mock' ? <MediaPlaceholder {...block} /> : null;
+              case 'note':
+                return <aside class="note">{block.text}</aside>;
+            }
+          })}
         </section>
       ))}
     </div>
 
-    <div class="closing">
-      <p class="eyebrow">Topics in this draft</p>
-      <ul class="topics" aria-label="Topics">{study.topics.map((topic) => <li>{topic}</li>)}</ul>
-      <a class="back" href="/#work"><span aria-hidden="true">←</span> All work</a>
-    </div>
+    <nav class="closing" aria-label="Case study">
+      <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to work</a>
+      {study.nextProject && (
+        <a class="back next" href={study.nextProject.href} target={study.nextProject.target}>
+          {study.nextProject.label} <span aria-hidden="true">→</span>
+        </a>
+      )}
+    </nav>
   </article>
 </BaseLayout>
 
 <style>
-  .study { width: min(100%, 760px); margin-inline: auto; padding-block: var(--space-40) var(--space-104); }
-  .back { display: inline-flex; align-items: center; gap: var(--space-8); min-height: var(--header-link-target); color: var(--text-muted); font-size: var(--fs-body-small); text-decoration: underline; text-underline-offset: 3px; }
-  .back:hover, .contents a:hover { color: var(--accent); }
-  .hero { margin-top: var(--space-40); }
+  /*
+   * The reading column. Media blocks inside a chapter opt out of it with
+   * `.media-wide`, which is why the column lives on `.study` rather than on a
+   * wrapper that would clip them.
+   */
+  .study { width: min(100%, var(--reading)); margin-inline: auto; padding-block: var(--space-40) var(--space-104); }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-8);
+    min-height: var(--header-link-target);
+    color: var(--text-muted);
+    font-size: var(--fs-body-small);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .back:hover { color: var(--accent); }
+
+  .intro { margin-top: var(--space-40); }
   .eyebrow { color: var(--accent); font-size: var(--fs-body-small); font-weight: var(--fw-medium); }
-  h1 { max-width: 18ch; margin-top: var(--space-12); color: var(--text-strong); font-size: var(--fs-display); line-height: 1.1; letter-spacing: -0.025em; }
-  .intro { max-width: 62ch; margin-top: var(--space-28); font-size: var(--fs-lead); line-height: 1.55; }
-  .draft, .input { border-left: 3px solid var(--accent); background: var(--surface-raised); border-radius: 0 var(--radius-panel) var(--radius-panel) 0; }
-  .draft { margin-top: var(--space-32); padding: var(--space-16) var(--space-20); font-size: var(--fs-body-small); }
-  .meta { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-20); margin-top: var(--space-40); padding-block: var(--space-20); border-block: var(--hairline); }
-  .meta dt { color: var(--text-muted); font-size: var(--fs-small); }
+  h1 {
+    max-width: 18ch;
+    margin-top: var(--space-12);
+    color: var(--text-strong);
+    font-size: var(--fs-display);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+  }
+  .lead { max-width: 62ch; margin-top: var(--space-28); font-size: var(--fs-lead); line-height: 1.55; }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-20);
+    margin-top: var(--space-40);
+    padding-block: var(--space-20);
+    border-block: var(--hairline);
+  }
+  .meta dt { color: var(--accent); font-size: var(--fs-small); }
   .meta dd { margin-top: var(--space-4); font-size: var(--fs-body-small); line-height: 1.5; overflow-wrap: anywhere; }
-  .contents { margin-top: var(--space-40); padding: var(--space-24); border: var(--hairline); border-radius: var(--radius-frame); }
-  .contents p { font-weight: var(--fw-semibold); }
-  .contents ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-32); row-gap: var(--space-8); margin: var(--space-12) 0 0; padding-left: var(--space-24); }
-  .contents li { padding-left: var(--space-4); }
-  .contents a { display: inline-block; padding-block: var(--space-4); color: var(--text); text-underline-offset: 3px; }
-  .sections { display: grid; gap: var(--space-80); margin-top: var(--space-80); }
-  .section { scroll-margin-top: calc(var(--header-height) + var(--space-24)); }
-  .section h2 { margin-bottom: var(--space-20); color: var(--text-strong); font-size: clamp(var(--fs-project-title), 3vw, 32px); line-height: 1.25; letter-spacing: -0.015em; }
-  .section > p, .bullets { max-width: 64ch; font-size: var(--fs-body-large); line-height: 1.75; }
-  .section > p + p { margin-top: var(--space-20); }
-  .bullets { margin: var(--space-24) 0 0; padding-left: var(--space-24); }
-  .bullets li + li { margin-top: var(--space-8); }
-  .figure { margin-top: var(--space-32); }
-  .figure img, .media-placeholder { width: 100%; border: var(--hairline); border-radius: var(--radius-frame); }
-  .figure img { height: auto; }
-  .media-placeholder { display: grid; min-height: clamp(190px, 32vw, 320px); place-items: center; padding: var(--space-24); background: var(--surface-raised); color: var(--text-muted); text-align: center; font-size: var(--fs-body-small); }
-  .figure figcaption { max-width: 64ch; margin-top: var(--space-10); color: var(--text-muted); font-size: var(--fs-small); line-height: 1.55; }
-  .input { margin-top: var(--space-32); padding: var(--space-16) var(--space-20); font-size: var(--fs-body-small); }
-  .input strong { color: var(--accent); font-weight: var(--fw-semibold); }
-  .input p { margin-top: var(--space-4); }
-  .closing { margin-top: var(--space-80); padding-top: var(--space-24); border-top: var(--hairline); }
-  .topics { display: flex; flex-wrap: wrap; gap: var(--space-8); margin-top: var(--space-10); }
-  .topics li { padding: var(--space-4) var(--space-8); border: var(--hairline); border-radius: var(--radius-chip); color: var(--text-muted); font-size: var(--fs-small); }
-  .closing .back { margin-top: var(--space-40); }
+
+  .chapters { display: grid; gap: var(--space-80); margin-top: var(--space-80); }
+  .chapter { scroll-margin-top: calc(var(--header-height) + var(--space-24)); }
+  h2 {
+    display: flex;
+    gap: var(--space-12);
+    align-items: baseline;
+    color: var(--text-strong);
+    font-size: clamp(var(--fs-project-title), 3vw, 32px);
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+  /* The accent is used only in short strings; these numerals are one. */
+  .number {
+    flex: none;
+    color: var(--accent);
+    font-weight: var(--fw-medium);
+  }
+  h3 {
+    margin-top: var(--space-40);
+    color: var(--text-strong);
+    font-size: var(--fs-sub);
+    line-height: 1.35;
+  }
+  .chapter p, .note { max-width: 64ch; font-size: var(--fs-body-large); line-height: 1.75; }
+  /*
+   * One rule for the gap above body copy, whatever precedes it: a heading, a
+   * figure, or another paragraph. Blocks are ordered editorially, so the layout
+   * cannot assume a fixed sequence.
+   */
+  .chapter p { margin-top: var(--space-20); }
+  .note {
+    margin-top: var(--space-20);
+    padding-left: var(--space-20);
+    border-left: 3px solid var(--line);
+    color: var(--text-muted);
+    font-size: var(--fs-body);
+  }
+
+  .closing {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-16) var(--space-32);
+    justify-content: space-between;
+    margin-top: var(--space-80);
+    padding-top: var(--space-24);
+    border-top: var(--hairline);
+  }
+  .next { margin-left: auto; }
+
   @media (max-width: 639px) {
     .study { padding-block: var(--space-24) var(--space-80); }
-    .hero { margin-top: var(--space-24); }
-    .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .contents { padding: var(--space-20); }
-    .contents ol { display: block; }
-    .contents li + li { margin-top: var(--space-4); }
-    .sections { gap: var(--space-64); margin-top: var(--space-64); }
+    .intro { margin-top: var(--space-24); }
+    .chapters { gap: var(--space-64); margin-top: var(--space-64); }
+    .closing { gap: 0; }
+    .next { margin-left: 0; }
   }
 </style>

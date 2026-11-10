@@ -1,0 +1,47 @@
+---
+/*
+ * One screenshot inside a chapter. The frame, caption treatment and lazy
+ * loading are shared with Comparison.astro so a single image and a set read as
+ * the same kind of object on the page. `width` defaults to the wider media
+ * column; see `.media-wide` in src/styles/base.css.
+ */
+import type { CaseStudyFigure, MediaWidth } from '../../types/content';
+
+interface Props {
+  figure: CaseStudyFigure;
+  width?: MediaWidth;
+}
+const { figure, width = 'wide' } = Astro.props;
+---
+
+<figure class:list={['figure', width === 'wide' && 'media-wide']}>
+  <img
+    src={figure.src}
+    alt={figure.alt}
+    width={figure.width}
+    height={figure.height}
+    loading="lazy"
+    decoding="async"
+  />
+  {figure.caption && <figcaption>{figure.caption}</figcaption>}
+</figure>
+
+<style>
+  .figure { margin-block: var(--space-56); }
+  img {
+    width: 100%;
+    height: auto;
+    border: var(--hairline);
+    border-radius: var(--radius-frame);
+  }
+  figcaption {
+    max-width: 64ch;
+    margin-top: var(--space-12);
+    color: var(--text-muted);
+    font-size: var(--fs-small);
+    line-height: 1.55;
+  }
+  @media (max-width: 639px) {
+    .figure { margin-block: var(--space-40); }
+  }
+</style>
