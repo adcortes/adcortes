@@ -31,7 +31,7 @@ const { study } = Astro.props;
   draft={study.status === 'mock'}
 >
   <article class="study">
-    <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to work</a>
+    <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to Selected work</a>
 
     <header class="intro">
       <p class="eyebrow">{study.category}</p>
@@ -86,7 +86,7 @@ const { study } = Astro.props;
     </div>
 
     <nav class="closing" aria-label="Case study">
-      <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to work</a>
+      <a class="back" href="/#work"><span aria-hidden="true">←</span> Back to Selected work</a>
       {study.nextProject && (
         <a class="back next" href={study.nextProject.href} target={study.nextProject.target}>
           {study.nextProject.label} <span aria-hidden="true">→</span>

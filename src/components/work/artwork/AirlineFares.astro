@@ -1,0 +1,212 @@
+---
+/*
+ * Airline products thumbnail — T3, "the fare selector".
+ *
+ * A thumbnail rather than a wireframe stand-in: a full-bleed tile carrying an
+ * illustration, with its own ground and radius instead of a 1px frame on the
+ * page ground. One flight-selection card seen straight on, with two dimmer
+ * copies of itself behind — the same component, skinned for another airline.
+ * The whole thing is aria-hidden; the <figcaption> rendered by ProjectEntry
+ * carries the meaning. No Newshore markup, CSS or screenshot is reproduced
+ * here.
+ *
+ * Scale: the wrapper is a size container and every dimension inside is in `em`,
+ * so one font-size in `cqw` scales the entire drawing with its column. There is
+ * no second, redrawn version for small sizes.
+ */
+---
+
+<div class="art" aria-hidden="true">
+  <div class="art__tile">
+    <span class="art__disc"></span>
+
+    <div class="sel">
+      {/*
+       * The copies behind step down in value rather than stacking shadows:
+       * depth by tone, not by effect.
+       */}
+      <span class="sel__back sel__back--far"></span>
+      <span class="sel__back sel__back--near"></span>
+
+      <div class="sel__card">
+        <div class="sel__head">
+          <span class="sel__mark"></span>
+          <span class="sel__price">€148</span>
+        </div>
+
+        <div class="sel__route">
+          <span class="sel__code">BCN</span>
+          <span class="sel__leg"></span>
+          <span class="sel__stop"></span>
+          <span class="sel__leg"></span>
+          <span class="sel__code">AMS</span>
+        </div>
+
+        <div class="sel__fares">
+          <span class="sel__fare"></span>
+          <span class="sel__fare"></span>
+          <span class="sel__fare sel__fare--selected"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .art {
+    /* The tile cannot query itself, so the size container is this wrapper. */
+    container-type: inline-size;
+  }
+
+  .art__tile {
+    /*
+     * Artwork colours, composited from the theme's own tokens rather than
+     * written as literals, so the whole drawing follows a theme change. Tuned
+     * against the earth theme.
+     */
+    --tile: color-mix(in srgb, var(--accent) 12%, var(--bg));
+    --tile-lift: color-mix(in srgb, var(--accent) 19%, var(--bg));
+    --paper: var(--text);
+    --paper-near: color-mix(in srgb, var(--text) 88%, var(--bg));
+    --paper-far: color-mix(in srgb, var(--text) 74%, var(--bg));
+    --ink: var(--bg);
+    --ink-soft: color-mix(in srgb, var(--text) 36%, var(--bg));
+    --rule: color-mix(in srgb, var(--text) 84%, var(--bg));
+
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    /*
+     * A fixed ratio rather than a minimum height: this is a thumbnail that
+     * fills its column, so it has no intrinsic height of its own to hold.
+     */
+    aspect-ratio: 3 / 2;
+    padding: 1.2em;
+    background: var(--tile);
+    border-radius: var(--radius-frame);
+    font-size: clamp(8px, 3.8cqw, 16px);
+  }
+
+  /* The one background shape: a disc bleeding off the corner. Depth without a
+     gradient. */
+  .art__disc {
+    position: absolute;
+    top: -22%;
+    right: -12%;
+    width: 62%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--tile-lift);
+  }
+
+  .sel {
+    position: relative;
+    z-index: 1;
+    width: 70%;
+  }
+
+  .sel__back {
+    position: absolute;
+    height: 2.4em;
+    border-radius: 0.4em;
+  }
+
+  .sel__back--far {
+    left: 8%;
+    right: 8%;
+    top: -1.5em;
+    background: var(--paper-far);
+  }
+
+  .sel__back--near {
+    left: 4%;
+    right: 4%;
+    top: -0.75em;
+    background: var(--paper-near);
+  }
+
+  .sel__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9em;
+    padding: 0.85em 0.95em;
+    background: var(--paper);
+    border-radius: 0.4em;
+    box-shadow: 0 0.45em 1.1em rgb(0 0 0 / 0.26);
+  }
+
+  .sel__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sel__mark {
+    flex: 0 0 auto;
+    width: 0.52em;
+    height: 0.52em;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .sel__price {
+    font-size: 0.68em;
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .sel__route {
+    display: flex;
+    align-items: center;
+    gap: 0.42em;
+  }
+
+  /*
+   * The only type in the drawing, and the reason it reads as designed rather
+   * than as an empty frame. No "→": the site's variable font has no glyph for
+   * it (see base.css), so the leg is drawn instead.
+   */
+  .sel__code {
+    font-size: 0.74em;
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+
+  .sel__leg {
+    flex: 1 1 auto;
+    height: 0.07em;
+    background: var(--rule);
+  }
+
+  .sel__stop {
+    flex: 0 0 auto;
+    width: 0.3em;
+    height: 0.3em;
+    background: var(--ink-soft);
+    transform: rotate(45deg);
+  }
+
+  .sel__fares {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.4em;
+  }
+
+  .sel__fare {
+    height: 1.25em;
+    border: 0.07em solid var(--rule);
+    border-radius: 0.2em;
+  }
+
+  /* The single accent moment in the whole drawing. */
+  .sel__fare--selected {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+</style>

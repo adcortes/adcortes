@@ -13,13 +13,30 @@ export interface Link {
   target?: "_blank" | "_self" | "_parent" | "_top";
 }
 
-/** Which diagram component stands in for a project's confidential screens. */
-export type DiagramId = "emr" | "design-system";
+/**
+ * Which local drawing a project shows.
+ *
+ * This type is the vocabulary and `ProjectEntry.astro` holds the registry that
+ * maps each key to a component. The registry is checked against this type, so
+ * adding a key here without drawing it — or drawing something this type does
+ * not name — fails the build rather than rendering nothing.
+ *
+ * `airline-stub` and `airline-fares` are two treatments of the same project.
+ * Both are kept deliberately: the entry in `work.ts` selects one, and swapping
+ * the key is the whole cost of changing its mind.
+ */
+export type ArtworkId = "airline-stub" | "airline-fares";
 
 /**
- * A project's visual. Diagram and image variants share the same <figure> slot,
- * responsive rules (shown from 640px up) and caption
- * treatment. A project may also have no visual.
+ * A project's visual. There are exactly two kinds of picture — an `artwork`
+ * drawn here in HTML and CSS, or an `image` file — and they share the same
+ * <figure> slot, responsive rules (shown from 640px up) and caption treatment.
+ *
+ * A project with no picture is the third outcome, and it is modelled the way
+ * this file models every other absence — `action?`, `image?`, `link?`: the
+ * property is simply omitted. There is no `{ kind: 'none' }` member, because a
+ * missing picture is not a kind of picture, and a sentinel would be one more
+ * thing every reader of the union has to learn and every renderer has to skip.
  */
 interface ProjectVisualBase {
   /** Visible <figcaption>. Shown from 640px up. */
@@ -27,19 +44,20 @@ interface ProjectVisualBase {
 }
 
 /**
- * A local Astro component, drawn in HTML and CSS. The drawing is decorative
- * (`aria-hidden`); the caption carries its meaning.
+ * A local Astro component, drawn in HTML and CSS — the frame and its artwork
+ * both come from the component, never from the <figure> slot. The drawing is
+ * decorative (`aria-hidden`); the caption carries its meaning.
  */
-export interface DiagramVisual extends ProjectVisualBase {
-  kind: "diagram";
+export interface ArtworkVisual extends ProjectVisualBase {
+  kind: "artwork";
   /** A key from the closed set the renderer knows how to draw. */
-  component: DiagramId;
+  id: ArtworkId;
 }
 
 /**
- * A local image asset. Unlike the diagrams it is meaningful content, so `alt`
- * is required and describes the image — it is never empty and never repeats the
- * caption.
+ * An image file — SVG, PNG or JPEG — under `public/`. Unlike an artwork it is
+ * meaningful content, so `alt` is required and describes the image: it is never
+ * empty and never repeats the caption.
  */
 export interface ImageVisual extends ProjectVisualBase {
   kind: "image";
@@ -51,11 +69,7 @@ export interface ImageVisual extends ProjectVisualBase {
   height?: number;
 }
 
-export interface NoVisual {
-  kind: "none";
-}
-
-export type ProjectVisual = DiagramVisual | ImageVisual | NoVisual;
+export type ProjectVisual = ArtworkVisual | ImageVisual;
 
 /** An action with a real destination. */
 export interface LinkAction extends Link {
@@ -99,7 +113,8 @@ export interface ProjectEntry {
   outcome: string;
   tags: string[];
   action?: ProjectAction;
-  visual: ProjectVisual;
+  /** Omitted when the project has no picture; never a placeholder. */
+  visual?: ProjectVisual;
 }
 
 /**
@@ -145,7 +160,7 @@ export interface WebWorkItem {
   link?: Link;
 }
 
-/** Selected work, group 3 — a 3-up list of smaller pieces, no diagram. */
+/** Selected work, group 3 — a 3-up list of smaller pieces, no artwork. */
 export interface WebWorkGroup {
   category: string;
   title: string;
@@ -170,7 +185,7 @@ export interface NavItem {
 /**
  * Which close-up crop a comparison figure is shown through.
  *
- * A closed set, like `DiagramId`: the crop geometry lives in static CSS in
+ * A closed set, like `ArtworkId`: the crop geometry lives in static CSS in
  * `Comparison.astro`, because Astro's CSP emits hashed styles with no
  * `'unsafe-inline'`, so a per-figure `style` attribute would be blocked on a
  * published page. The source file is never altered and the crop is reversible
@@ -179,7 +194,7 @@ export interface NavItem {
 export type CaseStudyCropId = "flyadeal-fares";
 
 /**
- * A screenshot or diagram inside a chapter. Unlike the homepage diagrams it is
+ * A screenshot or diagram inside a chapter. Unlike the homepage artwork it is
  * meaningful content, so `alt` is required and describes the image rather than
  * repeating the caption. Intrinsic size is required: it reserves the right box
  * before the lazy image arrives.

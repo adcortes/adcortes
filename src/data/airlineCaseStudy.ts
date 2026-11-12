@@ -31,8 +31,8 @@ export const airlineCaseStudy: CaseStudy = {
         {
           kind: "prose",
           paragraphs: [
-            "Newshore's Internet Booking Engine (IBE) was a white-label e-commerce platform for airlines, covering the direct booking journey from flight search and fare selection to ancillaries, passenger details, payment, and confirmation.",
-            "The platform supported dynamic booking flows, airline-specific configurations, and integration with different Passenger Service Systems (PSS). Optional passenger self-service features, such as Manage My Booking and Online Check-in, could be included depending on each airline's needs.",
+            "The Internet Booking Engine (IBE) product is a white-label e-commerce platform for airlines, covering the direct booking journey from flight search and fare selection to ancillaries, passenger details, seat selection, payment, and confirmation.",
+            "The platform supports dynamic booking flows, airline-specific configurations, and integration with different Passenger Service Systems (PSS). Optional passenger self-service features, such as Manage My Booking and Online Check-in, could be included depending on each airline's needs.",
           ],
         },
         {
@@ -42,16 +42,17 @@ export const airlineCaseStudy: CaseStudy = {
             alt: "The booking engine's flight-selection step on a laptop, tablet and phone. A row of dates with the lowest fare for each sits above the outbound and return flights, each listing departure and arrival times, duration, whether it is direct, and its price.",
             width: 1100,
             height: 800,
-            caption: "IBE’s white-label interface, before airline customization",
+            caption: "IBE’s white-label interface, before airline customization.",
           },
         },
         { kind: "subheading", text: "One foundation, different airlines" },
         {
           kind: "prose",
           paragraphs: [
-            "The frontend was built around a shared library of Angular components, designed to support multiple airline brands and business models.",
-            "Core components provided common functionality and interaction patterns. Brand themes handled visual identity, while configuration options and component extensions allowed individual airlines to adapt the booking experience to their requirements.",
-            "This approach gave us flexibility at different levels, from applying a brand theme to introducing a specific component variant or interaction without rebuilding the underlying functionality.",
+            "The frontend was organized around a design system and a library of shared Angular components, following Atomic Design principles.",
+            "Reusable components ranged from smaller UI elements to more complex patterns shared across the booking flow. These formed the foundation for larger modules, such as Flight Search, Fare Selection, and Seat Map.",
+            "Core functionality and interaction patterns could be reused across implementations, while brand themes, configuration options, and client-specific extensions allowed each airline to adapt the experience to its business model.",
+            "This gave us flexibility at different levels, from applying a visual theme to creating a specific component variant or interaction without rebuilding the underlying functionality.",
           ],
         },
         {
@@ -69,8 +70,8 @@ export const airlineCaseStudy: CaseStudy = {
         {
           kind: "prose",
           paragraphs: [
-            "UX decisions were closely connected to product requirements. Different fare structures, ancillary offerings, and booking flows needed interfaces that could accommodate business rules while remaining clear and consistent for passengers.",
-            "Accessibility was part of the component foundation, including semantic HTML, keyboard interactions, focus management, accessible forms, and error handling. These patterns were also reviewed with design and QA, including screen reader testing.",
+            "UX decisions were closely connected to product requirements. Different fare structures, ancillary offerings, and booking flows called for interfaces that could accommodate airline-specific business rules while remaining clear and consistent for passengers.",
+            "Accessibility was part of the shared component foundation, including semantic HTML, keyboard interactions, focus management, accessible forms, and error handling. These patterns were also reviewed with design and QA, including screen reader testing.",
           ],
         },
       ],
@@ -83,7 +84,7 @@ export const airlineCaseStudy: CaseStudy = {
         {
           kind: "prose",
           paragraphs: [
-            "The Disruption Management product was developed to help airlines handle planned and unplanned flight disruptions, including schedule changes, cancellations, passenger communications, alternative travel options, and refunds.",
+            "Disruption Management was developed to help airlines handle planned and unplanned flight disruptions, including schedule changes, cancellations, passenger communications, alternative travel options, and refunds.",
             "The platform integrated with airline reservation and flight operations systems, allowing operational teams to manage disruption scenarios, automate communications, and track passenger responses.",
             "Unlike the customer-facing booking engine, this product supported internal airline operations, where users needed to work with complex information and time-sensitive processes.",
           ],
@@ -108,7 +109,7 @@ export const airlineCaseStudy: CaseStudy = {
           kind: "prose",
           paragraphs: [
             "The interface was structured around operational workflows, with an emphasis on clear information hierarchy, consistent UI patterns, and predictable interactions.",
-            "Built with Angular Material and SCSS, the product brought different processes into a shared interface while supporting the specific requirements of airline disruption management.",
+            "Built with Angular Material, and SCSS, the product brought different processes into a shared interface while supporting the requirements of airline disruption management.",
           ],
         },
       ],
@@ -121,13 +122,11 @@ export const airlineCaseStudy: CaseStudy = {
         {
           kind: "prose",
           paragraphs: [
-            "As the products expanded across different airlines, maintaining consistency between design and frontend became increasingly important.",
-            "The design process evolved from individual files and handoffs into a more structured approach built around reusable components, shared patterns, and design tokens.",
-            "The transition from Photoshop and InVision to Sketch and eventually Figma brought new opportunities to organize design libraries, define component variants, and establish clearer workflows between design, product, and development.",
-            "Design libraries and frontend components evolved alongside each other. Although maintained as separate systems, they shared common patterns and principles to support consistency across airline implementations.",
-            "The same approach extended to collaboration between teams. Product requirements, UX decisions, and frontend implementation were closely connected, particularly when new functionality or airline-specific customizations were introduced.",
-            "Shared components and established interaction patterns also provided a foundation for accessibility reviews, QA testing, and knowledge sharing between designers and developers.",
-            "As the products and teams grew, these practices helped keep the interfaces consistent while allowing each airline implementation to evolve.",
+            "As the products and teams grew, keeping design and frontend aligned became increasingly important. We organized our work around a design system, shared components, and clearer workflows that could support different airline implementations.",
+            "Over the years, we went from Photoshop and InVision to Sketch and eventually Figma. The tools changed, but the challenge remained much the same: keeping things organized and making collaboration easier. We also adapted our design handoff process to work with both our internal team and the design teams of our airline clients.",
+            "Our design libraries and frontend components evolved together, supported by shared patterns, design tokens, and Storybook documentation covering component variants, interactions, and accessibility.",
+            "We also introduced custom AI skills to support our development standards. They helped create and update Storybook stories and UX, UI, and accessibility documentation, as well as follow our CSS conventions, including BEM and responsive styling. Developers remained responsible for reviewing the generated work.",
+            "These practices helped us keep a consistent foundation while allowing the products, client implementations, and teams to evolve.",
           ],
         },
       ],
@@ -143,7 +142,6 @@ export const airlineCaseStudy: CaseStudy = {
             "As we developed our own products and grew our teams, I gained a deeper understanding of how to build scalable, maintainable frontend systems that could support different products and business requirements.",
             "None of this happened in isolation. I worked with people who were open to new ideas and willing to learn and grow together.",
             "And I grew with them.",
-            "That experience shaped the way I work today, connecting product, design, and frontend engineering, with particular attention to usability, accessibility, and the details that make interfaces work.",
           ],
         },
       ],

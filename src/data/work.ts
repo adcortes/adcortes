@@ -10,10 +10,12 @@ export const workSection = {
 } as const;
 
 /*
- * Groups 1 and 2. A project may carry an HTML/CSS diagram, an image visual
- * (`{ kind: 'image', src, alt, … }`), or no visual (`{ kind: 'none' }`).
- * Diagrams stand in for confidential screens: the drawing is decorative and
- * its meaning lives in `caption`.
+ * Groups 1 and 2. A project may carry an HTML/CSS artwork
+ * (`{ kind: 'artwork', id, … }`) or an image file
+ * (`{ kind: 'image', src, alt, … }`). A project with no picture omits `visual`
+ * entirely, the same way it omits an `action` it does not have. Artwork stands
+ * in for confidential screens: the drawing is decorative and its meaning lives
+ * in `caption`.
  *
  * Actions are optional and appear only when their destination exists.
  */
@@ -23,29 +25,35 @@ export const projects: ProjectEntry[] = [
     category: "Product & design systems",
     title: "Airline booking & disruption products",
     summary:
-      "Booking and disruption-management products for airlines. I joined as designer and frontend developer, building the UX architecture, UI foundations and component system as the products and team grew.",
+      "A white-label booking platform adapted by multiple airlines, and an operational tool for handling flight disruptions. I joined as designer and frontend developer, building the UX architecture, UI foundations and component system as the products and team grew.",
     role: "UX architecture, styles and design-system evolution. Later, technical lead for distributed frontend teams and airline web delivery, while remaining hands-on in the codebase.",
     outcome:
       "Grew into a team of 10+ frontend developers and four designers, supporting multiple airline products.",
     tags: [
       "UX architecture",
       "Design systems",
+      "Atomic Design",
       "Angular",
       "Storybook",
       "SCSS",
       "Accessibility",
+      "AI-assisted workflows",
       "Technical leadership",
       "Figma",
     ],
     action: import.meta.env.DEV
       ? { kind: "link", label: "Read case study", href: `/preview/${airlineCaseStudy.slug}` }
       : undefined,
+    /*
+     * Two thumbnails are built for this project and only one ships. Swap the
+     * `id` to compare them: "airline-stub" is the perforated boarding pass,
+     * "airline-fares" the fare selector seen straight on. Delete the component
+     * that loses, and its key in ArtworkId, once the choice is made.
+     */
     visual: {
-      kind: "none",
-      // src: "/images/ibe-booking-1.png",
-      // alt: "",
-      // component: "design-system",
-      // caption: "One token and component layer shared across several airlines.",
+      kind: "artwork",
+      id: "airline-stub",
+      caption: "One booking interface, adapted to each airline.",
     },
   },
   {
@@ -58,11 +66,6 @@ export const projects: ProjectEntry[] = [
     outcome:
       "A focused, accessible foundation for day-to-day clinic operations, designed around real scheduling and clinical workflows.",
     tags: ["Next.js", "TypeScript", "PostgreSQL", "Supabase", "Accessibility"],
-    visual: {
-      kind: "none",
-      // component: "emr",
-      // caption: "Records list and consultation form. All patient data is synthetic.",
-    },
   },
   {
     id: "airline",
@@ -74,16 +77,11 @@ export const projects: ProjectEntry[] = [
     outcome:
       "A reusable template foundation applied to multiple airline brands, tested across Gmail, Outlook, Apple Mail and mobile/desktop email environments.",
     tags: ["Email design", "Responsive HTML", "Accessibility", "Design systems"],
-    visual: {
-      kind: "none",
-      // component: "design-system",
-      // caption: "One token and component layer shared across several airlines.",
-    },
   },
 ];
 
 /*
- * Group 3 is text-based and has no diagram. Every active item carries a `link`
+ * Group 3 is text-based and has no artwork. Every active item carries a `link`
  * to a live site; `link` stays optional so an item whose site is gone can ship
  * without one rather than against an invented URL. The two commented-out items
  * below are kept in place rather than deleted: the copy is approved and only

@@ -1,13 +1,13 @@
 ---
 /*
- * Selected work, groups 1 and 2 — one project: its diagram paired with its text.
+ * Selected work, groups 1 and 2 — one project: its artwork paired with its text.
  *
- * Below 640px the diagram and the summary are both dropped, leaving category,
+ * Below 640px the artwork and the summary are both dropped, leaving category,
  * title, role, outcome and tags.
  */
-import type { ProjectEntry } from '../../types/content';
-import EmrDiagram from './diagrams/EmrDiagram.astro';
-import DesignSystemDiagram from './diagrams/DesignSystemDiagram.astro';
+import type { ArtworkId, ProjectEntry } from '../../types/content';
+import AirlineStub from './artwork/AirlineStub.astro';
+import AirlineFares from './artwork/AirlineFares.astro';
 
 interface Props {
   entry: ProjectEntry;
@@ -16,20 +16,26 @@ interface Props {
 const { entry } = Astro.props;
 const { visual, action } = entry;
 
-/* The data names a diagram; the mapping keeps that name a closed set. */
-const diagrams = {
-  emr: EmrDiagram,
-  'design-system': DesignSystemDiagram,
-};
-const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
+/*
+ * The artwork registry. `satisfies` makes it total against ArtworkId without
+ * widening it, so a key added to the type but never drawn — or a component
+ * registered under a name the type does not allow — is a build error, and the
+ * lookup below still infers the exact component.
+ */
+const artworks = {
+  'airline-stub': AirlineStub,
+  'airline-fares': AirlineFares,
+} satisfies Record<ArtworkId, unknown>;
+
+const Artwork = visual?.kind === 'artwork' ? artworks[visual.id] : null;
 ---
 
-<li class:list={['project', { 'project--without-visual': visual.kind === 'none' }]}>
+<li class:list={['project', { 'project--without-visual': !visual }]}>
   {
-    visual.kind !== 'none' && (
+    visual && (
       <figure class="project__figure">
         {/*
-         * A diagram is drawn in CSS and is decorative, so its accessible text
+         * An artwork is drawn in CSS and is decorative, so its accessible text
          * is the caption alone; an image is real content and carries its own
          * meaningful alt.
          */}
@@ -44,7 +50,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
             decoding="async"
           />
         ) : (
-          Diagram && <Diagram />
+          Artwork && <Artwork />
         )}
         {visual.caption && <figcaption class="project__caption">{visual.caption}</figcaption>}
       </figure>
@@ -150,20 +156,20 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
     letter-spacing: -0.015em;
   }
 
-  /* Hidden below 640px together with the diagram. */
+  /* Hidden below 640px together with the artwork. */
   .project__summary {
     display: none;
     font-size: var(--fs-body);
     line-height: 1.65;
   }
 
-  /* Diagrams are tablet and desktop only. */
+  /* Artwork is tablet and desktop only. */
   .project__figure {
     display: none;
   }
 
-  /* An image visual fills the figure column and keeps the diagram's frame
-     radius, so either variant sits the same way in the row. */
+  /* An image visual fills the figure column and keeps the same frame radius an
+     artwork draws for itself, so either variant sits the same way in the row. */
   .project__image {
     width: 100%;
     height: auto;
@@ -254,7 +260,7 @@ const Diagram = visual.kind === 'diagram' ? diagrams[visual.component] : null;
   }
 
   /*
-   * Tablet and up — the diagram sits beside its text. A two-column grid
+   * Tablet and up — the artwork sits beside its text. A two-column grid
    * rather than wrapped flex, so the pairing holds across the whole 640–1023px
    * range instead of collapsing again at the narrow end.
    */
