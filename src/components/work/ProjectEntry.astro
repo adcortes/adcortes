@@ -76,7 +76,6 @@ const Artwork = visual?.kind === 'artwork' ? artworks[visual.id] : null;
       </div>
     </dl>
 
-    {/* An optional action sits below the tags, aligned with the project copy. */}
     <div class="project__footer">
       {/* Tags: plain text, no borders, fills or pills. */}
       <ul class="project__tags" aria-label="Tags">
@@ -84,21 +83,12 @@ const Artwork = visual?.kind === 'artwork' ? artworks[visual.id] : null;
       </ul>
 
       {
-        /*
-         * The one action, rendered only when it is real: a link with a working
-         * href, or a button with a working behaviour. There is no placeholder
-         * form — no href="#", no invented route and no inert button.
-         */
-        action &&
-          (action.kind === 'link' ? (
-            <a class="project__action" href={action.href}>
-              {action.label} <span aria-hidden="true">{action.href.startsWith('/') ? '→' : '↗'}</span>
-            </a>
-          ) : (
-            <button class="project__action" type="button" data-behaviour={action.behaviour}>
-              {action.label} <span aria-hidden="true">→</span>
-            </button>
-          ))
+        /* The one action, rendered only when the entry carries one. */
+        action && (
+          <a class="project__action" href={action.href} target={action.target}>
+            {action.label} <span aria-hidden="true">{action.href.startsWith('/') ? '→' : '↗'}</span>
+          </a>
+        )
       }
     </div>
   </div>
@@ -227,9 +217,7 @@ const Artwork = visual?.kind === 'artwork' ? artworks[visual.id] : null;
   }
 
   /*
-   * 44px minimum target. One rule covers both action elements, so a link and a
-   * button are the same control to look at; the button resets the UA's own
-   * background, border and font. Focus comes from the global :focus-visible in
+   * 44px minimum target. Focus comes from the global :focus-visible in
    * base.css and is never overridden here.
    */
   .project__action {
@@ -238,21 +226,12 @@ const Artwork = visual?.kind === 'artwork' ? artworks[visual.id] : null;
     align-items: center;
     gap: var(--space-6);
     min-height: 44px;
-    padding: 0;
-    background: none;
-    border: 0;
-    font-family: inherit;
     font-size: var(--fs-body-small);
     font-weight: var(--fw-semibold);
     line-height: 1.4;
     color: var(--accent);
-    text-align: left;
     text-decoration: none;
     border-bottom: 1px solid currentColor;
-  }
-
-  button.project__action {
-    cursor: pointer;
   }
 
   .project__action:hover {

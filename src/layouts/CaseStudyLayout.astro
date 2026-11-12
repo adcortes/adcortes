@@ -9,16 +9,14 @@
  *
  * Copy keeps a fixed reading measure; media may run wider (`.media-wide` in
  * src/styles/base.css) so interface detail stays legible without widening the
- * paragraphs. Reserved media slots render only while the study is a draft.
+ * paragraphs.
  *
  * There is no table of contents and no client script — the page is complete
  * HTML.
  */
 import BaseLayout from './BaseLayout.astro';
 import Figure from '../components/case-study/Figure.astro';
-import Comparison from '../components/case-study/Comparison.astro';
-import ImageWithText from '../components/case-study/ImageWithText.astro';
-import MediaPlaceholder from '../components/case-study/MediaPlaceholder.astro';
+import ImageGrid from '../components/case-study/ImageGrid.astro';
 import type { CaseStudy } from '../types/content';
 
 interface Props { study: CaseStudy }
@@ -27,7 +25,7 @@ const { study } = Astro.props;
 
 <BaseLayout
   title={`${study.title} — adcortes`}
-  description={study.introduction[0]}
+  description={study.description}
   draft={study.status === 'mock'}
 >
   <article class="study">
@@ -67,18 +65,10 @@ const { study } = Astro.props;
                 return <h3>{block.text}</h3>;
               case 'image':
                 return <Figure figure={block.figure} width={block.width} />;
-              case 'image-text':
+              case 'image-grid':
                 return (
-                  <ImageWithText text={block.text} figure={block.figure} />
+                  <ImageGrid figures={block.figures} caption={block.caption} width={block.width} />
                 );
-              case 'comparison':
-                return (
-                  <Comparison figures={block.figures} caption={block.caption} width={block.width} />
-                );
-              case 'placeholder':
-                return study.status === 'mock' ? <MediaPlaceholder {...block} /> : null;
-              case 'note':
-                return <aside class="note">{block.text}</aside>;
             }
           })}
         </section>
@@ -161,20 +151,13 @@ const { study } = Astro.props;
     font-size: var(--fs-sub);
     line-height: 1.35;
   }
-  .chapter p, .note { max-width: 64ch; font-size: var(--fs-body-large); line-height: 1.75; }
+  .chapter p { max-width: 64ch; font-size: var(--fs-body-large); line-height: 1.75; }
   /*
    * One rule for the gap above body copy, whatever precedes it: a heading, a
    * figure, or another paragraph. Blocks are ordered editorially, so the layout
    * cannot assume a fixed sequence.
    */
   .chapter p { margin-top: var(--space-20); }
-  .note {
-    margin-top: var(--space-20);
-    padding-left: var(--space-20);
-    border-left: 3px solid var(--line);
-    color: var(--text-muted);
-    font-size: var(--fs-body);
-  }
 
   .closing {
     display: flex;

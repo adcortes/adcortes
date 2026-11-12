@@ -1,10 +1,9 @@
 import type { CaseStudy } from "../types/content";
 
 /*
- * Approved editorial copy. Every media slot now carries a real asset, so no
- * `placeholder` blocks remain. Chapter 03 has no image at all: one belongs
- * there only if a real Figma or design-system capture can be shared, and an
- * invented interface must never stand in for a Newshore product.
+ * Chapter 03 has no image: one belongs there only if a real Figma or
+ * design-system capture can be shared, and an invented interface must never
+ * stand in for a Newshore product.
  */
 export const airlineCaseStudy: CaseStudy = {
   slug: "airline-booking-disruption",
@@ -18,6 +17,8 @@ export const airlineCaseStudy: CaseStudy = {
     { label: "Products", value: "Internet Booking Engine, Disruption Management" },
   ],
   status: "mock",
+  description:
+    "UX engineering and frontend architecture for two airline products at Newshore/FLYR: a white-label Internet Booking Engine and a Disruption Management tool, built on a shared Angular design system with accessibility as part of its foundation.",
   introduction: [
     "At Newshore/FLYR, I worked on two airline products: an Internet Booking Engine (IBE) that helped passengers book and manage their trips across different airlines, and Disruption Management, a tool that helped airline teams handle flight changes, cancellations, and passenger communications.",
     "My work connected design and frontend, from UI architecture and reusable components to interaction patterns and accessibility.",
@@ -56,7 +57,6 @@ export const airlineCaseStudy: CaseStudy = {
           ],
         },
         {
-          /* Same treatment as the Disruption Management figure: on the column, caption below. */
           kind: "image",
           width: "reading",
           figure: {

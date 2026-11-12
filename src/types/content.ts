@@ -1,11 +1,11 @@
 /* Content types for the page's copy and metadata. */
 
 /**
- * A link with a real destination.
+ * A label and an `href`. The type checks only that `href` is a string: whether
+ * the destination exists is an editorial check, not a compile-time one.
  *
- * There is no placeholder form. Every optional `Link` in this file is either
- * present with a working `href`, or absent and not rendered at all — the build
- * must never emit `href="#"`.
+ * An optional `Link` is omitted rather than stubbed, so no renderer in this
+ * project has a placeholder branch to fall back on.
  */
 export interface Link {
   label: string;
@@ -71,36 +71,6 @@ export interface ImageVisual extends ProjectVisualBase {
 
 export type ProjectVisual = ArtworkVisual | ImageVisual;
 
-/** An action with a real destination. */
-export interface LinkAction extends Link {
-  kind: "link";
-}
-
-/**
- * An action with a real behaviour.
- *
- * `behaviour: never` is a deliberate guard, not a placeholder type: no project
- * action currently needs a button, so there is no behaviour key to name, and
- * `never` makes `ButtonAction` impossible to construct. The renderer therefore
- * cannot be handed an inert or disabled control. Replace `never` with a union of
- * behaviour keys when a button earns its place.
- */
-export interface ButtonAction {
-  kind: "button";
-  label: string;
-  behaviour: never;
-}
-
-/**
- * The single optional action in a project's footer.
- *
- * There is no placeholder form: an action is either a link with a working
- * `href` or a button with a real behaviour, or it is absent and the footer
- * renders tags alone. The build must never emit `href="#"`, an invented URL or
- * a disabled button.
- */
-export type ProjectAction = LinkAction | ButtonAction;
-
 /** Selected work, groups 1 and 2 — a project with metadata and an optional visual. */
 export interface ProjectEntry {
   id: string;
@@ -112,7 +82,7 @@ export interface ProjectEntry {
   role: string;
   outcome: string;
   tags: string[];
-  action?: ProjectAction;
+  action?: Link;
   /** Omitted when the project has no picture; never a placeholder. */
   visual?: ProjectVisual;
 }
@@ -183,17 +153,6 @@ export interface NavItem {
 /** Long-form case studies are separate from homepage ProjectEntry summaries. */
 
 /**
- * Which close-up crop a comparison figure is shown through.
- *
- * A closed set, like `ArtworkId`: the crop geometry lives in static CSS in
- * `Comparison.astro`, because Astro's CSP emits hashed styles with no
- * `'unsafe-inline'`, so a per-figure `style` attribute would be blocked on a
- * published page. The source file is never altered and the crop is reversible
- * — drop the key and the full screenshot renders.
- */
-export type CaseStudyCropId = "flyadeal-fares";
-
-/**
  * A screenshot or diagram inside a chapter. Unlike the homepage artwork it is
  * meaningful content, so `alt` is required and describes the image rather than
  * repeating the caption. Intrinsic size is required: it reserves the right box
@@ -207,11 +166,6 @@ export interface CaseStudyFigure {
   height: number;
   /** Visible <figcaption>. Optional — an image may stand on its alt text alone. */
   caption?: string;
-  /**
-   * Show only part of the screenshot, scaled up. `alt` must then describe what
-   * the crop shows, not the whole file. Comparison figures only.
-   */
-  crop?: CaseStudyCropId;
 }
 
 /**
@@ -244,57 +198,14 @@ export interface ImageBlock {
 /**
  * Two or more figures shown side by side — the same flow or component across
  * different products. Each figure keeps its own alt text; the shared caption
- * explains what the comparison shows.
+ * explains what the set shows.
  */
-export interface ComparisonBlock {
-  kind: "comparison";
+export interface ImageGridBlock {
+  kind: "image-grid";
   figures: CaseStudyFigure[];
   caption?: string;
   /** Defaults to `wide`. */
   width?: MediaWidth;
-}
-
-/**
- * A figure set beside its explanation rather than under it: the text holds a
- * narrow column, the screenshot a wider one next to it. Use it when a single
- * image illustrates a point the surrounding narrative is making, instead of
- * interrupting the column the way a full-width figure does. The two columns
- * stack, text first, once there is no room for both.
- */
-export interface ImageTextBlock {
-  kind: "image-text";
-  /** Paragraphs in the column beside the figure. */
-  text: string[];
-  figure: CaseStudyFigure;
-}
-
-/**
- * A reserved media slot, rendered only while the study's `status` is `mock`.
- *
- * It exists so the editorial layout can be reviewed before the real
- * screenshots arrive, and it is visibly labelled as a placeholder rather than
- * dressed up as product UI. A published study renders nothing for it, so a
- * forgotten slot can never reach the live page as an empty frame.
- */
-export interface PlaceholderBlock {
-  kind: "placeholder";
-  /** Which asset this slot is reserved for, e.g. "Image 01 — booking experience". */
-  label: string;
-  /** What the real screenshot will show, and why it belongs here. */
-  note: string;
-  /** Box shape while empty: one landscape frame, or a side-by-side pair. */
-  shape?: "landscape" | "pair";
-  /** Defaults to `wide`. */
-  width?: MediaWidth;
-}
-
-/**
- * A short observation about the figure above it. Rendered as an aside, so it
- * reads as commentary rather than as part of the narrative.
- */
-export interface NoteBlock {
-  kind: "note";
-  text: string;
 }
 
 /**
@@ -306,10 +217,7 @@ export type CaseStudyBlock =
   | ProseBlock
   | SubheadingBlock
   | ImageBlock
-  | ImageTextBlock
-  | ComparisonBlock
-  | PlaceholderBlock
-  | NoteBlock;
+  | ImageGridBlock;
 
 export interface CaseStudyChapter {
   /** Anchor target, also used to associate the section with its heading. */
@@ -330,7 +238,9 @@ export interface CaseStudy {
   /** Accent label above the H1. */
   category: string;
   title: string;
-  /** Lead paragraphs. The first also becomes the page description. */
+  /** Meta description. Written for search results, not reused as visible copy. */
+  description: string;
+  /** Lead paragraphs. */
   introduction: string[];
   /** `mock` keeps the page out of search engines and analytics. */
   status: "mock" | "published";

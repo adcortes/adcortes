@@ -1,17 +1,14 @@
 ---
 /*
- * The same flow or component across different products, shown side by side.
- * Each image keeps its own alt text and its own label; the shared caption
- * explains what the comparison shows. Below 960px the images stack, so a
- * two-up pair never shrinks past the point where its interface detail is
+ * Two or more figures side by side — the same flow or component across
+ * different products. Each image keeps its own alt text and its own label; the
+ * shared caption explains what the set shows. Below 960px the images stack, so
+ * a two-up pair never shrinks past the point where its interface detail is
  * readable.
  *
  * A pair reads better compact than at the full media width, so the container
  * caps itself at --media-cap rather than running out to the container edge the
  * way a single screenshot does.
- *
- * The frame and any close-up crop come from the shared `.crop-frame`
- * primitive in src/styles/base.css.
  */
 import type { CaseStudyFigure, MediaWidth } from '../../types/content';
 
@@ -23,11 +20,11 @@ interface Props {
 const { figures, caption, width = 'wide' } = Astro.props;
 ---
 
-<figure class:list={['comparison', width === 'wide' && 'media-wide']}>
+<figure class:list={['image-grid', width === 'wide' && 'media-wide']}>
   <div class="grid">
     {figures.map((figure) => (
       <div class="item">
-        <div class="crop-frame" data-crop={figure.crop}>
+        <div class="frame">
           <img
             src={figure.src}
             alt={figure.alt}
@@ -46,7 +43,7 @@ const { figures, caption, width = 'wide' } = Astro.props;
 </figure>
 
 <style>
-  .comparison {
+  .image-grid {
     /* Read by .media-wide in src/styles/base.css. */
     --media-cap: 940px;
     margin-block: var(--space-56);
@@ -60,6 +57,15 @@ const { figures, caption, width = 'wide' } = Astro.props;
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
     gap: var(--space-24);
+  }
+  .frame {
+    overflow: hidden;
+    border: var(--hairline);
+    border-radius: var(--radius-frame);
+  }
+  .frame img {
+    width: 100%;
+    height: auto;
   }
   .label {
     margin-top: var(--space-10);
@@ -79,6 +85,6 @@ const { figures, caption, width = 'wide' } = Astro.props;
     .grid { grid-auto-flow: row; gap: var(--space-32); }
   }
   @media (max-width: 639px) {
-    .comparison { margin-block: var(--space-40); }
+    .image-grid { margin-block: var(--space-40); }
   }
 </style>

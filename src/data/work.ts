@@ -42,18 +42,16 @@ export const projects: ProjectEntry[] = [
       "Figma",
     ],
     action: import.meta.env.DEV
-      ? { kind: "link", label: "Read case study", href: `/preview/${airlineCaseStudy.slug}` }
+      ? { label: "Read case study", href: `/preview/${airlineCaseStudy.slug}` }
       : undefined,
     /*
-     * Two thumbnails are built for this project and only one ships. Swap the
-     * `id` to compare them: "airline-stub" is the perforated boarding pass,
-     * "airline-fares" the fare selector seen straight on. Delete the component
-     * that loses, and its key in ArtworkId, once the choice is made.
+     * Two artworks are drawn for this project and one ships. Swap the `id` to
+     * switch: "airline-stub" is the perforated boarding pass, "airline-fares"
+     * the fare selector seen straight on. Both are kept deliberately.
      */
     visual: {
       kind: "artwork",
       id: "airline-stub",
-      caption: "One booking interface, adapted to each airline.",
     },
   },
   {
