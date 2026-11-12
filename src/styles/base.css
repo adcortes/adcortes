@@ -134,52 +134,6 @@ a {
   margin-inline: calc(50% - var(--media-width) / 2);
 }
 
-/*
- * Screenshot frame, with optional close-up crop.
- *
- * Shared by the case-study media components, which is why it is a global
- * primitive and not a scoped rule: Astro scopes component styles, so a frame
- * used by two components needs its geometry in one place.
- *
- * A figure names a crop from the closed `CaseStudyCropId` set and the geometry
- * for it lives here. The crop never touches the source file — drop the
- * attribute and the whole screenshot renders. It has to be static CSS rather
- * than a per-figure value: Astro's CSP hashes processed styles and allows no
- * 'unsafe-inline', so a `style` attribute — including the ones `define:vars`
- * generates — would be blocked on a published page.
- *
- * Each crop is the image's width relative to its frame plus an offset, both
- * proportional, so one rule holds at every breakpoint.
- */
-.crop-frame {
-  overflow: hidden;
-  border: var(--hairline);
-  border-radius: var(--radius-frame);
-}
-
-.crop-frame img {
-  width: 100%;
-  height: auto;
-}
-
-.crop-frame[data-crop] {
-  position: relative;
-  aspect-ratio: 3 / 2;
-}
-
-.crop-frame[data-crop] img {
-  position: absolute;
-  width: auto;
-  max-width: none;
-}
-
-/* flyadeal, 1448×1086 — the fare options across the flight card. */
-.crop-frame[data-crop="flyadeal-fares"] img {
-  width: 158.153%;
-  left: 0.15%;
-  top: -59.189%;
-}
-
 /* --- Focus-visible --------------------------------------------------------
  * Never :focus, never outline: none.
  */

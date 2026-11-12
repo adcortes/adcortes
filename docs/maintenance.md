@@ -35,6 +35,8 @@ Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install 
 
 `src/data/work.ts` holds the short homepage summaries. Long-form studies are separate: `src/data/airlineCaseStudy.ts` holds the airline narrative, typed as `CaseStudy` in `src/types/content.ts` and rendered by `src/layouts/CaseStudyLayout.astro`.
 
+Each study carries its own `description`, used for the `<meta name="description">` and `og:description` only. Keep it accurate and separate from the visible `introduction` paragraphs.
+
 A study is a header — back-link, category, H1, lead paragraphs, and a metadata list — followed by chapters. Each chapter is an `id`, an H2 `heading`, an optional `number`, and a list of editorial `blocks` rendered in order.
 
 A `number` such as `"01/"` prints before the heading in the accent colour, the same treatment the About items use. It is decorative wayfinding and is hidden from assistive technology, so keep the heading meaningful on its own and omit the number from closing chapters that are not part of the sequence.
@@ -44,13 +46,13 @@ The block kinds are:
 - `prose` — one or more paragraphs.
 - `subheading` — an H3 for a sub-topic inside the chapter.
 - `image` — one `CaseStudyFigure` (`src`, `alt`, intrinsic `width`/`height`, optional `caption`), rendered by `src/components/case-study/Figure.astro`.
-- `comparison` — two or more figures side by side, each with its own label, under an optional shared caption, rendered by `src/components/case-study/Comparison.astro`; the images stack below 960px.
-- `placeholder` — a reserved media slot, rendered by `src/components/case-study/MediaPlaceholder.astro` and **only while `status` is `mock`**. It holds the editorial rhythm for review before the real screenshots exist and is visibly labelled as a placeholder. A published study renders nothing for it, so a forgotten slot cannot reach the live page as an empty frame.
-- `note` — a short observation about the figure above it.
+- `image-grid` — two or more figures side by side, each with its own label, under an optional shared caption, rendered by `src/components/case-study/ImageGrid.astro`; the images stack below 960px.
 
-Copy keeps a fixed reading measure. The three media blocks default to `width: "wide"`, which applies the `.media-wide` primitive in `src/styles/base.css`: the block runs out to the container's own content box so interface detail stays legible, while the paragraphs around it keep their measure. Pass `width: "reading"` for a screenshot that does not need the extra room. The width collapses to the reading column once the viewport is narrower than it, so wide media never causes sideways scrolling.
+The airline study currently uses `prose`, `subheading`, and `image` only; `image-grid` is part of the vocabulary and carries no content of its own.
 
-Chapters are deliberately not uniform, so a new study need not reuse the airline chapters or its image placement. Omit a block rather than stubbing it: a chapter with no `image` block renders with no media frame, and the page carries no placeholder or editorial TODO. The layout adds no client script. Add a `nextProject` link only once a second study is actually published.
+Copy keeps a fixed reading measure. The media blocks default to `width: "wide"`, which applies the `.media-wide` primitive in `src/styles/base.css`: the block runs out to the container's own content box so interface detail stays legible, while the paragraphs around it keep their measure. Pass `width: "reading"` for a screenshot that does not need the extra room. The width collapses to the reading column once the viewport is narrower than it, so wide media never causes sideways scrolling.
+
+Chapters are deliberately not uniform, so a new study need not reuse the airline chapters or its image placement. Omit a block rather than stubbing it: a chapter with no `image` block renders with no media frame, and there is no placeholder block to leave behind. The layout adds no client script. Add a `nextProject` link only once a second study is actually published.
 
 Only use real material. Omit a metadata row rather than guessing it — the airline study has no Period row because no verified employment dates exist in this project. Place screenshots in `public/images/` and record their intrinsic dimensions; give each one alt text that describes information the caption does not repeat, and review it for disclosure before publishing.
 
