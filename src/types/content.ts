@@ -1,11 +1,11 @@
 /* Content types for the page's copy and metadata. */
 
 /**
- * A link with a real destination.
+ * A label and an `href`. The type checks only that `href` is a string: whether
+ * the destination exists is an editorial check, not a compile-time one.
  *
- * There is no placeholder form. Every optional `Link` in this file is either
- * present with a working `href`, or absent and not rendered at all — the build
- * must never emit `href="#"`.
+ * An optional `Link` is omitted rather than stubbed, so no renderer in this
+ * project has a placeholder branch to fall back on.
  */
 export interface Link {
   label: string;
@@ -13,13 +13,30 @@ export interface Link {
   target?: "_blank" | "_self" | "_parent" | "_top";
 }
 
-/** Which diagram component stands in for a project's confidential screens. */
-export type DiagramId = "emr" | "design-system";
+/**
+ * Which local drawing a project shows.
+ *
+ * This type is the vocabulary and `ProjectEntry.astro` holds the registry that
+ * maps each key to a component. The registry is checked against this type, so
+ * adding a key here without drawing it — or drawing something this type does
+ * not name — fails the build rather than rendering nothing.
+ *
+ * `airline-stub` and `airline-fares` are two treatments of the same project.
+ * Both are kept deliberately: the entry in `work.ts` selects one, and swapping
+ * the key is the whole cost of changing its mind.
+ */
+export type ArtworkId = "airline-stub" | "airline-fares";
 
 /**
- * A project's visual. Diagram and image variants share the same <figure> slot,
- * responsive rules (shown from 640px up) and caption
- * treatment. A project may also have no visual.
+ * A project's visual. There are exactly two kinds of picture — an `artwork`
+ * drawn here in HTML and CSS, or an `image` file — and they share the same
+ * <figure> slot, responsive rules (shown from 640px up) and caption treatment.
+ *
+ * A project with no picture is the third outcome, and it is modelled the way
+ * this file models every other absence — `action?`, `image?`, `link?`: the
+ * property is simply omitted. There is no `{ kind: 'none' }` member, because a
+ * missing picture is not a kind of picture, and a sentinel would be one more
+ * thing every reader of the union has to learn and every renderer has to skip.
  */
 interface ProjectVisualBase {
   /** Visible <figcaption>. Shown from 640px up. */
@@ -27,19 +44,20 @@ interface ProjectVisualBase {
 }
 
 /**
- * A local Astro component, drawn in HTML and CSS. The drawing is decorative
- * (`aria-hidden`); the caption carries its meaning.
+ * A local Astro component, drawn in HTML and CSS — the frame and its artwork
+ * both come from the component, never from the <figure> slot. The drawing is
+ * decorative (`aria-hidden`); the caption carries its meaning.
  */
-export interface DiagramVisual extends ProjectVisualBase {
-  kind: "diagram";
+export interface ArtworkVisual extends ProjectVisualBase {
+  kind: "artwork";
   /** A key from the closed set the renderer knows how to draw. */
-  component: DiagramId;
+  id: ArtworkId;
 }
 
 /**
- * A local image asset. Unlike the diagrams it is meaningful content, so `alt`
- * is required and describes the image — it is never empty and never repeats the
- * caption.
+ * An image file — SVG, PNG or JPEG — under `public/`. Unlike an artwork it is
+ * meaningful content, so `alt` is required and describes the image: it is never
+ * empty and never repeats the caption.
  */
 export interface ImageVisual extends ProjectVisualBase {
   kind: "image";
@@ -51,41 +69,7 @@ export interface ImageVisual extends ProjectVisualBase {
   height?: number;
 }
 
-export interface NoVisual {
-  kind: "none";
-}
-
-export type ProjectVisual = DiagramVisual | ImageVisual | NoVisual;
-
-/** An action with a real destination. */
-export interface LinkAction extends Link {
-  kind: "link";
-}
-
-/**
- * An action with a real behaviour.
- *
- * `behaviour: never` is a deliberate guard, not a placeholder type: no project
- * action currently needs a button, so there is no behaviour key to name, and
- * `never` makes `ButtonAction` impossible to construct. The renderer therefore
- * cannot be handed an inert or disabled control. Replace `never` with a union of
- * behaviour keys when a button earns its place.
- */
-export interface ButtonAction {
-  kind: "button";
-  label: string;
-  behaviour: never;
-}
-
-/**
- * The single optional action in a project's footer.
- *
- * There is no placeholder form: an action is either a link with a working
- * `href` or a button with a real behaviour, or it is absent and the footer
- * renders tags alone. The build must never emit `href="#"`, an invented URL or
- * a disabled button.
- */
-export type ProjectAction = LinkAction | ButtonAction;
+export type ProjectVisual = ArtworkVisual | ImageVisual;
 
 /** Selected work, groups 1 and 2 — a project with metadata and an optional visual. */
 export interface ProjectEntry {
@@ -98,8 +82,9 @@ export interface ProjectEntry {
   role: string;
   outcome: string;
   tags: string[];
-  action?: ProjectAction;
-  visual: ProjectVisual;
+  action?: Link;
+  /** Omitted when the project has no picture; never a placeholder. */
+  visual?: ProjectVisual;
 }
 
 /**
@@ -145,7 +130,7 @@ export interface WebWorkItem {
   link?: Link;
 }
 
-/** Selected work, group 3 — a 3-up list of smaller pieces, no diagram. */
+/** Selected work, group 3 — a 3-up list of smaller pieces, no artwork. */
 export interface WebWorkGroup {
   category: string;
   title: string;
@@ -163,4 +148,104 @@ export interface AboutItem {
 export interface NavItem {
   label: string;
   href: string;
+}
+
+/** Long-form case studies are separate from homepage ProjectEntry summaries. */
+
+/**
+ * A screenshot or diagram inside a chapter. Unlike the homepage artwork it is
+ * meaningful content, so `alt` is required and describes the image rather than
+ * repeating the caption. Intrinsic size is required: it reserves the right box
+ * before the lazy image arrives.
+ */
+export interface CaseStudyFigure {
+  /** Path to a local asset under `public/`, e.g. "/images/work/<name>.png". */
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  /** Visible <figcaption>. Optional — an image may stand on its alt text alone. */
+  caption?: string;
+}
+
+/**
+ * How wide a media block runs. Reading-width media sits on the text column;
+ * `wide` lets a screenshot break out of it so interface detail stays legible,
+ * without widening the paragraphs. Both collapse to the same width on mobile.
+ */
+export type MediaWidth = "reading" | "wide";
+
+/** Body copy. One or more paragraphs rendered in reading order. */
+export interface ProseBlock {
+  kind: "prose";
+  paragraphs: string[];
+}
+
+/** An H3 inside a chapter, for a sub-topic within its H2. */
+export interface SubheadingBlock {
+  kind: "subheading";
+  text: string;
+}
+
+/** A single figure, placed next to the copy it illustrates. */
+export interface ImageBlock {
+  kind: "image";
+  figure: CaseStudyFigure;
+  /** Defaults to `wide`. */
+  width?: MediaWidth;
+}
+
+/**
+ * Two or more figures shown side by side — the same flow or component across
+ * different products. Each figure keeps its own alt text; the shared caption
+ * explains what the set shows.
+ */
+export interface ImageGridBlock {
+  kind: "image-grid";
+  figures: CaseStudyFigure[];
+  caption?: string;
+  /** Defaults to `wide`. */
+  width?: MediaWidth;
+}
+
+/**
+ * A chapter's content, in editorial order. Chapters are deliberately not
+ * uniform: each one carries only the blocks its story needs, and a chapter with
+ * no image block renders without any empty media frame.
+ */
+export type CaseStudyBlock =
+  | ProseBlock
+  | SubheadingBlock
+  | ImageBlock
+  | ImageGridBlock;
+
+export interface CaseStudyChapter {
+  /** Anchor target, also used to associate the section with its heading. */
+  id: string;
+  /**
+   * Optional sequence marker shown before the heading, in the accent colour —
+   * the same `01/` treatment the About items use. It is decorative wayfinding
+   * and is hidden from assistive technology, so the heading has to read
+   * correctly without it. A closing chapter can simply omit it.
+   */
+  number?: string;
+  heading: string;
+  blocks: CaseStudyBlock[];
+}
+
+export interface CaseStudy {
+  slug: string;
+  /** Accent label above the H1. */
+  category: string;
+  title: string;
+  /** Meta description. Written for search results, not reused as visible copy. */
+  description: string;
+  /** Lead paragraphs. */
+  introduction: string[];
+  status: "published";
+  /** Project facts. Omit a row rather than guessing its value. */
+  metadata: { label: string; value: string }[];
+  chapters: CaseStudyChapter[];
+  /** Rendered beside the closing back-link, only when another study is published. */
+  nextProject?: Link;
 }

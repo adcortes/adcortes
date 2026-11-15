@@ -1,0 +1,249 @@
+---
+/*
+ * Airline products thumbnail — T2, "the booking pass".
+ *
+ * A thumbnail rather than a wireframe stand-in: a full-bleed tile carrying an
+ * illustration, with its own ground and radius instead of a 1px frame on the
+ * page ground. One boarding pass split by a perforation, with the same pass
+ * repeated as an empty outline behind it — the white-label idea enacted rather
+ * than labelled. The whole thing is aria-hidden; the <figcaption> rendered by
+ * ProjectEntry carries the meaning. No Newshore markup, CSS or screenshot is
+ * reproduced here.
+ *
+ * Scale: the wrapper is a size container and every dimension inside is in `em`,
+ * so one font-size in `cqw` scales the entire drawing with its column. There is
+ * no second, redrawn version for small sizes.
+ */
+---
+
+<div class="art" aria-hidden="true">
+  <div class="art__tile">
+    <span class="art__disc"></span>
+    <span class="art__arc"></span>
+
+    <div class="pass">
+      {/* The same pass, unskinned: outline only, tipped the other way. */}
+      <span class="pass__ghost"></span>
+
+      <div class="pass__card">
+        <div class="pass__main">
+          <div class="pass__route">
+            <span class="pass__mark"></span>
+            <span class="pass__code">BCN</span>
+            <span class="pass__leg"></span>
+            <span class="pass__stop"></span>
+            <span class="pass__leg"></span>
+            <span class="pass__code">AMS</span>
+          </div>
+          <span class="pass__line"></span>
+        </div>
+
+        {/* The perforation: a dashed rule with a notch punched at each end. */}
+        <div class="pass__perf">
+          <span class="pass__notch pass__notch--top"></span>
+          <span class="pass__notch pass__notch--bottom"></span>
+        </div>
+
+        <div class="pass__side">
+          <span class="pass__price">€148</span>
+          <span class="pass__fare"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .art {
+    /* The tile cannot query itself, so the size container is this wrapper. */
+    container-type: inline-size;
+  }
+
+  .art__tile {
+    /*
+     * Artwork colours, composited from the theme's own tokens rather than
+     * written as literals: the tile has to be opaque so the notches can repaint
+     * it, and deriving it with color-mix keeps the whole drawing following a
+     * theme change. Tuned against the earth theme.
+     */
+    --tile: color-mix(in srgb, var(--accent) 12%, var(--bg));
+    --tile-lift: color-mix(in srgb, var(--accent) 19%, var(--bg));
+    --paper: var(--text);
+    --ink: var(--bg);
+    --ink-soft: color-mix(in srgb, var(--text) 36%, var(--bg));
+    --rule: color-mix(in srgb, var(--text) 84%, var(--bg));
+
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+    /*
+     * A fixed ratio rather than a minimum height: this is a thumbnail that
+     * fills its column, so it has no intrinsic height of its own to hold.
+     */
+    aspect-ratio: 3 / 2;
+    padding: 1.2em;
+    background: var(--tile);
+    border-radius: var(--radius-frame);
+    font-size: clamp(8px, 3.8cqw, 16px);
+  }
+
+  /* The one background shape: a disc bleeding off the corner. Depth without a
+     gradient. */
+  .art__disc {
+    position: absolute;
+    top: -22%;
+    right: -12%;
+    width: 62%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: var(--tile-lift);
+  }
+
+  /* The flight path, passing behind everything. */
+  .art__arc {
+    position: absolute;
+    left: -30%;
+    bottom: -58%;
+    width: 150%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    border: 0.09em solid color-mix(in srgb, var(--text) 13%, transparent);
+  }
+
+  .pass {
+    position: relative;
+    z-index: 1;
+    width: 82%;
+  }
+
+  .pass__ghost {
+    position: absolute;
+    inset: -0.9em -0.4em 0.9em 0.4em;
+    border: 0.08em solid color-mix(in srgb, var(--text) 30%, transparent);
+    border-radius: 0.4em;
+    transform: rotate(4deg);
+  }
+
+  /*
+   * The tilt is what separates an illustration from a wireframe. It is small on
+   * purpose: two and a half degrees reads as placed by hand, more reads as a
+   * sticker.
+   */
+  .pass__card {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0 0.9em;
+    padding: 0.9em 1em;
+    background: var(--paper);
+    border-radius: 0.4em;
+    box-shadow: 0 0.45em 1.1em rgb(0 0 0 / 0.26);
+    transform: rotate(-2.5deg);
+  }
+
+  .pass__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6em;
+    min-width: 0;
+  }
+
+  .pass__route {
+    display: flex;
+    align-items: center;
+    gap: 0.42em;
+  }
+
+  .pass__mark {
+    flex: 0 0 auto;
+    width: 0.52em;
+    height: 0.52em;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  /*
+   * The only type in the drawing, and the reason it reads as designed rather
+   * than as an empty frame. No "→": the site's variable font has no glyph for
+   * it (see base.css), so the leg is drawn instead.
+   */
+  .pass__code {
+    font-size: 0.74em;
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+  }
+
+  .pass__leg {
+    flex: 1 1 auto;
+    height: 0.07em;
+    background: var(--rule);
+  }
+
+  .pass__stop {
+    flex: 0 0 auto;
+    width: 0.3em;
+    height: 0.3em;
+    background: var(--ink-soft);
+    transform: rotate(45deg);
+  }
+
+  .pass__line {
+    width: 55%;
+    height: 0.26em;
+    border-radius: 0.2em;
+    background: var(--rule);
+  }
+
+  .pass__perf {
+    position: relative;
+    align-self: stretch;
+    width: 0;
+    border-left: 0.08em dashed var(--rule);
+  }
+
+  /* Punched out of the card edge, so they are painted in the tile's colour. */
+  .pass__notch {
+    position: absolute;
+    left: 50%;
+    width: 0.55em;
+    height: 0.55em;
+    border-radius: 50%;
+    background: var(--tile);
+    transform: translate(-50%, -50%);
+  }
+
+  .pass__notch--top {
+    top: -0.9em;
+  }
+
+  .pass__notch--bottom {
+    top: calc(100% + 0.9em);
+  }
+
+  .pass__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5em;
+  }
+
+  .pass__price {
+    font-size: 0.68em;
+    font-weight: var(--fw-medium);
+    line-height: 1;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The single accent moment in the whole drawing. */
+  .pass__fare {
+    width: 2.2em;
+    height: 1.25em;
+    border-radius: 0.2em;
+    background: var(--accent);
+  }
+</style>

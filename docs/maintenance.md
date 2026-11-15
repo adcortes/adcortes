@@ -4,7 +4,7 @@ This repository also hosts the owner's GitHub profile README. Keep `README.md` a
 
 ## Run and build
 
-Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install with `pnpm install`, run locally with `pnpm dev`, and inspect the production build with `pnpm build` then `pnpm preview`. `pnpm check` runs Astro's type and template checks. The static build should contain `dist/index.html` as its only HTML page.
+Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install with `pnpm install`, run locally with `pnpm dev`, and inspect the production build with `pnpm build` then `pnpm preview`. `pnpm check` runs Astro's type and template checks. The static build should contain `dist/index.html` and `dist/work/airline-booking-disruption/index.html` as its only HTML pages.
 
 ## Edit content and appearance
 
@@ -25,12 +25,35 @@ Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install 
 
 ## Before publication
 
-1. Run `pnpm check`, `pnpm build`, and `git diff --check`; confirm `dist/index.html` is the sole built HTML page.
+1. Run `pnpm check`, `pnpm build`, and `git diff --check`; confirm the homepage and airline case study are the only built HTML pages.
 2. Review the built page with JavaScript disabled and enabled. Check navigation, skip link, contact link, archive disclosures, keyboard order, visible focus, image alternatives, and reduced-motion behavior. For visual changes, build and inspect each theme by changing `src/config/theme.ts` locally.
 3. Inspect narrow mobile, tablet, and desktop widths, especially hero art, project rows, and the archive. Check for horizontal overflow and readable text.
 4. Inspect the production preview for image sharpness and dimensions, font loading, layout shifts, console or CSP errors, and avoidable large assets. Check canonical, description, Open Graph, favicon, and social-preview assets against the intended public URL.
 5. After manual deployment, open the live page and repeat the key link, responsive, and metadata checks.
 
-## Future case studies
+## Case studies
 
-`src/layouts/CaseStudyLayout.astro` is outside `src/pages/`, so Astro generates no route from it. `src/data/work.ts` currently holds short summaries for the portfolio's Work section; it is not a detailed case-study source. A future airline booking and disruption-management case study should keep detailed content separate from those summaries, near the existing `src/data/` content if a data module remains the simplest fit. Review the route shape and content types before implementation rather than treating the unpublished layout's current interface as final. Any published case study should use the existing visual tokens and components where suitable, accessibility conventions, and static Astro output.
+`src/data/work.ts` holds the short homepage summaries. Long-form studies are separate: `src/data/airlineCaseStudy.ts` holds the airline narrative, typed as `CaseStudy` in `src/types/content.ts` and rendered by `src/layouts/CaseStudyLayout.astro`.
+
+Each study carries its own `description`, used for the `<meta name="description">` and `og:description` only. Keep it accurate and separate from the visible `introduction` paragraphs.
+
+A study is a header — back-link, category, H1, lead paragraphs, and a metadata list — followed by chapters. Each chapter is an `id`, an H2 `heading`, an optional `number`, and a list of editorial `blocks` rendered in order.
+
+A `number` such as `"01/"` prints before the heading in the accent colour, the same treatment the About items use. It is decorative wayfinding and is hidden from assistive technology, so keep the heading meaningful on its own and omit the number from closing chapters that are not part of the sequence.
+
+The block kinds are:
+
+- `prose` — one or more paragraphs.
+- `subheading` — an H3 for a sub-topic inside the chapter.
+- `image` — one `CaseStudyFigure` (`src`, `alt`, intrinsic `width`/`height`, optional `caption`), rendered by `src/components/case-study/Figure.astro`.
+- `image-grid` — two or more figures side by side, each with its own label, under an optional shared caption, rendered by `src/components/case-study/ImageGrid.astro`; the images stack below 960px.
+
+The airline study currently uses `prose`, `subheading`, and `image` only; `image-grid` is part of the vocabulary and carries no content of its own.
+
+Copy keeps a fixed reading measure. The media blocks default to `width: "wide"`, which applies the `.media-wide` primitive in `src/styles/base.css`: the block runs out to the container's own content box so interface detail stays legible, while the paragraphs around it keep their measure. Pass `width: "reading"` for a screenshot that does not need the extra room. The width collapses to the reading column once the viewport is narrower than it, so wide media never causes sideways scrolling.
+
+Chapters are deliberately not uniform, so a new study need not reuse the airline chapters or its image placement. Omit a block rather than stubbing it: a chapter with no `image` block renders with no media frame, and there is no placeholder block to leave behind. The layout adds no client script. Add a `nextProject` link only once a second study is actually published.
+
+Only use real material. Omit a metadata row rather than guessing it — the airline study has no Period row because no verified employment dates exist in this project. Place screenshots in `public/images/` and record their intrinsic dimensions; give each one alt text that describes information the caption does not repeat, and review it for disclosure before publishing.
+
+The airline study is published at `/work/airline-booking-disruption` through its explicit static route in `src/pages/work/airline-booking-disruption.astro`. The homepage's "Read case study" link points there in development and production. Its status is `published`, and `BaseLayout.astro` includes canonical and Open Graph URLs and Vercel Analytics on both pages. When adding another study, create an explicit static route for its approved slug and check the built HTML, internal links, metadata, and image paths before deployment.

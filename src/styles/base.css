@@ -111,6 +111,29 @@ a {
   padding-inline: var(--gutter);
 }
 
+/*
+ * Media width. A case-study screenshot may run wider than its reading column
+ * so interface detail stays legible, while the paragraphs around it keep their
+ * comfortable measure. The width is capped by the container's own content box
+ * (--band-inner), so wide media lands on exactly the column the full-bleed
+ * bands use, and by the viewport minus its gutters — which is what makes this
+ * collapse to the reading column on mobile instead of overflowing. The
+ * negative margin is expressed against the parent's 50%, so the block stays
+ * centred on the text column it interrupts. A block that reads better compact
+ * than full width sets its own --media-cap; without one the container edge is
+ * the only cap.
+ *
+ * 100vw counts a classic scrollbar, so the cap can exceed the container by a
+ * few pixels on those platforms. `overflow-x: clip` on the root absorbs that
+ * the same way it absorbs the hero artwork's overhang, without turning the
+ * root into a scroll container — so this never produces sideways scrolling.
+ */
+.media-wide {
+  --media-width: min(100vw - 2 * var(--gutter), var(--band-inner), var(--media-cap, 100vw));
+  width: var(--media-width);
+  margin-inline: calc(50% - var(--media-width) / 2);
+}
+
 /* --- Focus-visible --------------------------------------------------------
  * Never :focus, never outline: none.
  */

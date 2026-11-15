@@ -5,9 +5,9 @@ Canonical, tool-neutral guidance for this Astro 7 portfolio. Use Node 24 and pnp
 
 ## Architecture and content
 
-- Astro builds static HTML without an adapter. `src/pages/index.astro` is the only published route; keep the server-rendered page usable without JavaScript.
+- Astro builds static HTML without an adapter. The published routes are `src/pages/index.astro` and `src/pages/work/airline-booking-disruption.astro`; keep both pages usable without JavaScript.
 - Edit portfolio copy and metadata in `src/data/*.ts`, with related types in `src/types/content.ts`. The hero display mode is in `src/config/hero.ts`.
-- `src/layouts/CaseStudyLayout.astro` is unpublished because it is outside `src/pages/`. Review routes and content types before adding case studies; see `docs/maintenance.md`.
+- `src/layouts/CaseStudyLayout.astro` renders the published airline route. Review routes and content types before adding case studies; see `docs/maintenance.md`.
 - `src/lib/email.ts` assembles contact links. Preserve its source-obfuscation convention.
 - Do not add a UI framework, CMS, animation library, or external service unless requested.
 
@@ -27,6 +27,6 @@ Canonical, tool-neutral guidance for this Astro 7 portfolio. Use Node 24 and pnp
 
 - `astro.config.mjs` sets the canonical origin to `https://adcortes.vercel.app`. `BaseLayout.astro` generates canonical and Open Graph URLs from it; the shared OG image is `public/og-image.png`.
 - `vercel.json` disables Git-triggered deployments. See `docs/maintenance.md` for the manual publishing checklist.
-- Before reporting completion, run `pnpm check`, `pnpm build`, and `git diff --check`. Confirm the build has `dist/index.html` and no other HTML page.
+- Before reporting completion, run `pnpm check`, `pnpm build`, and `git diff --check`. Confirm the build has `dist/index.html` and `dist/work/airline-booking-disruption/index.html` as its only HTML pages.
 
 Keep comments that explain accessibility exceptions, layout constraints, or non-obvious decisions accurate. Avoid comments that repeat the code.
