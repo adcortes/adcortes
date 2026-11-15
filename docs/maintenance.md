@@ -4,7 +4,7 @@ This repository also hosts the owner's GitHub profile README. Keep `README.md` a
 
 ## Run and build
 
-Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install with `pnpm install`, run locally with `pnpm dev`, and inspect the production build with `pnpm build` then `pnpm preview`. `pnpm check` runs Astro's type and template checks. The static build should contain `dist/index.html` as its only HTML page.
+Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install with `pnpm install`, run locally with `pnpm dev`, and inspect the production build with `pnpm build` then `pnpm preview`. `pnpm check` runs Astro's type and template checks. The static build should contain `dist/index.html` and `dist/work/airline-booking-disruption/index.html` as its only HTML pages.
 
 ## Edit content and appearance
 
@@ -25,7 +25,7 @@ Use Node 24 (`.nvmrc`) and the pnpm version declared in `package.json`. Install 
 
 ## Before publication
 
-1. Run `pnpm check`, `pnpm build`, and `git diff --check`; confirm `dist/index.html` is the sole built HTML page.
+1. Run `pnpm check`, `pnpm build`, and `git diff --check`; confirm the homepage and airline case study are the only built HTML pages.
 2. Review the built page with JavaScript disabled and enabled. Check navigation, skip link, contact link, archive disclosures, keyboard order, visible focus, image alternatives, and reduced-motion behavior. For visual changes, build and inspect each theme by changing `src/config/theme.ts` locally.
 3. Inspect narrow mobile, tablet, and desktop widths, especially hero art, project rows, and the archive. Check for horizontal overflow and readable text.
 4. Inspect the production preview for image sharpness and dimensions, font loading, layout shifts, console or CSP errors, and avoidable large assets. Check canonical, description, Open Graph, favicon, and social-preview assets against the intended public URL.
@@ -56,4 +56,4 @@ Chapters are deliberately not uniform, so a new study need not reuse the airline
 
 Only use real material. Omit a metadata row rather than guessing it — the airline study has no Period row because no verified employment dates exist in this project. Place screenshots in `public/images/` and record their intrinsic dimensions; give each one alt text that describes information the caption does not repeat, and review it for disclosure before publishing.
 
-Run `pnpm dev` and use the airline project's "Read case study" link in Selected work, or open `/preview/airline-booking-disruption` directly. The homepage action and `src/pages/preview/[slug].astro` route exist only in development; production builds emit neither a preview link nor preview HTML, and `status: "mock"` also keeps the preview out of search engines and analytics. To publish a study, add an explicit static route such as `src/pages/work/[slug].astro` with an approved slug, set `status` to `published`, and replace the development-only action with the published destination. Confirm the build output and metadata again before deployment.
+The airline study is published at `/work/airline-booking-disruption` through its explicit static route in `src/pages/work/airline-booking-disruption.astro`. The homepage's "Read case study" link points there in development and production. Its status is `published`, and `BaseLayout.astro` includes canonical and Open Graph URLs and Vercel Analytics on both pages. When adding another study, create an explicit static route for its approved slug and check the built HTML, internal links, metadata, and image paths before deployment.

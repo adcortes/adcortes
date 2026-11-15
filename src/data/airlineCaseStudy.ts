@@ -16,7 +16,7 @@ export const airlineCaseStudy: CaseStudy = {
     { label: "Focus", value: "UI architecture, design systems, accessibility" },
     { label: "Products", value: "Internet Booking Engine, Disruption Management" },
   ],
-  status: "mock",
+  status: "published",
   description:
     "UX engineering, frontend architecture, and design systems across airline booking and disruption management products at Newshore/FLYR.",
   introduction: [

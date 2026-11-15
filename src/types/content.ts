@@ -242,8 +242,7 @@ export interface CaseStudy {
   description: string;
   /** Lead paragraphs. */
   introduction: string[];
-  /** `mock` keeps the page out of search engines and analytics. */
-  status: "mock" | "published";
+  status: "published";
   /** Project facts. Omit a row rather than guessing its value. */
   metadata: { label: string; value: string }[];
   chapters: CaseStudyChapter[];

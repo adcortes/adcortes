@@ -41,9 +41,7 @@ export const projects: ProjectEntry[] = [
       "Technical leadership",
       "Figma",
     ],
-    action: import.meta.env.DEV
-      ? { label: "Read case study", href: `/preview/${airlineCaseStudy.slug}` }
-      : undefined,
+    action: { label: "Read case study", href: `/work/${airlineCaseStudy.slug}` },
     /*
      * Two artworks are drawn for this project and one ships. Swap the `id` to
      * switch: "airline-stub" is the perforated boarding pass, "airline-fares"
