@@ -100,13 +100,15 @@ const hasSocial = Boolean(social.linkedin || social.github);
   /* Gutters, but no container cap — the footer runs to the viewport edges. */
   .footer__inner {
     display: flex;
+    max-width: var(--container);
+    margin-inline: auto;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-16);
     padding-inline: var(--gutter);
     /* Leave room for the fixed back-to-top control at the end of the page. */
-    padding-block: var(--space-24) calc(var(--space-32) + var(--back-to-top-size) + var(--space-16));
+    padding-block: var(--space-24);
   }
 
   .footer__identity {
