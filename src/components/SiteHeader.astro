@@ -57,9 +57,14 @@ const isHome = Astro.url.pathname === '/';
     position: sticky;
     top: 0;
     z-index: 50;
-    /* The flow height stays constant while the visible bar gets shorter. */
+    /* Keep the initial space in flow, even when the sticky box compacts. */
     height: var(--header-height);
     pointer-events: none;
+  }
+
+  .site-header--compact {
+    height: var(--header-compact-height);
+    margin-bottom: calc(var(--header-height) - var(--header-compact-height));
   }
 
   .site-header::before {
