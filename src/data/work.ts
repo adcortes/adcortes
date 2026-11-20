@@ -25,10 +25,10 @@ export const projects: ProjectEntry[] = [
     category: "Product & design systems",
     title: "Airline booking & disruption products",
     summary:
-      "A white-label booking platform adapted by multiple airlines, and an operational tool for handling flight disruptions. I joined as designer and frontend developer, building the UX architecture, UI foundations and component system as the products and team grew.",
-    role: "UX architecture, styles and design-system evolution. Later, technical lead for distributed frontend teams and airline web delivery, while remaining hands-on in the codebase.",
+      "A core airline booking platform used by multiple airlines, alongside an operational tool for managing flight disruptions.",
+    role: "UX architecture, Design systems, Frontend development, Technical lead",
     outcome:
-      "Grew into a team of 10+ frontend developers and four designers, supporting multiple airline products.",
+      "Established the UI/UX foundations for both products and helped grow the team of frontend developers and designers.",
     tags: [
       "UX architecture",
       "Design systems",

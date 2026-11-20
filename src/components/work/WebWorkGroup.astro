@@ -379,9 +379,12 @@ const { group } = Astro.props;
    * Static by default, which is the no-JavaScript state: every panel is open.
    * JavaScript uses the native `hidden` attribute for instant disclosure.
    */
+  .web__panel {
+    margin-top: var(--space-12);
+  }
   .web__panel-inner {
     display: grid;
-    gap: var(--space-20);
+    gap: 0;
     /* padding: 4px 0 28px; */
   }
 
@@ -529,6 +532,9 @@ const { group } = Astro.props;
       padding-top: var(--space-10);
     }
 
+    .web__panel {
+      margin-bottom: var(--space-12);
+    }
     .web__panel-inner {
       grid-template-columns: 240px minmax(0, 1fr);
       gap: var(--space-28);
