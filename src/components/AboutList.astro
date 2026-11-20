@@ -24,7 +24,9 @@ const { items } = Astro.props;
           </span>
           {item.title}
         </h3>
-        {item.body && <p class="about__body">{item.body}</p>}
+        {item.body && (typeof item.body === 'string' ? [item.body] : item.body).map((paragraph) => (
+          <p class="about__body">{paragraph}</p>
+        ))}
         {item.bullets && (
           <ul class="about__bullets">
             {item.bullets.map((bullet) => (

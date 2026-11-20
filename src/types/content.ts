@@ -141,7 +141,7 @@ export interface WebWorkGroup {
 export interface AboutItem {
   number: string;
   title: string;
-  body?: string;
+  body?: string | string[];
   bullets?: string[];
 }
 
