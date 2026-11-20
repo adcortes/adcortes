@@ -15,8 +15,11 @@ export const about = {
 export const aboutItems: AboutItem[] = [
   {
     number: "01/",
-    title: "Who I am",
-    body: "I started out as a product designer in Rio de Janeiro. My interest in user experience, human-computer interaction and accessibility led me into frontend development, where I've been working between design and code ever since.",
+    title: "How it started",
+    body: [
+      "I started my career as a product designer in Rio de Janeiro, back in the early days of the web. At my first agency, the owner introduced me to user experience and human-computer interaction.",
+      "His passion was contagious and inspired me to explore frontend development. That's where I found my place between design and code.",
+    ],
   },
   {
     number: "02/",
