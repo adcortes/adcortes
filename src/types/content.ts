@@ -175,10 +175,16 @@ export interface CaseStudyFigure {
  */
 export type MediaWidth = "reading" | "wide";
 
-/** Body copy. One or more paragraphs rendered in reading order. */
+/** Trusted local body copy. Paragraph strings may contain inline HTML. */
 export interface ProseBlock {
   kind: "prose";
   paragraphs: string[];
+}
+
+/** A bulleted list within a chapter. */
+export interface ListBlock {
+  kind: "list";
+  items: string[];
 }
 
 /** An H3 inside a chapter, for a sub-topic within its H2. */
@@ -215,6 +221,7 @@ export interface ImageGridBlock {
  */
 export type CaseStudyBlock =
   | ProseBlock
+  | ListBlock
   | SubheadingBlock
   | ImageBlock
   | ImageGridBlock;

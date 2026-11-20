@@ -59,7 +59,9 @@ const { study } = Astro.props;
           {chapter.blocks.map((block) => {
             switch (block.kind) {
               case 'prose':
-                return block.paragraphs.map((paragraph) => <p>{paragraph}</p>);
+                return block.paragraphs.map((paragraph) => <p set:html={paragraph} />);
+              case 'list':
+                return <ul class="chapter-list">{block.items.map((item) => <li>{item}</li>)}</ul>;
               case 'subheading':
                 return <h3>{block.text}</h3>;
               case 'image':
@@ -157,6 +159,15 @@ const { study } = Astro.props;
    * cannot assume a fixed sequence.
    */
   .chapter p { margin-top: var(--space-20); }
+  .chapter ul.chapter-list {
+    margin-top: var(--space-20);
+    padding-inline-start: var(--space-24);
+    list-style: disc;
+    max-width: 64ch;
+    font-size: var(--fs-body-large);
+    line-height: 1.75;
+  }
+  .chapter-list li + li { margin-top: var(--space-8); }
 
   .closing {
     display: flex;
